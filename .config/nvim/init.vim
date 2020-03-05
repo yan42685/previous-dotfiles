@@ -732,6 +732,8 @@ noremap H ^
 noremap L $
 nnoremap dh d0
 nnoremap dl d$
+nnoremap ch c0
+nnoremap cl c$
 
 
 " Keep search pattern at the center of the screen.

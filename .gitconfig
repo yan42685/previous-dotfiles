@@ -130,10 +130,10 @@
     master-cleanse-remote = !"git branch --remotes --merged origin/master | sed 's# *origin/##' | grep -v '^master$' xargs -I% git push origin :% 2>&1 | grep --colour=never 'deleted'"
     # Publish the current branch by pushing it to the remote "origin",
     # and setting the current branch to track the upstream branch.
-    publish = !"git push --set-upstream origin $(git branch-name)"
+    publish = !"git push --set-upstream origin"
     # Unpublish the current branch by deleting the
     # remote version of the current branch.
-    unpublish = !"git push origin :$(git branch-name)"
+    unpublish = !"git push origin :"
 
     # Delete a branch name, then create the same branch name based on master -
     # useful if you have, for example, a development branch and master branch
