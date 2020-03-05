@@ -63,7 +63,7 @@
 "
 "==========================================
 " 【可选项】
-"  1. 终端设置cursor不闪烁, <c-a>全选, <c-c>,<m-i>复制粘贴, 设置透明终端, 用<leader>tt可以切换透明模式
+"  1. 终端设置cursor不闪烁, <c-a>全选, <c-c>,<m-i>复制粘贴, 设置透明终端, 用<leader>tt可以切换透明模式, 设置开启时窗口大小来达到启动全屏的目的
 "  2. 只能稍微调快一点键盘响应速度，调太快会导致一次按键多次响应
 "  3. 静态代码检查linter与排版器formatter（记得先换源）:
 "        for javascript
@@ -134,13 +134,12 @@ nmap <leader>er :CocCommand explorer<CR>
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "{{{
 set hidden  " 隐藏buff非关闭它, TextEdit might fail if hidden is not set.
-" set cmdheight=2  " Give more space for displaying messages.
+set cmdheight=2  " NOTE: 如果不设置为2，每次进入新buffer都需要回车确认...
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
 set updatetime=200  " FIXME: 可能影响性能
 set shortmess+=c  " Don't pass messages to ins-completion-menu.
 set signcolumn=yes  " Always show the signcolumn, otherwise it would shift the text each time
-" set cmdheight=2
 
 " Make <tab> used for trigger completion, completion confirm, snippet expand and jump like VSCode.
 inoremap <silent> <expr> <TAB>
@@ -196,7 +195,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 " 查看文档
-nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>
+nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
 " 打开鼠标位置下的链接
 nmap <silent> gl <Plug>(coc-openlink)
 nnoremap <silent> gq :CocList --normal quickfix<cr>
@@ -240,7 +239,7 @@ let g:Lf_WorkingDirectoryMode = 'a'  " the nearest ancestor of current directory
 let g:Lf_ShortcutF = '<leader>gf'  " 这两项是为了覆盖默认设置的键位
 let g:Lf_ShortcutB = '<leader>gb'
 let g:Lf_CommandMap = {'<C-]>':['<C-L>']}  " 搜索后<c-h>在右侧窗口打开文件
-nnoremap <leader>gr :Leaderf mru<cr>
+nnoremap <silent> <leader>gr :Leaderf mru<cr>
 nnoremap <leader>gc :Leaderf cmdHistory<cr>
 nnoremap <leader>gs :Leaderf searchHistory<cr>
 " 当前buffer搜索文本行
@@ -292,9 +291,9 @@ Plug 'arp242/undofile_warn.vim'
 
 " 拼写检查
 Plug 'kamykn/spelunker.vim'
+highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=247 gui=underline guifg=#9e9e9e
 "{{{
 " let g:spelunker_check_type = 2  " FIXME 如果打开大文件很慢就尝试开启此项 Spellcheck displayed words in buffer. Fast and dynamic
-highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=247 gui=underline guifg=#9e9e9e
 "}}}
 
 " 快捷切换粘贴记录
@@ -320,7 +319,7 @@ nnoremap gy :Yanks<cr>
 " 140+种语言的语法高亮包
 Plug 'sheerun/vim-polyglot'
 
-" 静态代码检查和自动排版
+" ALE静态代码检查和自动排版
 Plug 'dense-analysis/ale'
 "{{{
 " 不需要指定linters
@@ -654,6 +653,7 @@ let g:vista#renderer#icons = {
 \   "function": "\uf794",
 \   "variable": "\uf71b",
 \  }
+nnoremap <leader>ot :Vista<cr>
 
 " quickfix预览
 " Plug 'bfrg/vim-qf-preview'
@@ -681,7 +681,6 @@ call plug#end()
 
 " 主要按键重定义
 inoremap kj <esc>
-
 noremap ; :
 nnoremap zo zazz
 noremap ,f f
@@ -698,7 +697,6 @@ nnoremap <leader>rr @r
 " 快速在括号间跳转
 nnoremap gb %zz
 " 查找当前单词
-nnoremap gw *zz
 nnoremap gi gi<esc>zzi
 
 " 如果需要覆盖插件定义的映射，可用如下方式
@@ -734,7 +732,6 @@ nnoremap dh d0
 nnoremap dl d$
 nnoremap ch c0
 nnoremap cl c$
-
 
 " Keep search pattern at the center of the screen.
 nnoremap <silent> n nzz
@@ -838,7 +835,6 @@ set tags=./.tags;,.tags  " 让ctags改名为.tags，不污染工作区
 set confirm
 " set nowrap  " 取消换行
 set linebreak  " 一行文本超过window宽度会wrap，设置此项会让单词按语义分隔而不是按字母分隔
-" set foldcolumn=1  " 使得折叠在侧边栏中可见。
 set guicursor+=a:blinkon0  " 仅在gvim生效, 取消cursor的闪烁, 终端下的vim需要自行修改终端cursor设置
 set history=2000  " history存储容量
 filetype on  " 检测文件类型
@@ -922,13 +918,13 @@ set formatoptions+=B  " 合并两行中文时，不在中间加空格
 
 augroup auto_actions_for_better_experience
     autocmd!
-    autocmd! bufwritepost _vimrc source %  | call lightline#enable()  " vimrc文件修改之后自动加载并重新渲染lightline, windows
-    autocmd! bufwritepost .vimrc source % | call lightline#enable()  " vimrc文件修改之后自动加载并重新渲染lightline, linux
+    autocmd BufWritePost $MYVIMRC source $MYVIMRC | call lightline#enable()
     " 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exec "normal! g'\" \| zz" | endif
     " for # indent, python文件中输入新行时#号注释不切回行首
     autocmd BufNewFile,BufRead *.py inoremap # X<c-h>#
-    autocmd FileType help wincmd L  " 在右边窗口打开help
+    " 在右边窗口打开help
+    autocmd BufEnter * if &buftype == 'help' | wincmd L | endif
     autocmd FileType json syntax match Comment +\/\/.\+$+  " 让JSONC的注释显色正常
     autocmd BufEnter * silent! lcd %:p:h  " 自动切换当前目录为当前文件的目录
 augroup end
@@ -992,7 +988,7 @@ endif
 set background=dark
 set t_Co=256
 
-" 特定标记配色 TODO: FIXME: BUG: NOTE: DONE: HACK:
+" 特定标记配色 TODO: FIXME: BUG: NOTE: HACK:
 "{{{
 highlight MyTodo cterm=NONE ctermbg=180 ctermfg=black gui=bold guifg=#ff8700
 highlight MyNote cterm=NONE ctermbg=75 ctermfg=black gui=bold guifg=#19dd9d
@@ -1100,31 +1096,15 @@ inoremap <c-e> <esc>:call ScrollAnotherWindow(3)<CR>
 inoremap <c-g><c-g> :call ScrollAnotherWindow(5)<CR>
 inoremap <c-s-g> :call ScrollAnotherWindow(6)<CR>
 
-
-" 【vim8】内置终端
-" vim终端的映射
-"
-if has('terminal') && exists(':terminal') == 2 && has('patch-8.1.1')"{{{
-	set termwinkey=<c-_>  " vim 8.1 支持 termwinkey ，不需要把 terminal 切换成 normal 模式
-	tnoremap <m-h> <c-_>h
-	tnoremap <m-l> <c-_>l
-	tnoremap <m-j> <c-_>j
-	tnoremap <m-k> <c-_>k<esc>
-    " kill the job and exit terminal
-    " tnoremap <silent> <c-d> <c-_>:quit!<cr>
-	tnoremap <m-n> <c-\><c-n>
-    " 在终端粘贴必须用寄存器
-    tnoremap <m-i> <c-_>"0
-"}}}
-elseif has('nvim')  " neovim 没有 termwinkey 支持，必须把 terminal 切换回 normal 模式
-	tnoremap <m-h> <c-\><c-n><c-w>h
-	tnoremap <m-l> <c-\><c-n><c-w>l
-	tnoremap <m-j> <c-\><c-n><c-w>j
-	tnoremap <m-k> <c-\><c-n><c-w>k<esc>
-    tnoremap <m-n> <c-\><c-n>
-    " 粘贴寄存器0的内容到终端
-    tnoremap <expr> <m-i> '<C-\><C-N>"0pi'
-endif
+" 内置终端
+tnoremap <m-h> <c-\><c-n><c-w>h
+tnoremap <m-l> <c-\><c-n><c-w>l
+tnoremap <m-j> <c-\><c-n><c-w>j
+tnoremap <m-k> <c-\><c-n><c-w>k<esc>
+tnoremap <m-n> <c-\><c-n>
+" 粘贴寄存器0的内容到终端
+tnoremap <expr> <m-i> '<C-\><C-n>"0pi'
+tnoremap <m-m> <c-\><c-n>:Tclose<cr>
 
 " 切换透明模式, 需要预先设置好终端的透明度
 "{{{

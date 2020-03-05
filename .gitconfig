@@ -1,5 +1,5 @@
-[url "https://"]
-	insteadOf = git://
+; [url "https://"]
+;     insteadOf = git://
 [user]
 	name = alex
 	email = 419725794@qq.com
@@ -36,7 +36,7 @@
     cane = commit --amend --no-edit
     # commit with a message
     cm = commit --message
-    ca = commit -A --message
+    ca = commit --all --message
 
     ### checkout ###
     # checkout - update the working tree to match a branch or paths. [same as "o" for "out"]
@@ -171,3 +171,5 @@
     tool = vimdiff
 [difftool]
     prompt = false
+[hub]
+	protocol = https
