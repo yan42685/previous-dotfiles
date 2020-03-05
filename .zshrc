@@ -51,6 +51,10 @@ bindkey '^l' end-of-line
 bindkey '^k' up-history
 bindkey '^j' down-history
 bindkey ',' autosuggest-accept  # 采纳补全建议
+bindkey -M vicmd 'H' vi-beginning-of-line
+bindkey -M vicmd 'L' vi-end-of-line
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
 
 
 # 下面内容都是自动生成的

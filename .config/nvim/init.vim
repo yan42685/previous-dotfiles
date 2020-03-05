@@ -673,6 +673,10 @@ Plug 'thaerkh/vim-workspace'
 " 新增文本对象
 " Plug 'targets.vim'
 
+" 异步编译和测试
+" Plug 'tpope/vim-dispatch'
+
+
 call plug#end()
 
 "==========================================
@@ -926,7 +930,8 @@ augroup auto_actions_for_better_experience
     " 在右边窗口打开help
     autocmd BufEnter * if &buftype == 'help' | wincmd L | endif
     autocmd FileType json syntax match Comment +\/\/.\+$+  " 让JSONC的注释显色正常
-    autocmd BufEnter * silent! lcd %:p:h  " 自动切换当前目录为当前文件的目录
+    " Test插件要求工作目录在project根目录
+    " autocmd BufEnter * silent! lcd %:p:h  " 自动切换当前目录为当前文件的目录
 augroup end
 
 set viminfo+=!  " 保存viminfo全局信息
