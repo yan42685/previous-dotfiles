@@ -14,6 +14,7 @@
 [alias]
     # 很多alias来自 https://github.com/GitAlias/gitalias/blob/master/gitalias.txt
     ### add ###
+    ad = add
     # add all
     aa = add --all
     # add by patch - looks at each change, and asks if we want to put it in the repo.
