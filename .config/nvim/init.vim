@@ -683,7 +683,7 @@ nnoremap <silent> <leader>/ :nohls<cr>zz
 
 " Buffer操作
 " Close current buffer
-nnoremap <silent> <leader>bd :bd!<cr>
+nnoremap <silent> <leader>bd :bd<cr>
 " 命令行模式增强
 " 上下相比于<c-n> <c-p>更智能的地方:  可以根据已输入的字符补全历史命令
 cnoremap <c-k> <up>
