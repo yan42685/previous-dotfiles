@@ -397,29 +397,8 @@ function! NearestMethodOrFunction() abort
   return get(b:, 'vista_nearest_method_or_function', '')
 endfunction
 
-function! Artify_active_tab_num(n) abort
-  return Artify(a:n, 'bold')." \ue0bb"
-endfunction
-
 function! Tab_num(n) abort
-  " return a:n." \ue0bb"
   return a:n
-endfunction
-
-function! Artify_inactive_tab_num(n) abort
-  return Artify(a:n, 'double_struck')." \ue0bb"
-endfunction
-
-function! Artify_lightline_tab_filename(s) abort
-  return Artify(lightline#tab#filename(a:s), 'monospace')
-endfunction
-
-function! Artify_lightline_mode() abort
-  return Artify(lightline#mode(), 'monospace')
-endfunction
-
-function! Artify_line_percent() abort
-  return Artify(string((100*line('.'))/line('$')), 'bold')
 endfunction
 
 function! RemoveLabelOnTopRight() abort
@@ -439,44 +418,23 @@ let g:lightline#ale#indicator_errors = "\uf00d "
 let g:lightline#ale#indicator_ok = "\uf00c "
 " let g:lightline#asyncrun#indicator_none = ''
 " let g:lightline#asyncrun#indicator_run = 'Running...'
-let g:lightlineArtify = 0
-if g:lightlineArtify == 1
-"     let g:lightline.active = {
-"             \ 'left': [ [ 'artify_mode', 'paste' ],
-"             \           [ 'gitbranch', 'readonly', 'filename', 'modified', 'fileformat' ] ],
-"             \ 'right': [ [ 'artify_lineinfo' ],
-"             \            [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
-"             \           [ 'asyncrun_status' , 'filetype'] ]
-"             \ }
-"     let g:lightline.inactive = {
-"             \ 'left': [ [ 'filename' , 'modified', 'fileformat', 'filetype']],
-"             \ 'right': [ [ 'artify_lineinfo' ] ]
-"             \ }
-"     let g:lightline.tabline = {
-"             \ 'left': [ [ 'vim_logo', 'tabs' ] ],
-"             \ }
-"     let g:lightline.tab = {
-"             \ 'active': [ 'artify_activetabnum', 'artify_filename', 'modified' ],
-"             \ 'inactive': [ 'artify_inactivetabnum', 'filename', 'modified' ] }
-else
-    let g:lightline.active = {
-            \ 'left': [ [ 'mode', 'paste' ],
-            \           [  'filename', 'readonly', 'gitbranch', 'modified' ] ],
-            \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
-            \            [ 'lineinfo' ],
-            \            [ 'filetype', 'fileformat'] ]
-            \ }
-    let g:lightline.inactive = {
-        \ 'left': [ [ 'filename' , 'modified' ] ],
-        \ 'right': [ [ 'lineinfo' , 'fileformat', 'filetype'] ]
+let g:lightline.active = {
+        \ 'left': [ [ 'mode', 'paste' ],
+        \           [  'filename', 'readonly', 'gitbranch', 'modified' ] ],
+        \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
+        \            [ 'lineinfo' ],
+        \            [ 'filetype', 'fileformat'] ]
         \ }
-    let g:lightline.tabline = {
-        \ 'left': [ [ 'vim_logo', 'tabs' ] ],
-        \ 'right': [['RemoveLabelOnTopRight']]}
-    let g:lightline.tab = {
-        \ 'active': [ 'filename', 'modified' ],
-        \ 'inactive': [ 'filename', 'modified' ] }
-endif
+let g:lightline.inactive = {
+    \ 'left': [ [ 'filename' , 'modified' ] ],
+    \ 'right': [ [ 'lineinfo' , 'fileformat', 'filetype'] ]
+    \ }
+let g:lightline.tabline = {
+    \ 'left': [ [ 'vim_logo', 'tabs' ] ],
+    \ 'right': [['RemoveLabelOnTopRight']]}
+let g:lightline.tab = {
+    \ 'active': [ 'filename', 'modified' ],
+    \ 'inactive': [ 'filename', 'modified' ] }
 
 let g:lightline.tab_component = {
       \ }
@@ -534,36 +492,10 @@ let g:lightline.component_type = {
 let g:lightline.component_visible_condition = {
       \ }
 
-
 "}}}
 
-" 提供好看的字符
-Plug 'sainnhe/artify.vim'
-
-" ale和lightline插件适配
+" ale和lightline插件适配器
 Plug 'maximbaz/lightline-ale'
-"{{{
-" Register the components:
-let g:lightline.component_expand = {
-      \  'linter_checking': 'lightline#ale#checking',
-      \  'linter_infos': 'lightline#ale#infos',
-      \  'linter_warnings': 'lightline#ale#warnings',
-      \  'linter_errors': 'lightline#ale#errors',
-      \  'linter_ok': 'lightline#ale#ok',
-      \ }
-
-" Set color to the components:
-let g:lightline.component_type = {
-      \     'linter_checking': 'right',
-      \     'linter_infos': 'right',
-      \     'linter_warnings': 'warning',
-      \     'linter_errors': 'error',
-      \     'linter_ok': 'right',
-      \ }
-
-
-
-"}}}
 
 " 启动页面
 Plug 'mhinz/vim-startify'
