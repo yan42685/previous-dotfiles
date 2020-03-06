@@ -10,6 +10,13 @@ fi
 
 # Path to your oh-my-zsh installation.
 export ZSH="/home/yy/.oh-my-zsh"
+export EDITOR="nvim"
+export NNN_USE_EDITOR=1                                 # use the $EDITOR when opening text files
+export BROWSER="chromium"
+# export NNN_SSHFS_OPTS="sshfs -o follow_symlinks"        # make sshfs follow symlinks on the remote
+export NNN_COLORS="2136"                        # use a different color for each context
+export NNN_TRASH=1                                      # trash (needs trash-cli) instead of delete
+
 # Set fzf installation directory path
 
 ZSH_THEME="powerlevel10k/powerlevel10k"
@@ -20,6 +27,8 @@ LS_COLORS="ow=01;36;40" && export LS_COLORS  # 解决ls命令出现背景色的�
 
 # auto-correction
 ENABLE_CORRECTION="true"
+autoload -U colors && colors
+export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color? [Yes, No, Abort, Edit] "
 
 plugins=(git sudo z zsh-syntax-highlighting zsh-autosuggestions zsh-completions vi-mode extract colorize)
 
@@ -57,7 +66,7 @@ bindkey -M vicmd 'L' vi-end-of-line
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
 
-
+###############################################################################################################################################
 # 下面内容都是自动生成的
 source ~/powerlevel10k/powerlevel10k.zsh-theme
 

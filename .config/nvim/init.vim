@@ -15,7 +15,7 @@
 " 【依赖说明】
 "  coc.nvim补全插件需要安装node.js和npm LeaderF依赖Python3, vista依赖global-ctags
 "  安装完coc.nvim后【可选】用命令安装其扩展插件，比如
-"      :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer
+"      :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer coc-translator
 "      其中coc-tabnine需要设置'ignore_all_lsp': true来加强补全效果
 "
 "==========================================
@@ -195,18 +195,39 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 " 查看文档
-nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
+nnoremap <silent> <c-q> :call <SID>show_documentation()<CR>zz
 " 打开鼠标位置下的链接
 " nmap <silent> gl <Plug>(coc-openlink)
-nnoremap <silent> gq :CocList --normal quickfix<cr>
 nmap <silent> <leader>re <Plug>(coc-rename)
+
+" coc-translator
+" popup
+nmap ,t <Plug>(coc-translator-p)
+vmap ,t <Plug>(coc-translator-pv)
 
 " keymap提示
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 nnoremap <silent> <leader> :WhichKey '<space>'<cr>
+nnoremap <silent> , :WhichKey ','<cr>
+nnoremap <silent> g :WhichKey 'g'<cr>
 
 " git
 Plug 'tpope/vim-fugitive'
+nnoremap ,gd :vert Gdiff<cr>
+nnoremap ,gs :vert Gstatus<cr>
+nnoremap ,gl :Glog<cr>
+nnoremap ,gps :Gpush<cr>
+nnoremap ,gpl :Gpull<cr>
+nnoremap ,gf :Gfetch<cr>
+nnoremap ,gp :Ggrep<Space>
+nnoremap ,gm :Gmove<Space>
+nnoremap ,gb :Git branch<Space>
+nnoremap .go :Git checkout<Space>
+nnoremap ,ge :Gedit<CR>
+nnoremap ,gr :Gread<CR>
+nnoremap ,gw :Gwrite<CR><CR>
+nnoremap ,ga :Git add %:p<CR><CR>
+
 
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
@@ -416,14 +437,17 @@ let g:lightline#ale#indicator_checking = "\uf110 "
 let g:lightline#ale#indicator_warnings = "\uf529 "
 let g:lightline#ale#indicator_errors = "\uf00d "
 let g:lightline#ale#indicator_ok = "\uf00c "
-" let g:lightline#asyncrun#indicator_none = ''
-" let g:lightline#asyncrun#indicator_run = 'Running...'
+let g:lightline#asyncrun#indicator_none = ''
+let g:lightline#asyncrun#indicator_run = 'Running...'
 let g:lightline.active = {
         \ 'left': [ [ 'mode', 'paste' ],
-        \           [  'filename', 'readonly', 'gitbranch', 'modified' ] ],
+        \           [  'filename', 'readonly', 'gitbranch', 'modified'] ,
+        \
+        \],
         \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
         \            [ 'lineinfo' ],
-        \            [ 'filetype', 'fileformat'] ]
+        \            [ 'asyncrun_status', 'filetype', 'fileformat']
+        \          ]
         \ }
 let g:lightline.inactive = {
     \ 'left': [ [ 'filename' , 'modified' ] ],
@@ -483,8 +507,9 @@ let g:lightline.component_expand = {
       \ 'linter_errors': 'lightline#ale#errors',
       \ 'linter_ok': 'lightline#ale#ok',
       \ 'RemoveLabelOnTopRight': 'RemoveLabelOnTopRight',
+      \ 'asyncrun_status': 'lightline#asyncrun#status',
       \ }
-      " \ 'asyncrun_status': 'lightline#asyncrun#status'
+
 let g:lightline.component_type = {
       \ 'linter_warnings': 'warning',
       \ 'linter_errors': 'error'
@@ -557,7 +582,7 @@ function! AutoCompileAndRun() abort
 endfunction
 "}}}
 nnoremap <leader>rn :call AutoCompileAndRun()<cr>
-nnoremap <m-m> :Tclose<cr>
+nnoremap <m-m> :Ttoggle<cr>
 " 任何时候进入neoterm都是插入模式
 nnoremap <m-j> :botright Topen<cr><c-w>w<c-\><c-n>i
 inoremap <m-j> <esc>:botright Topen<cr>
@@ -571,11 +596,12 @@ Plug 'mg979/vim-visual-multi'
 
 " 异步自动生成tags
 Plug 'jsfaint/gen_tags.vim'
-let g:loaded_gentags#gtags = 1  " 关闭gtags功能, 这样可以关闭警告
-let g:loaded_gentags#ctags = 1  " 关闭ctags功能, 这样可以关闭警告
+let g:loaded_gentags#gtags = 1  " 设1关闭gtags功能, 这样可以关闭警告
+let g:loaded_gentags#ctags = 1
 
 " 浏览tags, 函数，类
 Plug 'liuchengxu/vista.vim'
+"{{{
 " let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
 " let g:vista_icon_indent = ["▸ ", ""]
 let g:vista_default_executive = 'ctags'  " Executive used when opening vista sidebar without specifying it.
@@ -585,7 +611,10 @@ let g:vista#renderer#icons = {
 \   "function": "\uf794",
 \   "variable": "\uf71b",
 \  }
+"}}}
 nnoremap <leader>ot :Vista<cr>
+
+
 
 " quickfix预览
 " Plug 'bfrg/vim-qf-preview'
@@ -605,8 +634,29 @@ Plug 'thaerkh/vim-workspace'
 " 新增文本对象
 " Plug 'targets.vim'
 
-" 异步编译和测试
-" Plug 'tpope/vim-dispatch'
+" 异步运行，测试
+Plug 'skywind3000/asyncrun.vim', { 'on': ['AsyncRun', 'AsyncStop', '<plug>(asyncrun-qftoggle)'] }
+nmap gq <plug>(asyncrun-qftoggle)
+" {{{
+" lazy load
+augroup asyncrun
+    au!
+    au User asyncrun.vim nnoremap <silent> <plug>(asyncrun-qftoggle) :call asyncrun#quickfix_toggle(10)<cr>
+augroup end
+" 整合fugitive
+command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
+"}}}
+" 任务完成自动打开qf
+augroup auto_open_quickfix
+    autocmd!
+    autocmd QuickFixCmdPost * botright copen 8
+augroup end
+nnoremap <leader>a :AsyncRun -mode=term -pos=bottom -rows=10 python "$(VIM_FILEPATH)"
+
+" 插件适配
+Plug 'albertomontesg/lightline-asyncrun'
+
+"
 
 
 call plug#end()
@@ -619,7 +669,6 @@ call plug#end()
 inoremap kj <esc>
 noremap ; :
 nnoremap zo zazz
-noremap ,f f
 noremap ,; ;
 nnoremap ,w :w<cr>zMzz
 vnoremap v <esc>
@@ -1043,7 +1092,7 @@ tnoremap <m-k> <c-\><c-n><c-w>k<esc>
 tnoremap <m-n> <c-\><c-n>
 " 粘贴寄存器0的内容到终端
 tnoremap <expr> <m-i> '<C-\><C-n>"0pi'
-tnoremap <m-m> <c-\><c-n>:Tclose<cr>
+tnoremap <m-m> <c-\><c-n>:Ttoggle<cr>
 
 " 切换透明模式, 需要预先设置好终端的透明度
 "{{{
