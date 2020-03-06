@@ -103,6 +103,8 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
+" {{{插件
+
 " 极大增强f查找能力
 Plug 'easymotion/vim-easymotion'
 map <silent> <leader>f <Plug>(easymotion-bd-f)
@@ -209,7 +211,6 @@ vmap ,t <Plug>(coc-translator-pv)
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 nnoremap <silent> <leader> :WhichKey '<space>'<cr>
 nnoremap <silent> , :WhichKey ','<cr>
-nnoremap <silent> g :WhichKey 'g'<cr>
 
 " git
 Plug 'tpope/vim-fugitive'
@@ -621,9 +622,6 @@ nnoremap <leader>ot :Vista<cr>
 " autocmd FileType qf nmap <buffer> p <plug>(qf-preview-open)
 " let g:qfpreview = #{scrollup: 'k',scrolldown: 'j',fullpageup: 'K',fullpagedown: 'J', close: 'q'}
 
-" 快速操作quickfix窗口
-" 'tpope/vim-unimpaired'
-
 " 似乎是vim唯一的test插件, 支持CI
 " Plug 'janko/vim-test'
 "
@@ -633,6 +631,13 @@ Plug 'thaerkh/vim-workspace'
 
 " 新增文本对象
 " Plug 'targets.vim'
+"
+" %匹配对象增强, 建议把%改成m
+"Plug 'andymass/vim-matchup'
+"
+"
+" 类似VSCode的编译/测试/部署 任务工具
+"Plug 'skywind3000/asynctasks.vim'
 
 " 异步运行，测试
 Plug 'skywind3000/asyncrun.vim', { 'on': ['AsyncRun', 'AsyncStop', '<plug>(asyncrun-qftoggle)'] }
@@ -656,8 +661,57 @@ nnoremap <leader>a :AsyncRun -mode=term -pos=bottom -rows=10 python "$(VIM_FILEP
 " 插件适配
 Plug 'albertomontesg/lightline-asyncrun'
 
+" sudo for neovim  (原来的tee trick只对vim有用，对neovim无效)
+Plug 'lambdalisue/suda.vim'
+"{{{suda.vim-usage
+" :E filename  sudo edit
+" :W       sudo edit
+"}}}
+command! -nargs=1 E  edit  suda://<args>
+command! W w suda://%
 "
+" 用vim看man
+Plug 'lambdalisue/vim-manpager'
 
+" FIXME: this source invode vim function that could be quite slow, so make sure your coc.preferences.timeout is not too low, otherwise it may timeout.
+Plug 'Shougo/neoinclude.vim' | Plug 'jsfaint/coc-neoinclude'
+
+" 像gitlens一样每行显示gitblame
+Plug 'APZelos/blamer.nvim'
+"{{{
+" 自动开启
+let g:blamer_enabled = 1
+"}}}
+"
+"working directory跳转到project目录
+"Plug 'airblade/vim-rooter'
+"
+" 自动解决绝大部分编码问题
+Plug 'mbbill/fencview', { 'on': [ 'FencAutoDetect', 'FencView' ] }
+"
+" 查看各个插件启动时间
+Plug 'tweekmonster/startuptime.vim', { 'on': 'StartupTime' }
+" Emmet支持
+Plug 'mattn/emmet-vim'
+"{{{
+" 只在特定文件加载
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
+"}}}
+
+" 内嵌代码辅助缩进
+" Plug 'AndrewRadev/inline_edit.vim'
+"
+" 更好的JSON支持
+Plug 'elzr/vim-json', { 'for': 'json' }
+            \| au BufNewFile,BufRead *.json call Func_vim_json()
+
+" 自动关闭标签
+Plug 'alvan/vim-closetag'
+
+" MarkDown预览
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+" }}}
 
 call plug#end()
 

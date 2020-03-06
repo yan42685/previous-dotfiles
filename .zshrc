@@ -12,6 +12,7 @@ fi
 export ZSH="/home/yy/.oh-my-zsh"
 export EDITOR="nvim"
 export NNN_USE_EDITOR=1                                 # use the $EDITOR when opening text files
+export MANPAGER="vim -c MANPAGER -"
 export BROWSER="chromium"
 # export NNN_SSHFS_OPTS="sshfs -o follow_symlinks"        # make sshfs follow symlinks on the remote
 export NNN_COLORS="2136"                        # use a different color for each context
