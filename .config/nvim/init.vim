@@ -197,7 +197,7 @@ nmap <silent> gr <Plug>(coc-references)
 " 查看文档
 nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
 " 打开鼠标位置下的链接
-nmap <silent> gl <Plug>(coc-openlink)
+" nmap <silent> gl <Plug>(coc-openlink)
 nnoremap <silent> gq :CocList --normal quickfix<cr>
 nmap <silent> <leader>re <Plug>(coc-rename)
 
@@ -373,7 +373,7 @@ function! Sy_stats_wrapper()
     endif
   endfor
   if !empty(hunkline)
-    let hunkline = printf(' [%s]', hunkline[:-2])
+    let hunkline = printf('[%s]', hunkline[:-2])
   endif
   return hunkline
 endfunction
@@ -497,7 +497,7 @@ let g:lightline.component = {
       \ 'mode': '%{lightline#mode()}',
       \ 'absolutepath': '%F',
       \ 'relativepath': '%f',
-      \ 'filename': '%t',
+      \ 'filename': ' %t',
       \ 'filesize': "%{HumanSize(line2byte('$') + len(getline('$')))}",
       \ 'fileencoding': '%{&fenc!=#""?&fenc:&enc}',
       \ 'fileformat': '%{&fenc!=#""?&fenc:&enc}[%{&ff}]',
@@ -694,6 +694,8 @@ vnoremap v <esc>
 " 我喜欢使用分号作为插入模式的 leader 键，因为分号后面除了空格和换行之外几乎不会接任何其他字符
 " 快速在行末写分号并换行
 inoremap ;; <c-o>A;<cr>
+" NOTE: 这里用imap是因为要借用auto-pairs插件提供的{}自动配对
+imap [[ <esc>A<space>{<cr>
 " 重复上次执行的寄存器的命令
 nnoremap <leader>r; @:
 " 执行宏r
