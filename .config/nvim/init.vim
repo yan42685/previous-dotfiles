@@ -297,6 +297,9 @@ Plug 'ap/vim-css-color', {'for': ['css']}
 " Vim-Surround快捷操作
 Plug 'tpope/vim-surround'
 
+" 让. 可以重复插件的操作, 和surround是绝配
+Plug 'tpope/vim-repeat'
+
 " uodo历史及持久化
 Plug 'simnalamburt/vim-mundo'
 " reference: https://vi.stackexchange.com/questions/6/how-can-i-use-the-undofile
@@ -634,6 +637,10 @@ function! AutoCompileAndRun() abort
         execute 'T g++ -Wall -g -std=c++11 % -o %.out && ./%.out'
     elseif &filetype == 'javascript'
         execute 'T node %'
+    elseif &filetype == 'java'
+        execute 'T javac % && java -enableassertions %:p'
+    elseif &ifletype == 'go'
+        execute 'T go build % && ./%:p'
     endif
 endfunction
 "}}}
@@ -700,7 +707,7 @@ command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 " 任务完成自动打开qf{{{
 augroup auto_open_quickfix
     autocmd!
-    autocmd QuickFixCmdPost * botright copen 8
+    autocmd QuickFixCmdPost * botright copen 8 | nnoremap <c-j> :cnext<cr> | nnoremap <c-k> :cprevious<cr>
 augroup end
 nnoremap <leader>a :AsyncRun -mode=term -pos=bottom -rows=10 python "$(VIM_FILEPATH)"
 "}}}
@@ -1242,5 +1249,23 @@ autocmd WinNew,WinEnter,WinLeave,BufLeave,BufEnter * call Change_ctrljk_for_quic
 "
 "
 "自动make
-autocmd FileType c set makeprg=if\ \[\ -f\ \"Makefile\"\ \];then\ make\ $*;else\ gcc\ -O2\ -g\ -Wall\ -Wextra\ -o'%<'\ '%'\ -lm;fi
-autocmd FileType cpp set makeprg=if\ \[\ -f\ \"Makefile\"\ \];then\ make\ $*;else\ g++\ -O2\ -g\ -Wall\ -Wextra\ -o'%<'\ '%'\ -lm;fi
+augroup my_auto_make
+    autocmd!
+    autocmd FileType c set makeprg=if\ \[\ -f\ \"Makefile\"\ \];then\ make\ $*;else\ gcc\ -O2\ -g\ -Wall\ -Wextra\ -o'%<'\ '%'\ -lm;fi
+    autocmd FileType cpp set makeprg=if\ \[\ -f\ \"Makefile\"\ \];then\ make\ $*;else\ g++\ -O2\ -g\ -Wall\ -Wextra\ -o'%<'\ '%'\ -lm;fi
+augroup end
+
+function! s:BlankUp(count) abort
+  put!=repeat(nr2char(10), a:count)
+  ']+1
+  silent! call repeat#set("\<Plug>unimpairedBlankUp", a:count)
+endfunction
+
+function! s:BlankDown(count) abort
+  put =repeat(nr2char(10), a:count)
+  '[-1
+  silent! call repeat#set("\<Plug>unimpairedBlankDown", a:count)
+endfunction
+
+nnoremap [<space> :<c-u>call <sid>BlankDown(v:count1)<cr>
+nnoremap ]<space> :<c-u>call <sid>BlankUp(v:count1)<cr>
