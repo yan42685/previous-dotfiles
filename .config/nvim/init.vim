@@ -83,6 +83,13 @@
 "   3. vimrc文件let语句的等号两边不能写空格, 写了不生效!}}}
 " ========================================
 
+" ==========================================
+" 【重要参数】
+let s:enable_file_autosave = 1  " 是否自动保存
+
+
+
+
 let mapleader=' '
 let g:mapleader=' '
 
@@ -136,7 +143,7 @@ set hidden  " 隐藏buff非关闭它, TextEdit might fail if hidden is not set.
 set cmdheight=2  " NOTE: 如果不设置为2，每次进入新buffer都需要回车确认...
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
-set updatetime=200  " FIXME: 可能影响性能
+set updatetime=400  " FIXME: 可能影响性能
 set shortmess+=c  " Don't pass messages to ins-completion-menu.
 set signcolumn=yes  " Always show the signcolumn, otherwise it would shift the text each time
 
@@ -165,7 +172,6 @@ augroup coc_completion_keybindings
         \ <SID>check_back_space() ? "ScrollAnotherWindow(2)" :
         \ coc#refresh()
     autocmd VimEnter * inoremap <expr> <c-k> pumvisible() ? "\<up>" : "ScrollAnotherWindow(1)"
-    " 正确高亮JSONC的注释
 augroup end
 
 function! s:check_back_space() abort
@@ -211,6 +217,8 @@ nnoremap <silent> , :WhichKey ','<cr>
 
 " git
 Plug 'tpope/vim-fugitive'
+nnoremap ,ga :Git add %:p<CR><CR>
+nnoremap ,gc :Gcommit --all<cr>
 nnoremap ,gd :vert Gdiff<cr>
 nnoremap ,gs :vert Gstatus<cr>
 nnoremap ,gl :Glog<cr>
@@ -224,7 +232,6 @@ nnoremap .go :Git checkout<Space>
 nnoremap ,ge :Gedit<CR>
 nnoremap ,gr :Gread<CR>
 nnoremap ,gw :Gwrite<CR><CR>
-nnoremap ,ga :Git add %:p<CR><CR>
 
 
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式
@@ -580,14 +587,10 @@ function! AutoCompileAndRun() abort
 endfunction
 "}}}
 nnoremap <leader>rn :call AutoCompileAndRun()<cr>
-nnoremap <m-m> :Ttoggle<cr>
+nnoremap <silent> <m-m> :botright Ttoggle<cr><c-w>w<c-\><c-n>i
 " 任何时候进入neoterm都是插入模式
-nnoremap <m-j> :botright Topen<cr><c-w>w<c-\><c-n>i
-inoremap <m-j> <esc>:botright Topen<cr>
-
-" 只保留当前buffer :BufOnly! 为不保存且强制关闭buffer
-Plug 'vim-scripts/BufOnly.vim'
-nnoremap <leader>bo :BufOnly<cr>
+nnoremap <silent> <m-j> :botright Topen<cr><c-w>w<c-\><c-n>i
+inoremap <silent> <m-j> <esc>:botright Topen<cr>
 
 " 多光标
 Plug 'mg979/vim-visual-multi'
@@ -616,18 +619,11 @@ let g:vista#renderer#icons = {
 nnoremap <leader>ot :Vista<cr>
 
 
-
-" quickfix预览
-" Plug 'bfrg/vim-qf-preview'
-" autocmd FileType qf nmap <buffer> p <plug>(qf-preview-open)
-" let g:qfpreview = #{scrollup: 'k',scrolldown: 'j',fullpageup: 'K',fullpagedown: 'J', close: 'q'}
-
 " 似乎是vim唯一的test插件, 支持CI
 " Plug 'janko/vim-test'
 "
 "
-" 工作区管理，自动保存等功能
-Plug 'thaerkh/vim-workspace'
+
 
 " 新增文本对象
 " Plug 'targets.vim'
@@ -641,7 +637,6 @@ Plug 'thaerkh/vim-workspace'
 
 " 异步运行，测试
 Plug 'skywind3000/asyncrun.vim', { 'on': ['AsyncRun', 'AsyncStop', '<plug>(asyncrun-qftoggle)'] }
-nmap gq <plug>(asyncrun-qftoggle)
 " {{{
 " lazy load
 augroup asyncrun
@@ -651,12 +646,14 @@ augroup end
 " 整合fugitive
 command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 "}}}
-" 任务完成自动打开qf
+" 任务完成自动打开qf{{{
 augroup auto_open_quickfix
     autocmd!
     autocmd QuickFixCmdPost * botright copen 8
 augroup end
 nnoremap <leader>a :AsyncRun -mode=term -pos=bottom -rows=10 python "$(VIM_FILEPATH)"
+"}}}
+nmap gq <plug>(asyncrun-qftoggle)
 
 " 插件适配
 Plug 'albertomontesg/lightline-asyncrun'
@@ -669,7 +666,7 @@ Plug 'lambdalisue/suda.vim'
 "}}}
 command! -nargs=1 E  edit  suda://<args>
 command! W w suda://%
-"
+
 " 用vim看man
 Plug 'lambdalisue/vim-manpager'
 
@@ -742,6 +739,8 @@ nnoremap <leader>rr @r
 nnoremap gb %zz
 " 查找当前单词
 nnoremap gi gi<esc>zzi
+nnoremap '' ''zz
+nnoremap '. '.zz
 
 " 替换模式串用法: 先用 / 查找, 然后再按下面的快捷键, subtitute查找域为空时会默认使用上次查找的内容
 nnoremap <leader>su :%s///gc<left><left><left>
@@ -794,6 +793,7 @@ cnoremap <c-j> <down>
 cnoremap <c-h> <home>
 cnoremap <c-l> <end>
 cnoremap <c-d> <delete>
+inoremap <c-d> <delete>
 cnoremap <m-i> <c-r>0
 inoremap <m-i> <c-r>0
 
@@ -870,7 +870,6 @@ colorscheme quantum
 " 基础设置{{{
 set background=dark
 set t_Co=256
-syntax on  " 开启语法高亮
 set tags=./.tags;,.tags  " 让ctags改名为.tags，不污染工作区
 set confirm
 " set nowrap  " 取消换行
@@ -879,13 +878,13 @@ set guicursor+=a:blinkon0  " 仅在gvim生效, 取消cursor的闪烁, 终端下�
 set history=2000  " history存储容量
 filetype on  " 检测文件类型
 filetype indent on  " 针对不同的文件类型采用不同的缩进格式
+set noswapfile
 set autoread  " 文件在外界被修改之后自动载入
+set autowriteall  " edit, next等动作时自动写入
 set timeout ttimeoutlen=50  " 连续识别按键的延迟
 set clipboard+=unnamedplus
 set shortmess=atI  " 启动的时候不显示那个援助乌干达儿童的提示
 set nobackup nowritebackup  " 取消备份文件
-" swap文件(如果放在HOME目录，那么多人同时编辑同一个文件的时候不会警告, 所以放在tmp目录比较好)
-set directory=/tmp//
 set updatecount =100  " FIXME:如果编辑大文件很慢那么考虑调大这个值 After typing this many characters the swap file will be written to disk
 set cursorline  " 突出显示当前行
 set synmaxcol=200  " 每次只渲染200行而不是整个文件
@@ -898,7 +897,6 @@ set vb t_vb= " 彻底禁止错误发出bell
 set tm=500
 set backspace=eol,start,indent  " Configure backspace so it acts as it should act
 set whichwrap+=<,>,h,l
-" set colorcolumn=80  " 高亮显示某一列,对代码宽度起到提示作用
 
 set viminfo+=!  " 保存viminfo全局信息
 set lazyredraw  " redraw only when we need to.
@@ -1001,17 +999,19 @@ set formatoptions+=B  " 合并两行中文时，不在中间加空格
 
 augroup auto_actions_for_better_experience
     autocmd!
+    " 自动source VIMRC
     autocmd BufWritePost $MYVIMRC source $MYVIMRC | call lightline#enable()
     " 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exec "normal! g'\" \| zz" | endif
-    " for # indent, python文件中输入新行时#号注释不切回行首
-    autocmd BufNewFile,BufRead *.py inoremap # X<c-h>#
     " 在右边窗口打开help
     autocmd BufEnter * if &buftype == 'help' | wincmd L | endif
     autocmd FileType json syntax match Comment +\/\/.\+$+  " 让JSONC的注释显色正常
     " Test插件要求工作目录在project根目录
     " autocmd BufEnter * silent! lcd %:p:h  " 自动切换当前目录为当前文件的目录
 augroup end
+
+" 开启语法高亮
+syntax on  " NOTE: 这条语句放在不同的地方会有不同的效果，经测试,放在这里是最合适的
 
 " 特定标记配色 TODO: FIXME: BUG: NOTE: HACK:
 "{{{
@@ -1085,28 +1085,11 @@ nnoremap <c-k> :call ScrollAnotherWindow(1)<CR>
 nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>
 nnoremap <c-e> :call ScrollAnotherWindow(3)<CR>
 nnoremap <c-d> :call ScrollAnotherWindow(4)<CR>
-augroup change_ctrlD_mapping_insert_mode
-    autocmd!
-    autocmd VimEnter,WinEnter,WinLeave,BufWritePost * call ChangeCtrlDMappingInsertMode()
-augroup end
-"{{{
-function! ChangeCtrlDMappingInsertMode() abort
-    if winnr('$') >  1
-        inoremap <c-d> <esc>:call ScrollAnotherWindow(4)<CR>
-    else
-        inoremap <c-d> <delete>
-    endif
-endfunc
-"}}}
 nnoremap <c-g><c-g> :call ScrollAnotherWindow(5)<CR>
 nnoremap <c-s-g> :call ScrollAnotherWindow(6)<CR>
-inoremap <c-k> <esc>:call ScrollAnotherWindow(1)<CR>
-inoremap <c-j> <esc>:call ScrollAnotherWindow(2)<CR>
-inoremap <c-e> <esc>:call ScrollAnotherWindow(3)<CR>
-inoremap <c-g><c-g> :call ScrollAnotherWindow(5)<CR>
-inoremap <c-s-g> :call ScrollAnotherWindow(6)<CR>
 
 " 内置终端
+tnoremap <c-d> <c-\><c-n>:Tclose<cr>
 tnoremap <m-h> <c-\><c-n><c-w>h
 tnoremap <m-l> <c-\><c-n><c-w>l
 tnoremap <m-j> <c-\><c-n><c-w>j
@@ -1114,7 +1097,7 @@ tnoremap <m-k> <c-\><c-n><c-w>k<esc>
 tnoremap <m-n> <c-\><c-n>
 " 粘贴寄存器0的内容到终端
 tnoremap <expr> <m-i> '<C-\><C-n>"0pi'
-tnoremap <m-m> <c-\><c-n>:Ttoggle<cr>
+tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
 
 " 切换透明模式, 需要预先设置好终端的透明度
 "{{{
@@ -1134,3 +1117,55 @@ endfunction
 nnoremap <leader>tt :call Toggle_transparent_background()<CR>
 " 快速编辑init.vim
 nnoremap <leader>en :e $MYVIMRC<CR>
+
+" 删除隐藏的buffer
+nnoremap <leader>bc :call DeleteHiddenBuffers()<cr>
+"{{{
+function! DeleteHiddenBuffers()
+    let tpbl=[]
+    let closed = 0
+    call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
+    for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
+        silent execute 'bwipeout' buf
+        let closed += 1
+    endfor
+    echo "Closed ".closed." hidden buffers"
+endfunction
+"}}}
+"
+"
+" 查看highlighting group
+nnoremap <F8> :<C-u>call <SID>synstack()<CR>
+" Print stack of syntax highlighting groups for word under the cursor{{{
+function! s:synstack()
+    echo join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ' -> ')
+endfunction
+"}}}
+"
+" 自动保存{{{
+function! s:Autosave(timed)
+    if &readonly || mode() == 'c' || pumvisible()
+        return
+    endif
+    let current_time = localtime()
+    let s:last_update = get(s:, 'last_update', 0)
+    let s:time_delta = current_time - s:last_update
+
+    if a:timed == 0 || s:time_delta >= 1
+        let s:last_update = current_time
+        checktime  " checktime with autoread will sync files on a last-writer-wins basis.
+        silent! doautocmd BufWritePre %  " needed for soft checks
+        silent! update  " only updates if there are changes to the file.
+        if a:timed == 0 || s:time_delta >= 4
+            silent! doautocmd BufWritePost %  " Periodically trigger BufWritePost.
+        endif
+    endif
+endfunction
+
+if s:enable_file_autosave
+    augroup WorkspaceToggle
+        au! BufLeave,FocusLost,FocusGained,InsertLeave * call s:Autosave(0)
+        au! CursorHold * call s:Autosave(1)
+    augroup END
+endif
+"}}}

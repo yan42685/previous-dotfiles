@@ -42,8 +42,9 @@ alias ts="trash"
 alias cp="cp -ip"
 alias mv="mv -i"
 alias zc='z -c'  # 当前目录下跳转
+alias cat='ccat'
 alias vi='nvim'
-alias vim='nvim'
+# alias vim='nvim'
 alias dot='/usr/bin/git --git-dir=/home/yy/.dotfiles/ --work-tree=/home/yy'   # 用于存放dotfiles
 alias rm='trash'
 
