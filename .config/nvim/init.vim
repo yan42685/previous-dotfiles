@@ -19,7 +19,7 @@
 "  1. :PlugInstall
 "  2. 提供python和系统剪切板支持 sudo pip3 install pynvim && apt install xsel
 "  3. rm -rf ~/.viminfo 这样可以使自动回到上次编辑的地方功能生效, 然后重新打开vim(注意要以当前用户打开),vim会自动重建该文件.
-"  4. :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer coc-translator
+"  4. :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer
 "  5. ubuntu下用snap包管理器安装ccls, 作为C、C++的LSP (推荐用snap安装, 因为ccls作者提供的编译安装方式似乎有问题, 反正Ubuntu18.04不行)
 "  6. 安装Sauce Code Pro Nerd Font Complete字体(coc-explorer要用到), 然后设置终端字体为这个, 注意不是原始的Source Code Pro), 最简单的安装方法就是下载ttf文件然后双击安装
 "  7. 需要在/etc/crontab设置以下定时任务，定期清理undofile
@@ -84,13 +84,12 @@
 " ========================================
 
 " ==========================================
-" 【重要参数】
+" 【可自行调整的重要参数】
 let s:enable_file_autosave = 1  " 是否自动保存
+set updatetime=400  " 检测CursorHold事件的时间间隔,影响性能的主要因素
 
 
-
-
-let mapleader=' '
+let mapleader=' '  " 此条命令的位置应在插件之前
 let g:mapleader=' '
 
 " =========================================
@@ -118,7 +117,6 @@ Plug 'joshdick/onedark.vim'
 Plug 'tyrannicaltoucan/vim-quantum'
 Plug 'KeitaNakamura/neodark.vim'
 Plug 'trevordmiller/nova-vim'
-Plug 'arcticicestudio/nord-vim'
 Plug 'sainnhe/forest-night'
 
 " 快速注释
@@ -143,7 +141,6 @@ set hidden  " 隐藏buff非关闭它, TextEdit might fail if hidden is not set.
 set cmdheight=2  " NOTE: 如果不设置为2，每次进入新buffer都需要回车确认...
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
-set updatetime=400  " FIXME: 可能影响性能
 set shortmess+=c  " Don't pass messages to ins-completion-menu.
 set signcolumn=yes  " Always show the signcolumn, otherwise it would shift the text each time
 
@@ -200,7 +197,7 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 " 查看文档
-nnoremap <silent> <c-q> :call <SID>show_documentation()<CR>zz
+nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
 " 打开鼠标位置下的链接
 " nmap <silent> gl <Plug>(coc-openlink)
 nmap <silent> <leader>re <Plug>(coc-rename)
@@ -209,6 +206,10 @@ nmap <silent> <leader>re <Plug>(coc-rename)
 " popup
 nmap ,t <Plug>(coc-translator-p)
 vmap ,t <Plug>(coc-translator-pv)
+" Plug 'voldikss/vim-translator'
+" let g:translator_window_type = 'popup'
+" nmap <silent> tt <Plug>Translate
+
 
 " keymap提示
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
@@ -358,12 +359,11 @@ let g:ale_fixers = {
 \   'javascript': ['prettier'],
 \   'python': ['autopep8'],
 \}
+let g:ale_lint_on_text_changed = 'normal'
+" let g:ale_lint_delay = 3000  " 这个配置似乎不生效
 " 保存时自动排版
 let g:ale_fix_on_save = 1
-
 " 配置状态栏信息
-let g:ale_echo_msg_error_str = 'E'
-let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
 
 " Note that the C options are also used for C++.
@@ -376,10 +376,10 @@ let g:ale_cpp_ccls_init_options = {
 \ }
 "}}}
 " 如果你觉得默认的 ale 提示符不好看，可以修改 ale 提示符使用 emoji 符号，换成萌萌的 emoji 表情
+let g:ale_set_highlights = 0  " 不要显示红色下划线
 let g:ale_sign_error = '✗'
 let g:ale_sign_warning = '⚡'
 " 切换到normal模式才更新lint信息
-let g:ale_lint_on_text_changed = 'normal'
 nmap <silent> ge <Plug>(ale_next_wrap)
 nmap <silent> gE <Plug>(ale_previous_wrap)
 
@@ -529,6 +529,62 @@ Plug 'maximbaz/lightline-ale'
 
 " 启动页面
 Plug 'mhinz/vim-startify'
+let g:startify_lists = [
+            \ { 'type': 'files',     'header': ['   MRU']            }, { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+            \ { 'type': 'sessions',  'header': ['   Sessions']       },
+            \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+            \ ]
+let g:startify_session_persistence = 1  " 持久化session
+let g:startify_fortune_use_unicode = 1  " 首页banner使用utf-8字符编码
+let g:startify_enable_special = 0  " 不显示<empty buffer> 和 <quit>
+let g:startify_session_sort = 1  " Sort sessions by modification time (when the session files were written) rather than alphabetically.
+let g:startify_custom_indices = map(range(1,100), 'string(v:val)')  " index从1开始数起
+let g:utf8_image = [
+            \ '(っ＾▿＾)۶🍸🌟🍺٩(˘◡˘  )',
+            \ '',
+            \]
+
+let g:utf8_middle_finger = [
+            \ '░░░░░░░░░░░░░░░▄▄░░░░░░░░░░░',
+            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
+            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
+            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
+            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
+            \ '██████▄███▄████░░███▄░░░░░░░',
+            \ '▓▓▓▓▓▓█░░░█░░░█░░█░░░███░░░░',
+            \ '▓▓▓▓▓▓█░░░█░░░█░░█░░░█░░█░░░',
+            \ '▓▓▓▓▓▓█░░░░░░░░░░░░░░█░░█░░░',
+            \ '▓▓▓▓▓▓█░░░░░░░░░░░░░░░░█░░░░',
+            \ '▓▓▓▓▓▓█░░░░░░░░░░░░░░██░░░░░',
+            \ '▓▓▓▓▓▓█████░░░░░░░░░██░░░░░░',
+            \ ]
+
+let g:utf8_double_moon = [
+            \ '┊┊┊┊      __    _   _                              _ ',
+            \ '┊┊┊☆     / _|  | | (_)  _ __    _ __     ___    __| |',
+            \ "┊┊🌙  *  | |_  | | | | | '_ \\  | '_ \\   / _ \\  / _` |",
+            \ '┊┊       |  _| | | | | | |_) | | |_) | |  __/ | (_| |',
+            \ '┊☆ °     |_|   |_| |_| | .__/  | .__/   \___|  \__,_|',
+            \ '🌙                     |_|     |_|                   ',
+            \ ]
+let g:startify_custom_header =
+            \ 'startify#pad(g:utf8_double_moon)'
+
+
+" __   _   _                              _
+" / _| | | (_)  _ __    _ __     ___    __| |
+" | |_  | | | | | '_ \  | '_ \   / _ \  / _` |
+" |  _| | | | | | |_) | | |_) | |  __/ | (_| |
+" |_|   |_| |_| | .__/  | .__/   \___|  \__,_|
+" |_|     |_|
+
+" :Startify
+" :SSave
+" :SLoad
+" :SClose
+" highlight StartifyHeader  ctermfg=114
+
+
 
 " 括号配对优化
 Plug 'jiangmiao/auto-pairs'
@@ -809,11 +865,11 @@ nnoremap <leader>ws <c-w>s<c-w>w
 nnoremap <leader>ww <c-w>w
 " 窗口最大化 leaving only the help window open/maximized
 nnoremap <leader>wo <c-w>ozz
-noremap <leader>v <c-w>v<c-w>w
-noremap <leader>j <esc><c-w>j
-noremap <leader>k <esc><c-w>k
-noremap <leader>h <esc><c-w>h
-noremap <leader>l <esc><c-w>l
+noremap <silent> <leader>v :wincmd v<cr>:wincmd w<cr>
+noremap <silent> <leader>j :wincmd j<cr>
+noremap <silent> <leader>k :wincmd k<cr>
+noremap <silent> <leader>h :wincmd h<cr>
+noremap <silent> <leader>l :wincmd l<cr>
 
 " Tab操作
 nnoremap th gT
@@ -862,7 +918,6 @@ colorscheme quantum
 " let g:neodark#use_256color = 1
 " colorscheme neodark
 
-" colorscheme nord
 " colorscheme nova
 " colorscheme forest-night
 
@@ -1119,7 +1174,6 @@ nnoremap <leader>tt :call Toggle_transparent_background()<CR>
 nnoremap <leader>en :e $MYVIMRC<CR>
 
 " 删除隐藏的buffer
-nnoremap <leader>bc :call DeleteHiddenBuffers()<cr>
 "{{{
 function! DeleteHiddenBuffers()
     let tpbl=[]
@@ -1132,15 +1186,15 @@ function! DeleteHiddenBuffers()
     echo "Closed ".closed." hidden buffers"
 endfunction
 "}}}
-"
+nnoremap <leader>bc :call DeleteHiddenBuffers()<cr>
 "
 " 查看highlighting group
-nnoremap <F8> :<C-u>call <SID>synstack()<CR>
 " Print stack of syntax highlighting groups for word under the cursor{{{
 function! s:synstack()
     echo join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ' -> ')
 endfunction
 "}}}
+nnoremap <F8> :<C-u>call <SID>synstack()<CR>
 "
 " 自动保存{{{
 function! s:Autosave(timed)
@@ -1164,8 +1218,10 @@ endfunction
 
 if s:enable_file_autosave
     augroup WorkspaceToggle
-        au! BufLeave,FocusLost,FocusGained,InsertLeave * call s:Autosave(0)
+        au! BufLeave,FocusLost,FocusGained * call s:Autosave(0)
         au! CursorHold * call s:Autosave(1)
     augroup END
 endif
 "}}}
+"
+"
