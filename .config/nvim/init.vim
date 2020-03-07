@@ -9,21 +9,30 @@
 "   1. 有意义，容易记忆
 "   2. 每个指令均衡左右手指击键, 如果都在同一手上则尽量用不同的手指击键，尽量减小手指移动距离
 "
-"==========================================
 "  推荐使用appimage来安装neovim，这样在每个平台都很方便使用
-"
-" 【依赖说明】
-"  coc.nvim补全插件需要安装node.js和npm LeaderF依赖Python3, vista依赖global-ctags
-"  安装完coc.nvim后【可选】用命令安装其扩展插件，比如
-"      :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer coc-translator
-"      其中coc-tabnine需要设置'ignore_all_lsp': true来加强补全效果
-"
 "==========================================
-" 【必做事项】
+" 【依赖说明】{{{
+"  coc.nvim补全插件需要安装node.js和npm LeaderF依赖Python3, vista依赖global-ctags
+"}}}
+"==========================================
+" 【必做事项】{{{
 "  1. :PlugInstall
 "  2. 提供python和系统剪切板支持 sudo pip3 install pynvim && apt install xsel
 "  3. rm -rf ~/.viminfo 这样可以使自动回到上次编辑的地方功能生效, 然后重新打开vim(注意要以当前用户打开),vim会自动重建该文件.
-"  4. 在:CocConfig 写入下面的JSON设置
+"  4. :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer coc-translator
+"  5. ubuntu下用snap包管理器安装ccls, 作为C、C++的LSP (推荐用snap安装, 因为ccls作者提供的编译安装方式似乎有问题, 反正Ubuntu18.04不行)
+"  6. 安装Sauce Code Pro Nerd Font Complete字体(coc-explorer要用到), 然后设置终端字体为这个, 注意不是原始的Source Code Pro), 最简单的安装方法就是下载ttf文件然后双击安装
+"  7. 需要在/etc/crontab设置以下定时任务，定期清理undofile
+"{{{
+"     # m h  dom mon dow   command
+"     43 00 *   *   3     find /home/{username}/.vim/undo-dir -type f -mtime +90 -delete
+"}}}
+"  8. 安装gtags(需要>6.63(需要>6.63)) 并用 pygments扩展语言类型
+"           在官网下载最新的tar.gz 解压后进入 执行 sudo apt install ncurses-dev && ./configure && make && sudo make install && sudo pip3 install pygments
+"  9. ctags(插件vista依赖):
+        " sudo apt install software-properties-common && sudo add-apt-repository ppa:hnakamur/universal-ctags && sudo apt update && sudo apt install universal-ctags
+"
+"  10. 在:CocConfig 写入下面的JSON设置
 "{{{
 " {
 "     // 补全启动时自动选择第一项
@@ -48,46 +57,34 @@
 "     }
 " }
 "}}}
-"  5. ubuntu下用snap包管理器安装ccls, 作为C、C++的LSP (推荐用snap安装, 因为ccls作者提供的编译安装方式似乎有问题, 反正Ubuntu18.04不行)
-"  6. 安装Sauce Code Pro Nerd Font Complete字体(coc-explorer要用到), 然后设置终端字体为这个, 注意不是原始的Source Code Pro), 最简单的安装方法就是下载ttf文件然后双击安装
-"  7. 需要在/etc/crontab设置以下定时任务，定期清理undofile
-"{{{
-"     # m h  dom mon dow   command
-"     43 00 *   *   3     find /home/{username}/.vim/undo-dir -type f -mtime +90 -delete
 "}}}
-"  8. 安装gtags(需要>6.63(需要>6.63)) 并用 pygments扩展语言类型
-"           在官网下载最新的tar.gz 解压后进入 执行 sudo apt install ncurses-dev && ./configure && make && sudo make install && sudo pip3 install pygments
-"  9. ctags(插件vista依赖):
-        " sudo apt install software-properties-common && sudo add-apt-repository ppa:hnakamur/universal-ctags && sudo apt update && sudo apt install universal-ctags
-
-"
 "==========================================
-" 【可选项】
-"  1. 终端设置cursor不闪烁, <c-a>全选, <c-c>,<m-i>复制粘贴, 设置透明终端, 用<leader>tt可以切换透明模式, 设置开启时窗口大小来达到启动全屏的目的
-"  2. 只能稍微调快一点键盘响应速度，调太快会导致一次按键多次响应
-"  3. 静态代码检查linter与排版器formatter（记得先换源）:
+" 【可选项】{{{
+"  1. 终端设置cursor不闪烁, <c-a>全选, <c-c>,<m-i>复制粘贴, 设置透明终端, 用<leader>tt可以切换透明模式, 设置开启时窗口大小来达到启动max-size的目的
+"  2. 然后终端设置General-勾消Show menubar by default in new terminals
+"  3. 只能稍微调快一点键盘响应速度，调太快会导致一次按键多次响应
+"  4. 静态代码检查linter与排版器formatter（记得先换源）:
 "        for javascript
 "            sudo npm install -g eslint && sudo npm install -g prettier
 "        for python
 "            sudo pip install pylint && sudo pip install autopep8
 "        for C,CPP
 "            sudo apt install cppcheck -y && sudo npm install -g clang-format
-"  4. 安装riggrep 配合Leaderf rg使用, 快速搜索文本行:
+"  5. 安装riggrep 配合Leaderf rg使用, 快速搜索文本行:
 "            curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb && sudo dpkg -i ripgrep_11.0.2_amd64.deb
 "            FIXME: 如果在Leaderf里调用rg出现~/.config文件夹permission deny的情况 就需要 sudo chown -R $USER:$GROUP ~/.config
-"  5. 使用vim-signify显示diff，必须要注册好git账户，比如git config --global user.name "username" && git config --global user.email "useremail@qq.com"
-"
-
+"  6. 使用vim-signify显示diff，必须要注册好git账户，比如git config --global user.name "username" && git config --global user.email "useremail@qq.com"
+"  7.  "coc-tabnine需要设置'ignore_all_lsp': true来加强补全效果
+"}}}
 " ========================================
-" 【必看】配置文件的坑:
+" 【必看】配置文件的坑:{{{
 "   1. 映射<Plug>(...)必须用递归映射, 否则不生效
 "   2. 映射ex命令的时候不能用noremap, 因为这会导致按键出现奇奇怪怪的结果, 应该改成nnoremap
-"   3. vimrc文件let语句的等号两边不能写空格, 写了不生效!
+"   3. vimrc文件let语句的等号两边不能写空格, 写了不生效!}}}
 " ========================================
 
 let mapleader=' '
 let g:mapleader=' '
-
 
 " =========================================
 " 插件管理
@@ -599,6 +596,9 @@ Plug 'mg979/vim-visual-multi'
 Plug 'jsfaint/gen_tags.vim'
 let g:loaded_gentags#gtags = 1  " 设1关闭gtags功能, 这样可以关闭警告
 let g:loaded_gentags#ctags = 1
+" 设置gtags
+let $GTAGSLABEL = 'native-pygments'  " FIXME: 当项目文件的路径包含非ASCII字符时，使用pygments会报UnicodeEncodeError
+" let $GTAGSCONF = '/path/to/share/gtags/gtags.conf'
 
 " 浏览tags, 函数，类
 Plug 'liuchengxu/vista.vim'
@@ -718,6 +718,9 @@ call plug#end()
 "==========================================
 " HotKey Settings  自定义快捷键设置
 "==========================================
+"
+" 如果需要覆盖插件定义的映射，可用如下方式
+" autocmd VimEnter * noremap <leader>cc echo "my purpose"
 
 " 主要按键重定义
 inoremap kj <esc>
@@ -739,9 +742,6 @@ nnoremap <leader>rr @r
 nnoremap gb %zz
 " 查找当前单词
 nnoremap gi gi<esc>zzi
-
-" 如果需要覆盖插件定义的映射，可用如下方式
-" autocmd VimEnter * noremap <leader>cc echo "my purpose"
 
 " 替换模式串用法: 先用 / 查找, 然后再按下面的快捷键, subtitute查找域为空时会默认使用上次查找的内容
 nnoremap <leader>su :%s///gc<left><left><left>
@@ -841,12 +841,10 @@ vnoremap > >gv
 nnoremap < <<
 nnoremap > >>
 
-
 noremap Y y$
 " select all
 noremap <c-a> ggVG
 inoremap <c-a> <esc>ggVG
-cnoremap w!! w !sudo tee >/dev/null %
 " 保存后全部折叠
 cnoremap w<cr> w<cr>zMzz
 " 交换 ' `, 使得可以快速使用'跳到marked相同的位置
@@ -854,10 +852,9 @@ noremap ' `
 noremap ` '
 
 "==========================================
-" General Settings 基础设置
+" Theme Settings  主题设置
 "==========================================
-set termguicolors
-" let g:quantum_black=1
+set termguicolors  " 使用真色彩
 " NOTE: quantum主题是必开的, 用来提供lightline主题
 colorscheme quantum
 " colorscheme onedark
@@ -869,9 +866,11 @@ colorscheme quantum
 " colorscheme nova
 " colorscheme forest-night
 
+"==========================================
+" 基础设置{{{
+set background=dark
+set t_Co=256
 syntax on  " 开启语法高亮
-let $GTAGSLABEL = 'native-pygments'  " FIXME: 当项目文件的路径包含非ASCII字符时，使用pygments会报UnicodeEncodeError
-" let $GTAGSCONF = '/path/to/share/gtags/gtags.conf'
 set tags=./.tags;,.tags  " 让ctags改名为.tags，不污染工作区
 set confirm
 " set nowrap  " 取消换行
@@ -901,9 +900,53 @@ set backspace=eol,start,indent  " Configure backspace so it acts as it should ac
 set whichwrap+=<,>,h,l
 " set colorcolumn=80  " 高亮显示某一列,对代码宽度起到提示作用
 
+set viminfo+=!  " 保存viminfo全局信息
+set lazyredraw  " redraw only when we need to.
+set nocompatible  " 去掉有关vi一致性模式，避免以前版本的bug和局限
+set wildmenu  " 增强模式中的命令行自动完成操作
+set wildmode=longest,full
+"}}}
+" 设置wildmenu忽略的文件{{{
+set wildignore+=*.o,*.out,*.obj,.git,*.rbc,*.rbo,*.class,.svn,*.gem  " Disable output and VCS files
+set wildignore+=*.dll,*.bak,*.exe,*.pyc,*.jpg,*.gif,*.png  " Disable binary files
+set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz  " Disable archive files
+set wildignore+=*/vendor/gems/*,*/vendor/cache/*,*/.bundle/*,*/.sass-cache/*  " Ignore bundler and sass cache
+set wildignore+=*/tmp/cache/assets/*/sprockets/*,*/tmp/cache/assets/*/sass/*  " Ignore rails temporary asset caches
+set wildignore+=node_modules/*  " Ignore node modules
+set wildignore+=*.swp,*~,._*  " Disable temp and backup files
+set wildignorecase  " files or directoies auto completion is case insensitive
+set completeopt-=menu  " 让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
+set completeopt+=longest,menuone
+"}}}
+" 设置标记一列的背景颜色和数字一行颜色一致{{{
+hi! link SignColumn   LineNr
+hi! link ShowMarksHLl DiffAdd
+hi! link ShowMarksHLu DiffChange
+"}}}
+" for error highlight，防止错误整行标红导致看不清{{{
+highlight clear SpellBad
+highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
+highlight clear SpellCap
+highlight SpellCap term=underline cterm=underline
+highlight clear SpellRare
+highlight SpellRare term=underline cterm=underline
+highlight clear SpellLocal
+highlight SpellLocal term=underline cterm=underline
+"}}}
+" FileType Settings  文件类型设置{{{
+
+" 具体编辑文件类型的一般设置，比如不要 tab 等
+augroup tab_indent_settings_by_filetype
+    autocmd!
+    autocmd FileType python,ruby,javascript,html,css,xml,sass,scss set tabstop=4 shiftwidth=4 softtabstop=4 expandtab ai
+    autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown set filetype=markdown.mkd
+    autocmd BufRead,BufNewFile *.part set filetype=html
+    autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
+    autocmd BufWinEnter *.php set mps-=<:>  " disable showmatch when use > in php
+augroup end
+"}}}
 "==========================================
-" Display Settings 展示/排版等界面格式设置
-"==========================================
+" Display Settings 展示/排版等界面格式设置{{{
 
 set ruler  " 显示当前的行号列号
 set showmode  " 左下角显示当前vim模式
@@ -940,10 +983,9 @@ if &term =~ '256color'
   " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
   set t_ut=
 endif
-
+"}}}
 "==========================================
-" FileEncode Settings 文件编码,格式
-"==========================================
+" FileEncode Settings 文件编码,格式{{{
 
 set fencs=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1
 set encoding=utf-8  " 设置新文件的编码为 UTF-8
@@ -952,9 +994,9 @@ set helplang=cn
 set termencoding=utf-8  " 下面这句只影响普通模式 (非图形界面) 下的 Vim
 set formatoptions+=m  " 如遇Unicode值大于255的文本，不必等到空格再折行
 set formatoptions+=B  " 合并两行中文时，不在中间加空格
-
+"}}}
 "==========================================
-" others 其它设置
+" 自动行为设置
 "==========================================
 
 augroup auto_actions_for_better_experience
@@ -970,65 +1012,6 @@ augroup auto_actions_for_better_experience
     " Test插件要求工作目录在project根目录
     " autocmd BufEnter * silent! lcd %:p:h  " 自动切换当前目录为当前文件的目录
 augroup end
-
-set viminfo+=!  " 保存viminfo全局信息
-set lazyredraw  " redraw only when we need to.
-set nocompatible  " 去掉有关vi一致性模式，避免以前版本的bug和局限
-set wildmenu  " 增强模式中的命令行自动完成操作
-set wildmode=longest,full
-" 设置wildmenu忽略的文件
-"{{{
-set wildignore+=*.o,*.out,*.obj,.git,*.rbc,*.rbo,*.class,.svn,*.gem  " Disable output and VCS files
-set wildignore+=*.dll,*.bak,*.exe,*.pyc,*.jpg,*.gif,*.png  " Disable binary files
-set wildignore+=*.zip,*.tar.gz,*.tar.bz2,*.rar,*.tar.xz  " Disable archive files
-set wildignore+=*/vendor/gems/*,*/vendor/cache/*,*/.bundle/*,*/.sass-cache/*  " Ignore bundler and sass cache
-set wildignore+=*/tmp/cache/assets/*/sprockets/*,*/tmp/cache/assets/*/sass/*  " Ignore rails temporary asset caches
-set wildignore+=node_modules/*  " Ignore node modules
-set wildignore+=*.swp,*~,._*  " Disable temp and backup files
-set wildignorecase  " files or directoies auto completion is case insensitive
-set completeopt-=menu  " 让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
-set completeopt+=longest,menuone
-"}}}
-
-"==========================================
-" FileType Settings  文件类型设置
-"==========================================
-
-" 具体编辑文件类型的一般设置，比如不要 tab 等
-augroup tab_indent_settings_by_filetype
-    autocmd!
-    autocmd FileType python,ruby,javascript,html,css,xml,sass,scss set tabstop=4 shiftwidth=4 softtabstop=4 expandtab ai
-    autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown set filetype=markdown.mkd
-    autocmd BufRead,BufNewFile *.part set filetype=html
-    autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
-    autocmd BufWinEnter *.php set mps-=<:>  " disable showmatch when use > in php
-augroup end
-
-"==========================================
-" Theme Settings  主题设置
-"==========================================
-
-" Set extra options when running in GUI mode
-"{{{
-if has("gui_running")
-    set guifont=Ubuntu Mono:h14
-    if has("gui_gtk2")   "GTK2
-        set guifont=Ubuntu Mono\ 12,Monospace\ 12
-    endif
-    set guioptions-=T
-    set guioptions+=e
-    set guioptions-=r
-    set guioptions-=L
-    set guitablabel=%M\ %t
-    set showtabline=1
-    set linespace=2
-    set noimd
-    set t_Co=256
-endif
-"}}}
-
-set background=dark
-set t_Co=256
 
 " 特定标记配色 TODO: FIXME: BUG: NOTE: HACK:
 "{{{
@@ -1047,25 +1030,10 @@ augroup highlight_my_keywords
 augroup end
 "}}}
 
-" 设置标记一列的背景颜色和数字一行颜色一致
-"{{{
-hi! link SignColumn   LineNr
-hi! link ShowMarksHLl DiffAdd
-hi! link ShowMarksHLu DiffChange
-"}}}
 
-" for error highlight，防止错误整行标红导致看不清
-"{{{
-highlight clear SpellBad
-highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
-highlight clear SpellCap
-highlight SpellCap term=underline cterm=underline
-highlight clear SpellRare
-highlight SpellRare term=underline cterm=underline
-highlight clear SpellLocal
-highlight SpellLocal term=underline cterm=underline
-"}}}
-
+" =============================================
+" 新增功能
+" =============================================
 " F1 - F6 设置
 " F1 废弃这个键,防止调出系统帮助
 noremap <F1> <nop>

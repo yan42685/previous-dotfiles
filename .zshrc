@@ -16,7 +16,7 @@ export MANPAGER="vim -c MANPAGER -"
 export BROWSER="chromium"
 # export NNN_SSHFS_OPTS="sshfs -o follow_symlinks"        # make sshfs follow symlinks on the remote
 export NNN_COLORS="2136"                        # use a different color for each context
-export NNN_TRASH=1                                      # trash (needs trash-cli) instead of delete
+export NNN_TRASH=1     # trash (needs trash-cli) instead of delete
 
 # Set fzf installation directory path
 
@@ -55,7 +55,7 @@ alias rm='trash'
 # alias vim='vim --servername $VIM_SERVERNAME --remote "+wincmd o | Tclose"';
 # fi
 # }}}
-#
+
 bindkey 'kj' vi-cmd-mode
 bindkey '^h' beginning-of-line
 bindkey '^l' end-of-line
@@ -66,6 +66,7 @@ bindkey -M vicmd 'H' vi-beginning-of-line
 bindkey -M vicmd 'L' vi-end-of-line
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
+
 
 ###############################################################################################################################################
 # 下面内容都是自动生成的
