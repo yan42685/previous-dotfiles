@@ -199,7 +199,6 @@ nmap <silent> gr <Plug>(coc-references)
 " 查看文档
 nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
 " 打开鼠标位置下的链接
-" nmap <silent> gl <Plug>(coc-openlink)
 nmap <silent> <leader>re <Plug>(coc-rename)
 
 " coc-translator
@@ -529,9 +528,10 @@ Plug 'maximbaz/lightline-ale'
 
 " 启动页面
 Plug 'mhinz/vim-startify'
+"{{{
 let g:startify_lists = [
-            \ { 'type': 'files',     'header': ['   MRU']            }, { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
             \ { 'type': 'sessions',  'header': ['   Sessions']       },
+            \ { 'type': 'files',     'header': ['   MRU']            },
             \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
             \ ]
 let g:startify_session_persistence = 1  " 持久化session
@@ -559,30 +559,25 @@ let g:utf8_middle_finger = [
             \ '▓▓▓▓▓▓█████░░░░░░░░░██░░░░░░',
             \ ]
 
+" I get it from https://fsymbols.com/text-art/
 let g:utf8_double_moon = [
-            \ '┊┊┊┊      __    _   _                              _ ',
-            \ '┊┊┊☆     / _|  | | (_)  _ __    _ __     ___    __| |',
-            \ "┊┊🌙  *  | |_  | | | | | '_ \\  | '_ \\   / _ \\  / _` |",
-            \ '┊┊       |  _| | | | | | |_) | | |_) | |  __/ | (_| |',
-            \ '┊☆ °     |_|   |_| |_| | .__/  | .__/   \___|  \__,_|',
-            \ '🌙                     |_|     |_|                   ',
+            \ '┊┊┊┊      ' . '███████╗██╗     ██╗ ██████╗ ██████╗ ███████╗██████╗ ',
+            \ '┊┊┊☆      ' . '██╔════╝██║     ██║ ██╔══██╗██╔══██╗██╔════╝██╔══██╗',
+            \ '┊┊🌙  *   ' . '█████╗  ██║     ██║ ██████╔╝██████╔╝█████╗  ██║  ██║',
+            \ '┊┊        ' . '██╔══╝  ██║     ██║ ██╔═══╝ ██╔═══╝ ██╔══╝  ██║  ██║',
+            \ '┊☆ °      ' . '██║     ███████╗██║ ██║     ██║     ███████╗██████╔╝',
+            \ '🌙        ' . '╚═╝     ╚══════╝╚═╝ ╚═╝     ╚═╝     ╚══════╝╚═════╝ ',
             \ ]
+
+
 let g:startify_custom_header =
             \ 'startify#pad(g:utf8_double_moon)'
-
-
-" __   _   _                              _
-" / _| | | (_)  _ __    _ __     ___    __| |
-" | |_  | | | | | '_ \  | '_ \   / _ \  / _` |
-" |  _| | | | | | |_) | | |_) | |  __/ | (_| |
-" |_|   |_| |_| | .__/  | .__/   \___|  \__,_|
-" |_|     |_|
-
-" :Startify
-" :SSave
-" :SLoad
-" :SClose
-" highlight StartifyHeader  ctermfg=114
+"}}}
+" Project(Session) index
+nnoremap <leader>pi :Startify<cr>
+nnoremap <leader>ps :SSave<cr>
+nnoremap <leader>pl :SLoad<cr>
+nnoremap <leader>pc :SClose<cr>
 
 
 
@@ -1224,4 +1219,28 @@ if s:enable_file_autosave
 endif
 "}}}
 "
+" <c-j><c-k>移动quickfix
+"{{{
+function List_is_opened(type) abort
+    if a:type == "quickfix"
+        let g:my_check_quickfix_ids = getqflist({"winid" : 1})
+    endif
+    return get(g:my_check_quickfix_ids, "winid", 0) != 0
+endfunction
 "
+function Change_ctrljk_for_quickfix() abort
+    if List_is_opened("quickfix")
+        nnoremap <c-j> :cnext<cr>
+        nnoremap <c-k> :cprevious<cr>
+    else
+        nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>
+        nnoremap <c-k> :call ScrollAnotherWindow(1)<CR>
+    endif
+endfunction
+"}}}
+autocmd WinNew,WinEnter,WinLeave,BufLeave,BufEnter * call Change_ctrljk_for_quickfix()
+"
+"
+"自动make
+autocmd FileType c set makeprg=if\ \[\ -f\ \"Makefile\"\ \];then\ make\ $*;else\ gcc\ -O2\ -g\ -Wall\ -Wextra\ -o'%<'\ '%'\ -lm;fi
+autocmd FileType cpp set makeprg=if\ \[\ -f\ \"Makefile\"\ \];then\ make\ $*;else\ g++\ -O2\ -g\ -Wall\ -Wextra\ -o'%<'\ '%'\ -lm;fi
