@@ -1,5 +1,12 @@
 {
 
+    "list.insertMappings": {
+        // 切换过滤匹配模式 普通/严格/正则
+        "<c-r>": "do:switch"
+    },
+    "list.normalMappings": {
+        "q": "do:exit"
+    },
     "yank.enableCompletion": false,
     "yank.highlight.enable": false,
     // 补全启动时自动选择第一项

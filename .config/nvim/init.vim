@@ -1,4 +1,6 @@
-﻿" TODO: 改掉Leader插件那里安装的特定tag(之前因为最新版会报错才指定了特定版本)
+﻿" TODO: 配置sesson自动保存
+" TODO: 增加tab的操作，整合coclist
+" TODO: 改掉Leader插件那里安装的特定tag(之前因为最新版会报错才指定了特定版本)
 " 只考虑NeoVim，不一定兼容Vim
 "
 " 我所理解的Vim哲学:
@@ -112,7 +114,15 @@ call plug#begin('~/.vim/plugged')
 
 " {{{插件
 
-" 极大增强f查找能力
+" 极大增强f和t查找能力 , f<cr>会重复上次搜索的字母, f会自动重复搜索
+Plug 'rhysd/clever-f.vim'
+let g:clever_f_smart_case = 1  " smart case
+let g:clever_f_chars_match_any_signs = 1  " 可以搜索所有的字符,比如;,.
+let g:clever_f_repeat_last_char_inputs = ["\<CR>", "\<Tab>"]  " 使用上次的输入
+let g:clever_f_mark_char_color = 'MyHack'
+
+
+" 快速移动
 Plug 'easymotion/vim-easymotion'
 map <silent> <leader>f <Plug>(easymotion-bd-f)
 
@@ -213,6 +223,7 @@ vmap ,t <Plug>(coc-translator-pv)
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 nnoremap <silent> <leader> :WhichKey '<space>'<cr>
 nnoremap <silent> , :WhichKey ','<cr>
+nnoremap <silent> g :WhichKey 'g'<cr>
 
 " git
 Plug 'tpope/vim-fugitive'
@@ -570,6 +581,7 @@ nnoremap <leader>pi :Startify<cr>
 nnoremap <leader>ps :SSave<cr>
 nnoremap <leader>pl :SLoad<cr>
 nnoremap <leader>pc :SClose<cr>
+nnoremap <leader>pd :SDelete<cr>
 
 " 括号配对优化
 Plug 'jiangmiao/auto-pairs'
@@ -745,6 +757,10 @@ autocmd FileType html,css EmmetInstall
 " 自动关闭标签
 Plug 'alvan/vim-closetag'
 
+" markdown代码内高亮
+Plug 'tpope/vim-markdown'
+" TODO: 不知道还能不能用其他语言的高亮
+let g:markdown_fenced_languages = ['html', 'css', 'js=javascript', 'python', 'bash=sh']
 " MarkDown预览
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 
@@ -818,6 +834,8 @@ nnoremap <silent> N Nzz
 nnoremap <silent> * *zz
 nnoremap <silent> # #zz
 nnoremap G Gzz
+" 定义这个是为了让which-key查询的时候不报错
+nnoremap gg gg
 nnoremap gv gvzz
 " 去掉搜索高亮
 nnoremap <silent> <leader>/ :nohls<cr>zz
