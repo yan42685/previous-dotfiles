@@ -1,4 +1,5 @@
-﻿" 只考虑NeoVim，不一定兼容Vim
+﻿" TODO: 改掉Leader插件那里安装的特定tag(之前因为最新版会报错才指定了特定版本)
+" 只考虑NeoVim，不一定兼容Vim
 "
 " 我所理解的Vim哲学:
 "   1. 抓住主要问题, 用相对简单和有意义的按键映射出现频率高的操作, 而非常冷门的操作不设置快捷键，可以考虑用别的方式替代
@@ -236,7 +237,7 @@ nnoremap ,gw :Gwrite<CR><CR>
 
 
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式
-Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+Plug 'Yggdroot/LeaderF', { 'tag': 'd6a2c7b94df2e7b65a2009fee01b999004aa9076','do': './install.sh' }
 "{{{
 let g:Lf_WildIgnore = {
             \ 'dir': ['.svn','.git','.hg','.vscode','.wine','.deepinwine','.oh-my-zsh'],
@@ -250,7 +251,6 @@ let g:Lf_RgConfig = [
     \ "--hidden",
     \
 \ ]
-" let g:Lf_WindowPosition = 'popup'  " 用popup方式展示搜索内容
 let g:Lf_PreviewInPopup = 1  " <c-p>预览弹出窗口
 let g:Lf_CursorBlink = 0  " 取消光标闪烁
 let g:Lf_ShowHidden = 1  " 搜索结果包含隐藏文件
@@ -273,9 +273,9 @@ nnoremap <leader>gs :Leaderf searchHistory<cr>
 nnoremap <leader>gl :Leaderf line<cr>
 nnoremap <c-p> :Leaderf command<cr>
 " search word under cursor literally in all listed buffers
-" nnoremap <leader>sb :<C-U><C-R>=printf("Leaderf! rg -F --all-buffers -e %s ", expand("<cword>"))<CR><cr>
+nnoremap <leader>sb :<C-U><C-R>=printf("Leaderf! rg -F --all-buffers -e %s ", expand("<cword>"))<CR><cr>
 " search word under cursor in *.h and *.cpp *.c files.
-" nnoremap <leader>sc :<C-U><C-R>=printf("Leaderf! rg -e %s -g *.{h,cpp,c}", expand("<cword>"))<CR><cr>
+nnoremap <leader>sc :<C-U><C-R>=printf("Leaderf! rg -e %s -g *.{h,cpp,c}", expand("<cword>"))<CR><cr>
 
 " search visually selected text literally
 nnoremap <leader>sw :<C-U><C-R>=printf("Leaderf! rg -F -e %s", expand("<cword>"))<CR><cr>
