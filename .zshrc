@@ -1,15 +1,14 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# NOTE: 这些是必须放在p10k-instant-prompt前面的命令{{{
+# Disable flow control (ctrl+s, ctrl+q) to enable saving with ctrl+s in Vim
+stty -ixon -ixoff
+# }}}
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.{{{
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
-
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-# fi
-
+# }}}
 # export PATH variables{{{
 export EDITOR="nvim"
 export NNN_USE_EDITOR=1                                 # use the $EDITOR when opening text files
@@ -24,12 +23,10 @@ export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color? [Yes
 
 # load zgen
 source "${HOME}/.zgen/zgen.zsh"
-
 # if the init scipt doesn't exist
 if ! zgen saved; then
     echo "Creating a zgen save"
 
-    zgen load unixorn/autoupdate-zgen  # 自动更新zgen
     zgen oh-my-zsh
     zgen oh-my-zsh plugins/git
     zgen oh-my-zsh plugins/sudo
@@ -44,6 +41,20 @@ if ! zgen saved; then
     zgen load zsh-users/zsh-autosuggestions
     zgen load zsh-users/zsh-completions
     zgen load zsh-users/zsh-history-substring-search
+    zgen load chrissicool/zsh-256color  # 自动开启终端的256色
+    zgen load djui/alias-tips  # 如果使用的不是缩写命令，会自动提醒你之前定义的alias
+    zgen load peterhurford/git-it-on.zsh  # open your current folder, on your current branch, in GitHub or GitLab
+                                          # NOTE: This was built on a Mac. 在Linux不一定有效
+    zgen load
+    zgen load
+    zgen load
+    zgen load
+    zgen load
+    zgen load
+    zgen load
+    zgen load StackExchange/blackbox  # 在VCS里选择性加密文件 you don't have to worry about storing your VCS repo on an untrusted server
+    zgen load unixorn/autoupdate-zgen  # 自动更新zgen及相关插件
+
     # zgen load /path/to/super-secret-private-plugin
 
     # save all to init script
@@ -76,6 +87,7 @@ bindkey -M vicmd 'L' vi-end-of-line
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
 
+bindkey '^r' history-incremental-search-backward
 
 # {{{
 insert-last-command-output() {
@@ -114,6 +126,7 @@ ZSH_COLORIZE_STYLE="solarized-dark"
 ENABLE_CORRECTION="true"
 autoload -U colors && colors#
 # }}}
+# 其他设置
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
