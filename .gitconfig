@@ -36,7 +36,7 @@
     cane = commit --amend --no-edit
     # commit with a message
     cm = commit --message
-    ca = commit --all -message
+    ca = commit --all --message
 
     ### checkout ###
     # checkout - update the working tree to match a branch or paths. [same as "o" for "out"]
