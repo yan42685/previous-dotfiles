@@ -777,7 +777,13 @@ Plug 'alvan/vim-closetag'
 " MarkDown预览
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 
-
+" Todo List 和 笔记，文档管理
+Plug 'vimwiki/vimwiki'
+"{{{
+" 使用markdown而不是vimwiki的语法
+"let g:vimwiki_list = [{'path': '~/vimwiki/',
+            \ 'syntax': 'markdown', 'ext': '.md'}]
+"}}}
 
 " }}}
 
@@ -877,8 +883,8 @@ nnoremap <silent> <m-h> :bn<cr>
 " Window操作
 " flip two windows
 nnoremap <leader>wf <c-w><c-r>
-nnoremap <leader>ws <c-w>s<c-w>w
-nnoremap <leader>ww <c-w>w
+" split bottom window
+nnoremap <leader>ss <c-w>s<c-w>w
 " 窗口最大化 leaving only the help window open/maximized
 nnoremap <leader>wo <c-w>ozz
 noremap <silent> <leader>v :wincmd v<cr>:wincmd w<cr>

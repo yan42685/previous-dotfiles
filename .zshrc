@@ -1,3 +1,4 @@
+# 需要下载的软件: fzf, nnn
 # NOTE: 这些是必须放在p10k-instant-prompt前面的命令{{{
 # Disable flow control (ctrl+s, ctrl+q) to enable saving with ctrl+s in Vim
 stty -ixon -ixoff
@@ -27,7 +28,7 @@ export FuzzyFinder="fzf"
 # }}}
 # Options{{{
 ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc ${HOME}/.zshrc.local)  # .zshrc修改时自动更新
-    setopt correct_all
+setopt correct_all
 # }}}
 
 # load zgen
@@ -87,13 +88,14 @@ bindkey ',' autosuggest-accept
 bindkey 'kj' vi-cmd-mode
 bindkey '^h' beginning-of-line
 bindkey '^l' end-of-line
+# 增量查询历史命令记录
+bindkey '^r' history-incremental-search-backward
 bindkey '^k' history-substring-search-up
 bindkey '^j' history-substring-search-down
 bindkey ',' autosuggest-accept  # 采纳补全建议
 bindkey -M vicmd 'H' vi-beginning-of-line
 bindkey -M vicmd 'L' vi-end-of-line
 
-bindkey '^r' history-incremental-search-backward
 
 # {{{
 insert-last-command-output() {
