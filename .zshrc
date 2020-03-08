@@ -1,7 +1,14 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
+
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# fi
 
 # export PATH variables{{{
 export EDITOR="nvim"
@@ -22,6 +29,7 @@ source "${HOME}/.zgen/zgen.zsh"
 if ! zgen saved; then
     echo "Creating a zgen save"
 
+    zgen load unixorn/autoupdate-zgen  # 自动更新zgen
     zgen oh-my-zsh
     zgen oh-my-zsh plugins/git
     zgen oh-my-zsh plugins/sudo
@@ -42,6 +50,8 @@ if ! zgen saved; then
     zgen save
 fi
 
+ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc ${HOME}/.zshrc.local)  # .zshrc修改时自动更新
+
 alias ts="trash"
 # 安全的cp和mv，防止误操作覆盖同名文件
 alias cp="cp -ip"
@@ -55,7 +65,6 @@ alias rm='trash'
 
 # 采纳补全建议
 bindkey ',' autosuggest-accept
-
 bindkey 'kj' vi-cmd-mode
 bindkey '^h' beginning-of-line
 bindkey '^l' end-of-line
@@ -66,6 +75,18 @@ bindkey -M vicmd 'H' vi-beginning-of-line
 bindkey -M vicmd 'L' vi-end-of-line
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
+
+
+# {{{
+insert-last-command-output() {
+LBUFFER+="$(eval $history[$((HISTCMD-1))])"
+}
+zle -N insert-last-command-output
+# }}}
+bindkey '^[x' insert-last-command-output  # insert last command result
+bindkey -M menuselect '^M' .accept-line  # In menu completion, the Return key will accept the current selected match
+bindkey -s '^ ' ' git status --short^M'  # Ctrl+space: print Git status
+
 
 ###############################################################################################################################################
 # {{{ [弃用] Vim单实例
@@ -84,7 +105,7 @@ zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
 # }}}
 # Oh-My-Zsh设置{{{
 #
-# ZSH_THEME="powerlevel10k/powerlevel10k"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 ZSH_COLORIZE_STYLE="solarized-dark"
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS=true
@@ -94,8 +115,6 @@ ENABLE_CORRECTION="true"
 autoload -U colors && colors#
 # }}}
 
-source ~/powerlevel10k/powerlevel10k.zsh-theme
-source $ZSH/oh-my-zsh.sh
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
