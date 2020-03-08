@@ -79,8 +79,8 @@ bindkey ',' autosuggest-accept
 bindkey 'kj' vi-cmd-mode
 bindkey '^h' beginning-of-line
 bindkey '^l' end-of-line
-bindkey '^k' up-history
-bindkey '^j' down-history
+bindkey '^k' history-substring-search-up
+bindkey '^j' history-substring-search-down
 bindkey ',' autosuggest-accept  # 采纳补全建议
 bindkey -M vicmd 'H' vi-beginning-of-line
 bindkey -M vicmd 'L' vi-end-of-line

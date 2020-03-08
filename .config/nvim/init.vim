@@ -60,7 +60,8 @@
 "}}}
 "==========================================
 " 【可选项】{{{
-"  1. 终端设置cursor不闪烁, <c-a>全选, <c-c>,<m-i>复制粘贴, 设置透明终端, 用<leader>tt可以切换透明模式, 设置开启时窗口大小来达到启动max-size的目的
+"  1. 终端设置cursor不闪烁, <c-a>全选, <c-c>复制，<m-i>粘贴系统剪切板， 而Vim里面的<m-i>会被终端拦截，所以有相同的效果，
+"          然后在Vim映射<m-p>是粘贴0寄存器的内容. 设置透明终端, 用<leader>tt可以切换透明模式, 设置开启时窗口大小来达到启动max-size的目的
 "  2. 然后终端设置General-勾消Show menubar by default in new terminals
 "  3. 只能稍微调快一点键盘响应速度，调太快会导致一次按键多次响应
 "  4. 静态代码检查linter与排版器formatter（记得先换源）:
@@ -330,7 +331,7 @@ Plug 'svermeulen/vim-yoink'
 "{{{
 let g:yoinkMaxItems = 100
 let g:yoinkSyncNumberedRegisters = 1
-let g:yoinkIncludeDeleteOperations = 1
+" let g:yoinkIncludeDeleteOperations = 1
 if has('nvim')
     let g:yoinkSavePersistently = 1
 endif
@@ -339,7 +340,6 @@ let g:yoinkAutoFormatPaste = 1
 " 使用剪切板下条历史记录
 nmap <m-n> <plug>(YoinkPostPasteSwapBack)
 " 使用剪切板上条历史记录
-nmap <m-p> <plug>(YoinkPostPasteSwapForward)
 nmap p <plug>(YoinkPaste_p)
 nmap y <plug>(YoinkYankPreserveCursorPosition)
 xmap y <plug>(YoinkYankPreserveCursorPosition)
@@ -658,7 +658,7 @@ tnoremap <m-j> <c-\><c-n><c-w>j
 tnoremap <m-k> <c-\><c-n><c-w>k<esc>
 tnoremap <m-n> <c-\><c-n>
 " 粘贴寄存器0的内容到终端
-tnoremap <expr> <m-i> '<C-\><C-n>"0pi'
+tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
 tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
 
 " 多光标
@@ -863,8 +863,9 @@ cnoremap <c-h> <home>
 cnoremap <c-l> <end>
 cnoremap <c-d> <delete>
 inoremap <c-d> <delete>
-cnoremap <m-i> <c-r>0
-inoremap <m-i> <c-r>0
+cnoremap <m-p> <c-r>0
+inoremap <m-p> <c-r>0
+nnoremap <m-p> "0p
 
 inoremap <c-h> <esc>I
 inoremap <c-l> <esc>A

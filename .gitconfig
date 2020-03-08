@@ -144,6 +144,7 @@
     #
     reincarnate = !"f() { [[ -n $@ ]] && git checkout \"$@\" && git unpublish && git checkout master && git branch -D \"$@\" && git checkout -b \"$@\" && git publish; }; f"
 
+    ahead-of-master = log --oneline origin/master..HEAD  # Show commits that haven't made it to master yet.
     ps = push
     ft = fetch
     pl = pull
