@@ -20,7 +20,7 @@
 "  1. :PlugInstall
 "  2. 提供python和系统剪切板支持 sudo pip3 install pynvim && apt install xsel
 "  3. rm -rf ~/.viminfo 这样可以使自动回到上次编辑的地方功能生效, 然后重新打开vim(注意要以当前用户打开),vim会自动重建该文件.
-"  4. :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer
+"  4. :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer coc-yank
 "  5. ubuntu下用snap包管理器安装ccls, 作为C、C++的LSP (推荐用snap安装, 因为ccls作者提供的编译安装方式似乎有问题, 反正Ubuntu18.04不行)
 "  6. 安装Sauce Code Pro Nerd Font Complete字体(coc-explorer要用到), 然后设置终端字体为这个, 注意不是原始的Source Code Pro), 最简单的安装方法就是下载ttf文件然后双击安装
 "  7. 需要在/etc/crontab设置以下定时任务，定期清理undofile
@@ -206,13 +206,8 @@ nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
 nmap <silent> <leader>re <Plug>(coc-rename)
 
 " coc-translator
-" popup
 nmap ,t <Plug>(coc-translator-p)
 vmap ,t <Plug>(coc-translator-pv)
-" Plug 'voldikss/vim-translator'
-" let g:translator_window_type = 'popup'
-" nmap <silent> tt <Plug>Translate
-
 
 " keymap提示
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
@@ -236,7 +231,6 @@ nnoremap .go :Git checkout<Space>
 nnoremap ,ge :Gedit<CR>
 nnoremap ,gr :Gread<CR>
 nnoremap ,gw :Gwrite<CR><CR>
-
 
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式
 Plug 'Yggdroot/LeaderF', { 'tag': 'd6a2c7b94df2e7b65a2009fee01b999004aa9076','do': './install.sh' }
@@ -289,11 +283,18 @@ nnoremap <leader>rg :<C-U><C-R>=printf("Leaderf! rg -S -e")<CR><space>
 Plug 'Yggdroot/indentLine', {'for': 'python'}
 
 " 高亮书签marker
-" mx           Toggle mark 'x' and display it in the leftmost column
-" m<space>     Delete all marks from the current buffer
-" m/           Open location list and display marks from current buffer
+" 取消默认的快捷键{{{
+let g:SignatureMap = {
+\ 'Leader'             :  "m", 'PlaceNextMark'     :  "",  'ToggleMarkAtLine'   :  "",
+\ 'PurgeMarksAtLine'   :  "", 'DeleteMark'         :  "",  'PurgeMarks'         :  "",
+\ 'PurgeMarkers'       :  "", 'GotoNextLineAlpha'  :  "",  'GotoPrevLineAlpha'  :  "",
+\ 'GotoNextSpotAlpha'  :  "", 'GotoPrevSpotAlpha'  :  "",  'GotoNextLineByPos'  :  "",
+\ 'GotoPrevLineByPos'  :  "", 'GotoNextSpotByPos'  :  "",  'GotoPrevSpotByPos'  :  "",
+\ 'GotoNextMarker'     :  "", 'GotoPrevMarker'     :  "",  'GotoNextMarkerAny'  :  "",
+\ 'GotoPrevMarkerAny'  :  "", 'ListBufferMarks'    :  "",  'ListBufferMarkers'  :  ""
+\ }
+"}}}
 Plug 'kshenoy/vim-signature'
-nmap <leader>mc m<space>
 
 " 实时显示HEX颜色，比如#245984
 Plug 'ap/vim-css-color', {'for': ['css']}
@@ -324,29 +325,14 @@ Plug 'arp242/undofile_warn.vim'
 
 " 拼写检查
 Plug 'kamykn/spelunker.vim'
-highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=247 gui=underline guifg=#9e9e9e
 "{{{
+highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=247 gui=underline guifg=#9e9e9e
 " let g:spelunker_check_type = 2  " FIXME 如果打开大文件很慢就尝试开启此项 Spellcheck displayed words in buffer. Fast and dynamic
 "}}}
 
-" 快捷切换粘贴记录
-Plug 'svermeulen/vim-yoink'
-"{{{
-let g:yoinkMaxItems = 100
-let g:yoinkSyncNumberedRegisters = 1
-" let g:yoinkIncludeDeleteOperations = 1
-if has('nvim')
-    let g:yoinkSavePersistently = 1
-endif
-let g:yoinkAutoFormatPaste = 1
-"}}}
-" 使用剪切板下条历史记录
-nmap <m-n> <plug>(YoinkPostPasteSwapBack)
-" 使用剪切板上条历史记录
-nmap p <plug>(YoinkPaste_p)
-nmap y <plug>(YoinkYankPreserveCursorPosition)
-xmap y <plug>(YoinkYankPreserveCursorPosition)
-nnoremap gy :Yanks<cr>
+" 使用coc-yank
+nnoremap <silent> gy :<C-u>CocList --normal yank<cr>
+
 
 " 140+种语言的语法高亮包
 Plug 'sheerun/vim-polyglot'
@@ -585,8 +571,6 @@ nnoremap <leader>ps :SSave<cr>
 nnoremap <leader>pl :SLoad<cr>
 nnoremap <leader>pc :SClose<cr>
 
-
-
 " 括号配对优化
 Plug 'jiangmiao/auto-pairs'
 "{{{
@@ -610,11 +594,6 @@ let g:rainbow_active = 1
 
 " 【可能影响性能】侧栏显示git diff情况(要求vim8+)
 Plug 'mhinz/vim-signify'
-nnoremap <leader>df :SignifyHunkDiff<cr>
-nnoremap <leader>dF :SignifyDiff<cr>
-nnoremap <leader>dh :SignifyToggleHighlight<cr>
-nmap <leader>dn <plug>(signify-next-hunk)<cr>
-nmap <leader>dp <plug>(signify-prev-hunk)<cr>
 
 " coc-snippets是框架,这个是内容
 Plug 'honza/vim-snippets'
@@ -671,18 +650,14 @@ Plug 'mg979/vim-visual-multi'
 Plug 'jsfaint/gen_tags.vim'
 let g:loaded_gentags#gtags = 1  " 设1关闭gtags功能, 这样可以关闭警告
 let g:loaded_gentags#ctags = 1
-" 设置gtags
 let $GTAGSLABEL = 'native-pygments'  " FIXME: 当项目文件的路径包含非ASCII字符时，使用pygments会报UnicodeEncodeError
 " let $GTAGSCONF = '/path/to/share/gtags/gtags.conf'
 
 " 浏览tags, 函数，类
 Plug 'liuchengxu/vista.vim'
 "{{{
-" let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
-" let g:vista_icon_indent = ["▸ ", ""]
 let g:vista_default_executive = 'ctags'  " Executive used when opening vista sidebar without specifying it.
 let g:vista#renderer#enable_icon = 1  " Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
-" The default icons can't be suitable for all the filetypes, you can extend it as you wish.
 let g:vista#renderer#icons = {
 \   "function": "\uf794",
 \   "variable": "\uf71b",
@@ -693,16 +668,12 @@ nnoremap <leader>ot :Vista<cr>
 
 " 似乎是vim唯一的test插件, 支持CI
 " Plug 'janko/vim-test'
-"
-"
-
 
 " 新增文本对象
 " Plug 'targets.vim'
 "
 " %匹配对象增强, 建议把%改成m
 "Plug 'andymass/vim-matchup'
-"
 "
 " 类似VSCode的编译/测试/部署 任务工具
 "Plug 'skywind3000/asynctasks.vim'
