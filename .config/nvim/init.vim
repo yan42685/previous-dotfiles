@@ -794,17 +794,8 @@ nnoremap '. '.zz
 nnoremap <leader>su :%s///gc<left><left><left>
 vnoremap <leader>su :s///gc<left><left><left>
 " 退出系列
-noremap <silent> ,q <esc>:q<cr>
 noremap <silent> <leader>q <esc>:q<cr>
-noremap <silent> <c-w> <esc>:q<cr>
-
-noremap <silent> ,,q <esc>:qa!<cr>
 noremap <silent> <leader><leader>q <esc>:qa!<cr>
-" 和:wq功能类似, 但是不会写入未被修改的文件
-noremap <silent> ,x <esc>:x<cr>
-noremap <silent> <leader>x <esc>:x<cr>
-" 放弃buffer内的编辑操作, 回到刚打开文件的样子
-noremap <leader><leader>e <esc>:e!<cr>
 
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
