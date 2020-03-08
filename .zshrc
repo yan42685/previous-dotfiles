@@ -121,12 +121,6 @@ LS_COLORS="ow=01;36;40" && export LS_COLORS
 # make cd use the ls colours
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
 # }}}
-# Oh-My-Zsh设置{{{
-#
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS=true
-
-# }}}
 # 其他设置
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

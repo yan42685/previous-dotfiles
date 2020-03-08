@@ -7,7 +7,7 @@
 "      但其实<Plug>(easymotion-bd-f)就足以胜任日常快速移动所需要的绝大部分功能, 过多的快捷键及功能反而会是干扰
 "
 " 键位设计原则:
-"   1. 有意义，容易记忆
+"   1. 有意义，容易记忆.
 "   2. 每个指令均衡左右手指击键, 如果都在同一手上则尽量用不同的手指击键，尽量减小手指移动距离
 "
 "  推荐使用appimage来安装neovim，这样在每个平台都很方便使用
@@ -82,8 +82,9 @@
 " 【必看】配置文件的坑:{{{
 "   1. 映射<Plug>(...)必须用递归映射, 否则不生效
 "   2. 映射ex命令的时候不能用noremap, 因为这会导致按键出现奇奇怪怪的结果, 应该改成nnoremap
-"   3. vimrc文件let语句的等号两边不能写空格, 写了不生效!}}}
+"   3. vimrc文件let语句的等号两边不能写空格, 写了不生效!
 "   4. 单引号是raw String 而双引号才可以转义， 所以设置unicode字体的时候应该用双引号比如"\ue0b0"
+"}}}
 " ========================================
 
 " ==========================================
@@ -1077,6 +1078,28 @@ augroup auto_actions_for_better_experience
     autocmd BufEnter * if &buftype == 'help' | wincmd L | endif
     " Test插件要求工作目录在project根目录
     " autocmd BufEnter * silent! lcd %:p:h  " 自动切换当前目录为当前文件的目录
+    "
+    " <c-j><c-k>移动quickfix
+    "{{{
+    function List_is_opened(type) abort
+        if a:type == "quickfix"
+            let g:my_check_quickfix_ids = getqflist({"winid" : 1})
+        endif
+        return get(g:my_check_quickfix_ids, "winid", 0) != 0
+    endfunction
+    "
+    function Change_ctrljk_for_quickfix() abort
+        if List_is_opened("quickfix")
+            nnoremap <c-j> :cnext<cr>
+            nnoremap <c-k> :cprevious<cr>
+        else
+            nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>
+            nnoremap <c-k> :call ScrollAnotherWindow(1)<CR>
+        endif
+    endfunction
+    "}}}
+    autocmd WinNew,WinEnter,WinLeave,BufLeave,BufEnter * call Change_ctrljk_for_quickfix()
+
 augroup end
 
 " 开启语法高亮
@@ -1098,7 +1121,6 @@ augroup highlight_my_keywords
     autocmd Syntax * call matchadd('MyHack',  '\W\zsHACK:')
 augroup end
 "}}}
-
 
 " =============================================
 " 新增功能
@@ -1157,7 +1179,6 @@ nnoremap <c-d> :call ScrollAnotherWindow(4)<CR>
 nnoremap <c-g><c-g> :call ScrollAnotherWindow(5)<CR>
 nnoremap <c-s-g> :call ScrollAnotherWindow(6)<CR>
 
-
 " 切换透明模式, 需要预先设置好终端的透明度
 "{{{
 let t:is_transparent = 0
@@ -1176,7 +1197,6 @@ endfunction
 nnoremap <leader>tt :call Toggle_transparent_background()<CR>
 " 快速编辑init.vim
 nnoremap <leader>en :e $MYVIMRC<CR>
-
 " 删除隐藏的buffer
 "{{{
 function! DeleteHiddenBuffers()
@@ -1191,7 +1211,6 @@ function! DeleteHiddenBuffers()
 endfunction
 "}}}
 nnoremap <leader>bc :call DeleteHiddenBuffers()<cr>
-"
 " 查看highlighting group
 " Print stack of syntax highlighting groups for word under the cursor{{{
 function! s:synstack()
@@ -1199,8 +1218,8 @@ function! s:synstack()
 endfunction
 "}}}
 nnoremap <F8> :<C-u>call <SID>synstack()<CR>
-"
-" 自动保存{{{
+"自动保存
+" {{{
 function! s:Autosave(timed)
     if &readonly || mode() == 'c' || pumvisible()
         return
@@ -1227,32 +1246,13 @@ if s:enable_file_autosave
     augroup END
 endif
 "}}}
-"
-" <c-j><c-k>移动quickfix
+" 让JSONC的注释显色正常
 "{{{
-function List_is_opened(type) abort
-    if a:type == "quickfix"
-        let g:my_check_quickfix_ids = getqflist({"winid" : 1})
-    endif
-    return get(g:my_check_quickfix_ids, "winid", 0) != 0
-endfunction
-"
-function Change_ctrljk_for_quickfix() abort
-    if List_is_opened("quickfix")
-        nnoremap <c-j> :cnext<cr>
-        nnoremap <c-k> :cprevious<cr>
-    else
-        nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>
-        nnoremap <c-k> :call ScrollAnotherWindow(1)<CR>
-    endif
-endfunction
-"}}}
-autocmd WinNew,WinEnter,WinLeave,BufLeave,BufEnter * call Change_ctrljk_for_quickfix()
-"
 augroup enable_comment_highlighting_for_json
-    autocmd FileType json syntax match Comment +\/\/.\+$+  " 让JSONC的注释显色正常
+    autocmd FileType json syntax match Comment +\/\/.\+$+
 augroup end
-"
+"}}}
+
 "自动make
 augroup my_auto_make
     autocmd!
@@ -1260,17 +1260,19 @@ augroup my_auto_make
     autocmd FileType cpp set makeprg=if\ \[\ -f\ \"Makefile\"\ \];then\ make\ $*;else\ g++\ -O2\ -g\ -Wall\ -Wextra\ -o'%<'\ '%'\ -lm;fi
 augroup end
 
+" 添加空白行
+"{{{
 function! s:BlankUp(count) abort
-  put!=repeat(nr2char(10), a:count)
-  ']+1
-  silent! call repeat#set("\<Plug>unimpairedBlankUp", a:count)
+    put!=repeat(nr2char(10), a:count)
+    ']+1
+    silent! call repeat#set("\<Plug>unimpairedBlankUp", a:count)
 endfunction
 
 function! s:BlankDown(count) abort
-  put =repeat(nr2char(10), a:count)
-  '[-1
-  silent! call repeat#set("\<Plug>unimpairedBlankDown", a:count)
+    put =repeat(nr2char(10), a:count)
+    '[-1
+    silent! call repeat#set("\<Plug>unimpairedBlankDown", a:count)
 endfunction
-
+"}}}
 nnoremap [<space> :<c-u>call <sid>BlankDown(v:count1)<cr>
 nnoremap ]<space> :<c-u>call <sid>BlankUp(v:count1)<cr>
