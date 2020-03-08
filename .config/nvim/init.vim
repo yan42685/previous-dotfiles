@@ -767,16 +767,17 @@ autocmd FileType html,css EmmetInstall
 
 " 内嵌代码辅助缩进
 " Plug 'AndrewRadev/inline_edit.vim'
-"
-" 更好的JSON支持
-Plug 'elzr/vim-json', { 'for': 'json' }
-            \| au BufNewFile,BufRead *.json call Func_vim_json()
 
 " 自动关闭标签
 Plug 'alvan/vim-closetag'
 
 " MarkDown预览
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+
+Plug 'mcchrish/nnn.vim'
+let g:nnn#set_default_mappings = 0  " disable default mappings
+let g:nnn#layout = { 'left': '~20%' }
+nnoremap <silent> <leader>nn :NnnPicker '%:p:h'<cr>
 " }}}
 
 call plug#end()
@@ -1074,7 +1075,6 @@ augroup auto_actions_for_better_experience
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exec "normal! g'\" \| zz" | endif
     " 在右边窗口打开help
     autocmd BufEnter * if &buftype == 'help' | wincmd L | endif
-    autocmd FileType json syntax match Comment +\/\/.\+$+  " 让JSONC的注释显色正常
     " Test插件要求工作目录在project根目录
     " autocmd BufEnter * silent! lcd %:p:h  " 自动切换当前目录为当前文件的目录
 augroup end
@@ -1249,6 +1249,9 @@ endfunction
 "}}}
 autocmd WinNew,WinEnter,WinLeave,BufLeave,BufEnter * call Change_ctrljk_for_quickfix()
 "
+augroup enable_comment_highlighting_for_json
+    autocmd FileType json syntax match Comment +\/\/.\+$+  " 让JSONC的注释显色正常
+augroup end
 "
 "自动make
 augroup my_auto_make
