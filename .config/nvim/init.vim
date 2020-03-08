@@ -83,6 +83,7 @@
 "   1. 映射<Plug>(...)必须用递归映射, 否则不生效
 "   2. 映射ex命令的时候不能用noremap, 因为这会导致按键出现奇奇怪怪的结果, 应该改成nnoremap
 "   3. vimrc文件let语句的等号两边不能写空格, 写了不生效!}}}
+"   4. 单引号是raw String 而双引号才可以转义， 所以设置unicode字体的时候应该用双引号比如"\ue0b0"
 " ========================================
 
 " ==========================================
@@ -251,6 +252,7 @@ let g:Lf_RgConfig = [
     \ "--hidden",
     \
 \ ]
+let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2"  }
 let g:Lf_PreviewInPopup = 1  " <c-p>预览弹出窗口
 let g:Lf_CursorBlink = 0  " 取消光标闪烁
 let g:Lf_ShowHidden = 1  " 搜索结果包含隐藏文件
@@ -774,10 +776,8 @@ Plug 'alvan/vim-closetag'
 " MarkDown预览
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 
-Plug 'mcchrish/nnn.vim'
-let g:nnn#set_default_mappings = 0  " disable default mappings
-let g:nnn#layout = { 'left': '~20%' }
-nnoremap <silent> <leader>nn :NnnPicker '%:p:h'<cr>
+
+
 " }}}
 
 call plug#end()
@@ -819,7 +819,7 @@ vnoremap <leader>su :s///gc<left><left><left>
 noremap <silent> ,q <esc>:q<cr>
 noremap <silent> <leader>q <esc>:q<cr>
 noremap <silent> <c-w> <esc>:q<cr>
-inoremap <silent> <c-w> <esc>:q<cr>
+
 noremap <silent> ,,q <esc>:qa!<cr>
 noremap <silent> <leader><leader>q <esc>:qa!<cr>
 " 和:wq功能类似, 但是不会写入未被修改的文件

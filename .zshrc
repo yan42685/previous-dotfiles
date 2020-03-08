@@ -23,6 +23,11 @@ export NNN_COLORS="2136"                        # use a different color for each
 export NNN_TRASH=1     # trash (needs trash-cli) instead of delete
 export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color? [Yes, No, Abort, Edit] "
 export FuzzyFinder="fzf"
+
+# }}}
+# Options{{{
+ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc ${HOME}/.zshrc.local)  # .zshrc修改时自动更新
+    setopt correct_all
 # }}}
 
 # load zgen
@@ -49,13 +54,13 @@ if ! zgen saved; then
     zgen load djui/alias-tips  # 如果使用的不是缩写命令，会自动提醒你之前定义的alias
     zgen load peterhurford/git-it-on.zsh  # open your current folder, on your current branch, in GitHub or GitLab
                                           # NOTE: This was built on a Mac. 在Linux不一定有效
-    zgen load
-    zgen load
-    zgen load
-    zgen load
-    zgen load
-    zgen load
-    zgen load
+    # zgen load
+    # zgen load
+    # zgen load
+    # zgen load
+    # zgen load
+    # zgen load
+    # zgen load
     zgen load StackExchange/blackbox  # 在VCS里选择性加密文件 you don't have to worry about storing your VCS repo on an untrusted server
     zgen load unixorn/autoupdate-zgen  # 自动更新zgen及相关插件
 
@@ -65,7 +70,6 @@ if ! zgen saved; then
     zgen save
 fi
 
-ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc ${HOME}/.zshrc.local)  # .zshrc修改时自动更新
 
 alias ts="trash"
 # 安全的cp和mv，防止误操作覆盖同名文件
@@ -88,8 +92,6 @@ bindkey '^j' history-substring-search-down
 bindkey ',' autosuggest-accept  # 采纳补全建议
 bindkey -M vicmd 'H' vi-beginning-of-line
 bindkey -M vicmd 'L' vi-end-of-line
-bindkey -M vicmd 'k' history-substring-search-up
-bindkey -M vicmd 'j' history-substring-search-down
 
 bindkey '^r' history-incremental-search-backward
 
@@ -121,14 +123,9 @@ zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
 # }}}
 # Oh-My-Zsh设置{{{
 #
-ZSH_THEME="powerlevel10k/powerlevel10k"
-ZSH_COLORIZE_STYLE="solarized-dark"
 # Uncomment the following line if pasting URLs and other text is messed up.
 # DISABLE_MAGIC_FUNCTIONS=true
 
-# auto-correction
-ENABLE_CORRECTION="true"
-autoload -U colors && colors#
 # }}}
 # 其他设置
 
