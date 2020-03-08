@@ -1,15 +1,9 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-
-# Path to your oh-my-zsh installation.
-export ZSH="/home/yy/.oh-my-zsh"
+# export PATH variables{{{
 export EDITOR="nvim"
 export NNN_USE_EDITOR=1                                 # use the $EDITOR when opening text files
 export MANPAGER="vim -c MANPAGER -"
@@ -17,25 +11,36 @@ export BROWSER="chromium"
 # export NNN_SSHFS_OPTS="sshfs -o follow_symlinks"        # make sshfs follow symlinks on the remote
 export NNN_COLORS="2136"                        # use a different color for each context
 export NNN_TRASH=1     # trash (needs trash-cli) instead of delete
-
-# Set fzf installation directory path
-
-ZSH_THEME="powerlevel10k/powerlevel10k"
-ZSH_COLORIZE_STYLE="solarized-dark"
-LS_COLORS="ow=01;36;40" && export LS_COLORS  # 解决ls命令出现背景色的问题
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS=true
-
-# auto-correction
-ENABLE_CORRECTION="true"
-autoload -U colors && colors
-export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color? [Yes, No, Abort, Edit] "
-
-plugins=(git sudo z zsh-syntax-highlighting zsh-autosuggestions zsh-completions vi-mode extract colorize)
-
-source $ZSH/oh-my-zsh.sh
-
 export EDITOR='nvim'
+export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color? [Yes, No, Abort, Edit] "
+# }}}
+
+# load zgen
+source "${HOME}/.zgen/zgen.zsh"
+
+# if the init scipt doesn't exist
+if ! zgen saved; then
+    echo "Creating a zgen save"
+
+    zgen oh-my-zsh
+    zgen oh-my-zsh plugins/git
+    zgen oh-my-zsh plugins/sudo
+    zgen oh-my-zsh plugins/z
+    zgen oh-my-zsh plugins/vi-mode
+    zgen oh-my-zsh plugins/command-not-found
+    zgen oh-my-zsh plugins/extract
+    zgen oh-my-zsh plugins/colorize
+    zgen oh-my-zsh plugins/z
+    zgen load romkatv/powerlevel10k powerlevel10k
+    zgen load zsh-users/zsh-syntax-highlighting
+    zgen load zsh-users/zsh-autosuggestions
+    zgen load zsh-users/zsh-completions
+    zgen load zsh-users/zsh-history-substring-search
+    # zgen load /path/to/super-secret-private-plugin
+
+    # save all to init script
+    zgen save
+fi
 
 alias ts="trash"
 # 安全的cp和mv，防止误操作覆盖同名文件
@@ -48,14 +53,8 @@ alias vi='nvim'
 alias dot='/usr/bin/git --git-dir=/home/yy/.dotfiles/ --work-tree=/home/yy'   # 用于存放dotfiles
 alias rm='trash'
 
-# {{{ [弃用] Vim单实例
-# if [ -z "$VIMRUNTIME" ]; then
-# alias vim='vim --servername FOO';
-# else
-# # 单引号不用转义
-# alias vim='vim --servername $VIM_SERVERNAME --remote "+wincmd o | Tclose"';
-# fi
-# }}}
+# 采纳补全建议
+bindkey ',' autosuggest-accept
 
 bindkey 'kj' vi-cmd-mode
 bindkey '^h' beginning-of-line
@@ -68,12 +67,35 @@ bindkey -M vicmd 'L' vi-end-of-line
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
 
-
 ###############################################################################################################################################
-# 下面内容都是自动生成的
-source ~/powerlevel10k/powerlevel10k.zsh-theme
+# {{{ [弃用] Vim单实例
+# if [ -z "$VIMRUNTIME" ]; then
+# alias vim='vim --servername FOO';
+# else
+# # 单引号不用转义
+# alias vim='vim --servername $VIM_SERVERNAME --remote "+wincmd o | Tclose"';
+# fi
+# }}}
+# 以下两点是解决ls命令出现背景色的问题{{{
+# Change ls colours
+LS_COLORS="ow=01;36;40" && export LS_COLORS
+# make cd use the ls colours
+zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
+# }}}
+# Oh-My-Zsh设置{{{
+#
+# ZSH_THEME="powerlevel10k/powerlevel10k"
+ZSH_COLORIZE_STYLE="solarized-dark"
+# Uncomment the following line if pasting URLs and other text is messed up.
+# DISABLE_MAGIC_FUNCTIONS=true
 
+# auto-correction
+ENABLE_CORRECTION="true"
+autoload -U colors && colors#
+# }}}
+
+source ~/powerlevel10k/powerlevel10k.zsh-theme
+source $ZSH/oh-my-zsh.sh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

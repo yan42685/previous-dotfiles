@@ -644,11 +644,22 @@ function! AutoCompileAndRun() abort
     endif
 endfunction
 "}}}
+" 一键运行
 nnoremap <leader>rn :call AutoCompileAndRun()<cr>
 nnoremap <silent> <m-m> :botright Ttoggle<cr><c-w>w<c-\><c-n>i
 " 任何时候进入neoterm都是插入模式
 nnoremap <silent> <m-j> :botright Topen<cr><c-w>w<c-\><c-n>i
 inoremap <silent> <m-j> <esc>:botright Topen<cr>
+" 内置终端
+tnoremap <c-d> <c-\><c-n>:Tclose<cr>
+tnoremap <m-h> <c-\><c-n><c-w>h
+tnoremap <m-l> <c-\><c-n><c-w>l
+tnoremap <m-j> <c-\><c-n><c-w>j
+tnoremap <m-k> <c-\><c-n><c-w>k<esc>
+tnoremap <m-n> <c-\><c-n>
+" 粘贴寄存器0的内容到终端
+tnoremap <expr> <m-i> '<C-\><C-n>"0pi'
+tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
 
 " 多光标
 Plug 'mg979/vim-visual-multi'
@@ -1145,16 +1156,6 @@ nnoremap <c-d> :call ScrollAnotherWindow(4)<CR>
 nnoremap <c-g><c-g> :call ScrollAnotherWindow(5)<CR>
 nnoremap <c-s-g> :call ScrollAnotherWindow(6)<CR>
 
-" 内置终端
-tnoremap <c-d> <c-\><c-n>:Tclose<cr>
-tnoremap <m-h> <c-\><c-n><c-w>h
-tnoremap <m-l> <c-\><c-n><c-w>l
-tnoremap <m-j> <c-\><c-n><c-w>j
-tnoremap <m-k> <c-\><c-n><c-w>k<esc>
-tnoremap <m-n> <c-\><c-n>
-" 粘贴寄存器0的内容到终端
-tnoremap <expr> <m-i> '<C-\><C-n>"0pi'
-tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
 
 " 切换透明模式, 需要预先设置好终端的透明度
 "{{{
