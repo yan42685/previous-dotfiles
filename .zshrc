@@ -43,6 +43,7 @@ GIT_AUTO_FETCH_INTERVAL=1200 #in seconds
 # zsh-autosuggestion
 export ZSH_AUTOSUGGEST_USE_ASYNC="true"
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=244"
+FZ_HISTORY_CD_CMD="_zlua"  # NOTE: 必须在fz加载之前
 # }}}
 
 # {{{ completion settings
@@ -186,16 +187,16 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' l
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 # }}}
-FZ_HISTORY_CD_CMD="_zlua"
 
-# load zgen
+# load zgen Plugins
+# {{{
 source "${HOME}/.zgen/zgen.zsh"
 # if the init scipt doesn't exist
 if ! zgen saved; then
     echo "Creating a zgen save"
 
     zgen oh-my-zsh  # 加载oh-my-zsh的lib文件，但是不支持 DISABLE_LS_COLORS="true" 这样的 OMZ专属设置
-    zgen load skywind3000/z.lua  # Windows下也能用
+    zgen load skywind3000/z.lua  # Windows下也能用, FIXME: 如果z.lua不生效，就先把~/.zgen/ohmyzsh/ohmyzsh-master/plugins/z给删掉
                                 # NOTE: 必须放在fz之前加载
     zgen load changyuheng/fz    # 为z添加<tab>后的fuzzy补全列表, 并提供进入非历史目录的功能(即cd)
                                 # NOTE: 需要在z之后source, 依赖fzf
@@ -224,7 +225,7 @@ if ! zgen saved; then
     # save all to init script
     zgen save
 fi
-
+# }}}
 
 alias ts="trash"
 # 安全的cp和mv，防止误操作覆盖同名文件
@@ -238,10 +239,10 @@ alias rm='trash'
 alias nnn='PAGER= nnn'
 alias zh='z -I -t .'  # MRU
 alias zb='z -b'  # 项目目录
-alias zbf='z -b -I'
 alias zc='z -c' # 严格匹配当前路径的子路径
 alias zz='z -i' # 使用交互式选择模式
 alias zf='z -I' # 使用 fzf 对多个结果进行选择
+alias zbf='z -b -I'
 
 # 采纳补全建议
 bindkey ',' autosuggest-accept
@@ -268,7 +269,7 @@ bindkey -M menuselect '^M' .accept-line  # In menu completion, the Return key wi
 bindkey -s '^ ' ' git status --short^M'  # Ctrl+space: print Git status
 
 
-###############################################################################################################################################
+############################################################
 # {{{ [弃用] Vim单实例
 # if [ -z "$VIMRUNTIME" ]; then
 # alias vim='vim --servername FOO';
@@ -447,12 +448,14 @@ zcomp-gen () {
 }
 # }}}
 # }}}
-# Z.lua
-#
+# Z.lua{{{
 export _ZL_DATA="$HOME/.cache/.zlua"
 export _ZL_MATCH_MODE=1  # 增强匹配模式
 export _ZL_ROOT_MARKERS=".git,.svn,.hg,.root,package.json"  # 设定项目根目录列表
 function _z() { _zlua "$@"; }  # 整合fz与zlua
+# }}}
+
+############################################################
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
