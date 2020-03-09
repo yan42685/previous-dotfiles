@@ -121,7 +121,7 @@ let g:clever_f_mark_char_color = 'MyHack'
 
 
 " 快速移动
-Plug 'easymotion/vim-easymotion'
+Plug 'easymotion/vim-easymotion', {'on': '<Plug>(easymotion-bd-f)'}
 map <silent> <leader>f <Plug>(easymotion-bd-f)
 
 " 主题配色
@@ -132,7 +132,7 @@ Plug 'trevordmiller/nova-vim'
 Plug 'sainnhe/forest-night'
 
 " 快速注释
-Plug 'preservim/nerdcommenter'
+Plug 'preservim/nerdcommenter', {'on': '<plug>NERDCommenterToggle'}
 "{{{
 let g:NERDSpaceDelims = 1  " Add spaces after commeqt delimiters by default
 let g:NERDDefaultAlign = 'left'  " Align line-wise comment delimiters flush left instead of following code indentation
@@ -140,8 +140,8 @@ let g:NERDAltDelims_java = 1  " Set a language to use its alternate delimiters b
 let g:NERDTrimTrailingWhitespace = 1  " Enable trimming of trailing whitespace when uncommenting
 let g:NERDCommentEmptyLines = 1  " Allow commenting and inverting empty lines (useful when commenting a region)
 "}}}
-map <c-_> <leader>c<space>
-imap <c-_> <esc><c-_>
+map <c-_> <plug>NERDCommenterToggle
+imap <c-_> <esc><plug>NERDCommenterToggle
 
 " 文件树 (现在用的是coc-explorer)
 nmap <leader>er :CocCommand explorer<CR>
@@ -658,7 +658,7 @@ tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
 tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
 
 " 多光标
-Plug 'mg979/vim-visual-multi'
+" Plug 'mg979/vim-visual-multi'
 
 " 异步自动生成tags
 Plug 'jsfaint/gen_tags.vim'
@@ -924,7 +924,7 @@ colorscheme quantum
 " colorscheme neodark
 
 " colorscheme nova
-colorscheme forest-night
+" colorscheme forest-night
 
 "==========================================
 " 基础设置{{{
