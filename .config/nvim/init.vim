@@ -1007,7 +1007,6 @@ augroup tab_indent_settings_by_filetype
     autocmd BufWinEnter *.php set mps-=<:>  " disable showmatch when use > in php
 augroup end
 "}}}
-"==========================================
 " Display Settings 展示/排版等界面格式设置{{{
 
 set ruler  " 显示当前的行号列号
@@ -1046,7 +1045,6 @@ if &term =~ '256color'
   set t_ut=
 endif
 "}}}
-"==========================================
 " FileEncode Settings 文件编码,格式{{{
 
 set fencs=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1
@@ -1059,7 +1057,6 @@ set formatoptions+=B  " 合并两行中文时，不在中间加空格
 "}}}
 "==========================================
 " 自动行为设置
-"==========================================
 
 augroup auto_actions_for_better_experience
     autocmd!
@@ -1198,12 +1195,10 @@ let s:palette = {
               \ 'yellow':     ['#d8a657',   '214',  'Yellow'],
               \ 'green':      ['#a9b665',   '142',  'Green'],
               \ 'aqua':       ['#89b482',   '108',  'Cyan'],
-              \ 'blue':       ['#7daea3',   '109',  'Blue'],
+              \ 'grey':       ['#868d80',   '109',  'Blue'],
               \ 'purple':     ['#d3869b',   '175',  'Magenta'],
-              \ 'grey':       ['#928374',   '245',  'LightGrey'],
               \ 'none':       ['NONE',      'NONE', 'NONE']
               \ }
-
 
 function! s:HL(group, fg, bg, ...)
     let hl_string = [
@@ -1229,15 +1224,14 @@ function! s:HL(group, fg, bg, ...)
     execute join(hl_string, ' ')
 endfunction
 
-
 function s:Enable_normal_scheme() abort
     call s:HL('FoldColumn', s:palette.grey, s:palette.bg2)
     call s:HL('Folded', s:palette.grey, s:palette.none)
-    " call s:HL('SignColumn', s:palette.fg0, s:palette.bg2)
-    call s:HL('BlueSign', s:palette.blue, s:palette.bg2)
-    call s:HL('PurpleSign', s:palette.purple, s:palette.bg2)
+    call s:HL('SignColumn', s:palette.fg0, s:palette.none)
+    call s:HL('OrangeSign', s:palette.orange, s:palette.none)
+    call s:HL('PurpleSign', s:palette.purple, s:palette.none)
     " kshenoy/vim-signature
-    highlight! link SignatureMarkText BlueSign
+    highlight! link SignatureMarkText OrangeSign
     highlight! link SignatureMarkerText PurpleSign
 endfunction
 
@@ -1245,7 +1239,7 @@ function s:Enable_transparent_scheme() abort
     call s:HL('FoldColumn', s:palette.grey, s:palette.none)
     call s:HL('Folded', s:palette.grey, s:palette.none)
     call s:HL('SignColumn', s:palette.none, s:palette.none)
-    call s:HL('BlueSign', s:palette.blue, s:palette.none)
+    call s:HL('OrangeSign', s:palette.orange, s:palette.none)
     call s:HL('PurpleSign', s:palette.purple, s:palette.none)
 endfunction
 
