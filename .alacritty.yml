@@ -33,8 +33,17 @@ background_opacity: 0.7
 
 font:
   normal:
-    family:
-      'Sauce Code Pro Nerd Font'
+    family: 'Sauce Code Pro Nerd Font'
+  bold:
+    family: 'Sauce Code Pro Nerd Font Bold'
+    # family: 'Sauce Code Pro Nerd Font'
+    # family: 'Hack Bold'
+    # family: 'Monospace Bold'
+    # style: 'bold'
+  italic:
+    family: 'Sauce Code Pro Nerd Font Italic'
+  bold_italic:
+    family: 'Sauce Code Pro Nerd Fond Bold Italic'
 
 key_bindings:
   - {key: I, mods: Alt, action: PasteSelection}

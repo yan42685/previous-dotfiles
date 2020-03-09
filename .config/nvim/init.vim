@@ -129,6 +129,7 @@ Plug 'joshdick/onedark.vim'
 Plug 'tyrannicaltoucan/vim-quantum'
 Plug 'KeitaNakamura/neodark.vim'
 Plug 'trevordmiller/nova-vim'
+Plug 'sainnhe/gruvbox-material'
 Plug 'sainnhe/forest-night'
 
 " 快速注释
@@ -922,6 +923,7 @@ set termguicolors  " 使用真色彩
 colorscheme quantum
 " colorscheme onedark
 
+" colorscheme gruvbox-material
 " let g:neodark#use_256color = 1
 " colorscheme neodark
 
@@ -1098,11 +1100,11 @@ syntax on  " NOTE: 这条语句放在不同的地方会有不同的效果，经�
 
 " 特定标记配色 TODO: FIXME: BUG: NOTE: HACK:
 "{{{
-highlight MyTodo cterm=NONE ctermbg=180 ctermfg=black gui=bold guifg=#ff8700
-highlight MyNote cterm=NONE ctermbg=75 ctermfg=black gui=bold guifg=#19dd9d
-highlight MyFixme cterm=NONE ctermbg=189 ctermfg=black gui=bold guifg=#e697e6
-highlight MyBug cterm=NONE ctermbg=168 ctermfg=black gui=bold guifg=#dd698c
-highlight MyHack cterm=NONE ctermbg=240 ctermfg=black gui=bold guifg=#f4da9a
+highlight MyTodo cterm=bold ctermbg=180 ctermfg=black gui=bold guifg=#ff8700
+highlight MyNote cterm=bold ctermbg=75 ctermfg=black gui=bold guifg=#19dd9d
+highlight MyFixme cterm=bold ctermbg=189 ctermfg=black gui=bold guifg=#e697e6
+highlight MyBug cterm=bold ctermbg=168 ctermfg=black gui=bold guifg=#dd698c
+highlight MyHack cterm=bold ctermbg=240 ctermfg=black gui=bold guifg=#f4da9a
 augroup highlight_my_keywords
     autocmd!
     autocmd Syntax * call matchadd('MyTodo',  '\W\zs\(TODO\|CHANGED\|XXX\|DONE\):')
@@ -1124,7 +1126,7 @@ cnoremap <F1> <nop>
 
 " F2 行号开关，用于鼠标复制代码用, 为方便复制，用<F2>开启/关闭行号显示:
 " {{{
-function! HideNumber()
+function! ToggleColumnNumber()
   if(&relativenumber == &number)
     set relativenumber! number!
   elseif(&number)
@@ -1135,7 +1137,7 @@ function! HideNumber()
   set number?
 endfunc
 " }}}
-nnoremap <F2> :call HideNumber()<cr>
+nnoremap <F2> :call ToggleColumnNumber()<cr>
 
 " F6 语法开关，关闭语法可以加快大文件的展示
 nnoremap <F6> :exec exists('syntax_on') ? 'syn off' : 'syn on'<cr>
@@ -1171,20 +1173,102 @@ nnoremap <c-g><c-g> :call ScrollAnotherWindow(5)<CR>
 nnoremap <c-s-g> :call ScrollAnotherWindow(6)<CR>
 
 " 切换透明模式, 需要预先设置好终端的透明度
+let s:palette = {
+              \ 'bg0':        ['#282828',   '235',  'Black'],
+              \ 'bg1':        ['#302f2e',   '236',  'DarkGrey'],
+              \ 'bg2':        ['#32302f',   '236',  'DarkGrey'],
+              \ 'bg3':        ['#45403d',   '237',  'DarkGrey'],
+              \ 'bg4':        ['#45403d',   '237',  'DarkGrey'],
+              \ 'bg5':        ['#5a524c',   '239',  'DarkGrey'],
+              \ 'bg_grey0':   ['#7c6f64',   '243',  'DarkGrey'],
+              \ 'bg_grey1':   ['#a89984',   '246',  'LightGrey'],
+              \ 'bg_red':     ['#ea6962',   '167',  'Red'],
+              \ 'bg_green':   ['#a9b665',   '142',  'Green'],
+              \ 'bg_yellow':  ['#d8a657',   '214',  'Yellow'],
+              \ 'bg_green1':  ['#34381b',   '22',   'DarkGreen'],
+              \ 'bg_green2':  ['#3b4439',   '22',   'DarkGreen'],
+              \ 'bg_red1':    ['#402120',   '52',   'DarkRed'],
+              \ 'bg_red2':    ['#4c3432',   '52',   'DarkRed'],
+              \ 'bg_blue1':   ['#0e363e',   '17',   'DarkBlue'],
+              \ 'bg_blue2':   ['#374141',   '17',   'DarkBlue'],
+              \ 'fg0':        ['#d4be98',   '223',  'White'],
+              \ 'fg1':        ['#ddc7a1',   '223',  'White'],
+              \ 'red':        ['#ea6962',   '167',  'Red'],
+              \ 'orange':     ['#e78a4e',   '208',  'DarkYellow'],
+              \ 'yellow':     ['#d8a657',   '214',  'Yellow'],
+              \ 'green':      ['#a9b665',   '142',  'Green'],
+              \ 'aqua':       ['#89b482',   '108',  'Cyan'],
+              \ 'blue':       ['#7daea3',   '109',  'Blue'],
+              \ 'purple':     ['#d3869b',   '175',  'Magenta'],
+              \ 'grey':       ['#928374',   '245',  'LightGrey'],
+              \ 'none':       ['NONE',      'NONE', 'NONE']
+              \ }
+
+
+function! s:HL(group, fg, bg, ...)
+    let hl_string = [
+          \ 'highlight', a:group,
+          \ 'guifg=' . a:fg[0],
+          \ 'guibg=' . a:bg[0],
+          \ ]
+    if a:0 >= 1
+      if a:1 ==# 'undercurl'
+        call add(hl_string, 'gui=undercurl')
+        call add(hl_string, 'cterm=underline')
+      else
+        call add(hl_string, 'gui=' . a:1)
+        call add(hl_string, 'cterm=' . a:1)
+      endif
+    else
+      call add(hl_string, 'gui=NONE')
+      call add(hl_string, 'cterm=NONE')
+    endif
+    if a:0 >= 2
+      call add(hl_string, 'guisp=' . a:2[0])
+    endif
+    execute join(hl_string, ' ')
+endfunction
+
+
+function s:Enable_normal_scheme() abort
+    call s:HL('FoldColumn', s:palette.grey, s:palette.bg2)
+    call s:HL('Folded', s:palette.grey, s:palette.none)
+    " call s:HL('SignColumn', s:palette.fg0, s:palette.bg2)
+    call s:HL('BlueSign', s:palette.blue, s:palette.bg2)
+    call s:HL('PurpleSign', s:palette.purple, s:palette.bg2)
+    " kshenoy/vim-signature
+    highlight! link SignatureMarkText BlueSign
+    highlight! link SignatureMarkerText PurpleSign
+endfunction
+
+function s:Enable_transparent_scheme() abort
+    call s:HL('FoldColumn', s:palette.grey, s:palette.none)
+    call s:HL('Folded', s:palette.grey, s:palette.none)
+    call s:HL('SignColumn', s:palette.none, s:palette.none)
+    call s:HL('BlueSign', s:palette.blue, s:palette.none)
+    call s:HL('PurpleSign', s:palette.purple, s:palette.none)
+endfunction
+
+call s:Enable_normal_scheme()
+
+
 "{{{
 let t:is_transparent = 0
 function! Toggle_transparent_background()
   if t:is_transparent == 1
     windo set cursorline
     syn off | syn on
+    call s:Enable_normal_scheme()
     let t:is_transparent = 0
   else
-    windo set nocursorline  " 对所有窗口
+    windo set nocursorline
     hi Normal guibg=NONE ctermbg=NONE
+    call s:Enable_transparent_scheme()
     let t:is_transparent = 1
   endif
 endfunction
 "}}}
+
 nnoremap <leader>tt :call Toggle_transparent_background()<CR>
 " 快速编辑init.vim
 nnoremap <leader>en :e $MYVIMRC<CR>
