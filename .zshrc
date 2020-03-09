@@ -186,6 +186,7 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' l
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 # }}}
+FZ_HISTORY_CD_CMD="_zlua"
 
 # load zgen
 source "${HOME}/.zgen/zgen.zsh"
@@ -194,14 +195,16 @@ if ! zgen saved; then
     echo "Creating a zgen save"
 
     zgen oh-my-zsh  # 加载oh-my-zsh的lib文件，但是不支持 DISABLE_LS_COLORS="true" 这样的 OMZ专属设置
+    zgen load skywind3000/z.lua  # Windows下也能用
+                                # NOTE: 必须放在fz之前加载
+    zgen load changyuheng/fz    # 为z添加<tab>后的fuzzy补全列表, 并提供进入非历史目录的功能(即cd)
+                                # NOTE: 需要在z之后source, 依赖fzf
     zgen oh-my-zsh plugins/git
     zgen oh-my-zsh plugins/sudo
-    zgen oh-my-zsh plugins/z
     zgen oh-my-zsh plugins/vi-mode
     zgen oh-my-zsh plugins/command-not-found
     zgen oh-my-zsh plugins/extract
     zgen oh-my-zsh plugins/colorize
-    zgen oh-my-zsh plugins/z
     zgen oh-my-zsh plugins/git-auto-fetch
     zgen load romkatv/powerlevel10k powerlevel10k
     zgen load zsh-users/zsh-syntax-highlighting
@@ -213,8 +216,6 @@ if ! zgen saved; then
     zgen load hlissner/zsh-autopair
     zgen load peterhurford/git-it-on.zsh  # open your current folder, on your current branch, in GitHub or GitLab
                                           # NOTE: This was built on a Mac. 在Linux不一定有效, 并且只有当文件夹名字和远程仓库一致才有效
-    zgen load changyuheng/fz    # 为z添加<tab>后的fuzzy补全列表, 并提供进入非历史目录的功能(即cd)
-                                # NOTE: 需要在z之后source, 依赖fzf
     zgen load StackExchange/blackbox  # 在VCS里选择性加密文件 you don't have to worry about storing your VCS repo on an untrusted server
     zgen load unixorn/autoupdate-zgen  # 自动更新zgen及相关插件
 
@@ -235,6 +236,12 @@ alias vi='nvim'
 alias dot='/usr/bin/git --git-dir=/home/yy/.dotfiles/ --work-tree=/home/yy'   # 用于存放dotfiles
 alias rm='trash'
 alias nnn='PAGER= nnn'
+alias zh='z -I -t .'  # MRU
+alias zb='z -b'  # 项目目录
+alias zbf='z -b -I'
+alias zc='z -c' # 严格匹配当前路径的子路径
+alias zz='z -i' # 使用交互式选择模式
+alias zf='z -I' # 使用 fzf 对多个结果进行选择
 
 # 采纳补全建议
 bindkey ',' autosuggest-accept
@@ -440,7 +447,12 @@ zcomp-gen () {
 }
 # }}}
 # }}}
-
+# Z.lua
+#
+export _ZL_DATA="$HOME/.cache/.zlua"
+export _ZL_MATCH_MODE=1  # 增强匹配模式
+export _ZL_ROOT_MARKERS=".git,.svn,.hg,.root,package.json"  # 设定项目根目录列表
+function _z() { _zlua "$@"; }  # 整合fz与zlua
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
