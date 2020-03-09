@@ -1,4 +1,4 @@
-# 需要下载的软件: fzf, nnn, trash
+# 需要下载的软件: fzf, nnn, trash, lua
 # NOTE: 这些是必须放在p10k-instant-prompt前面的命令{{{
 # Disable flow control (ctrl+s, ctrl+q) to enable saving with ctrl+s in Vim
 stty -ixon -ixoff
@@ -237,12 +237,13 @@ alias vi='nvim'
 alias dot='/usr/bin/git --git-dir=/home/yy/.dotfiles/ --work-tree=/home/yy'   # 用于存放dotfiles
 alias rm='trash'
 alias nnn='PAGER= nnn'
+alias zho='z ~'
 alias zh='z -I -t .'  # MRU
 alias zb='z -b'  # 项目目录
 alias zc='z -c' # 严格匹配当前路径的子路径
-alias zz='z -i' # 使用交互式选择模式
 alias zf='z -I' # 使用 fzf 对多个结果进行选择
 alias zbf='z -b -I'
+alias diff='nvim -d'
 
 # 采纳补全建议
 bindkey ',' autosuggest-accept
