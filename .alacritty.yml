@@ -37,5 +37,5 @@ font:
       'Sauce Code Pro Nerd Font'
 
 key_bindings:
-  - {key: I, mods: Alt, action: Paste}
+  - {key: I, mods: Alt, action: PasteSelection}
   - {key: C, mods: Control, action: Copy}

@@ -924,7 +924,7 @@ colorscheme quantum
 " colorscheme neodark
 
 " colorscheme nova
-" colorscheme forest-night
+colorscheme forest-night
 
 "==========================================
 " 基础设置{{{
