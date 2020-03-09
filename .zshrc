@@ -1,4 +1,4 @@
-# 需要下载的软件: fzf, nnn
+# 需要下载的软件: fzf, nnn, trash
 # NOTE: 这些是必须放在p10k-instant-prompt前面的命令{{{
 # Disable flow control (ctrl+s, ctrl+q) to enable saving with ctrl+s in Vim
 stty -ixon -ixoff
@@ -10,18 +10,42 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 # }}}
-# 其他设置
+
+# export PATH variables{{{
+export TERM=xterm-256color
+export NNN_USE_EDITOR=1                                 # use the $EDITOR when opening text files
+export EDITOR=vim
+# 下面这条选项会让git的输出用nvim来打开
+# export PAGER="nvim --cmd 'let g:vimManPager = 1' -c MANPAGER -"
+export MANPAGER="nvim --cmd 'let g:vimManPager = 1' -c MANPAGER -"
+export BROWSER="chromium"
+export NNN_COLORS="2136"                        # use a different color for each context
+export NNN_TRASH=1     # trash (needs trash-cli) instead of delete
+export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color? [Yes, No, Abort, Edit] "
+export FuzzyFinder="fzf"
+
+# }}}
+
+# General settings{{{
 set -o monitor
 set +o nonotify
 umask 077  # 新建文件的权限
-# 插件设置
-# Auto load
+setopt hist_save_no_dups hist_ignore_dups       # eliminate duplicate entries in history
+setopt correctall                               # enable auto correction
+setopt autopushd pushdignoredups                # auto push dir into stack and and don’t duplicate them
+autoload -U promptinit && promptinit  # FIXME: 不太了解这句话的作用
+# }}}
+
+# Plugin settings{{{
+ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc)  # .zshrc修改时自动更新zgen
 ZGEN_AUTOLOAD_COMPINIT=0  # 不要使用ZGEN的compinit
-autoload -U +X compinit && compinit
-autoload -U +X bashcompinit && bashcompinit
 GIT_AUTO_FETCH_INTERVAL=1200 #in seconds
-# {{{ completion
-#
+# zsh-autosuggestion
+export ZSH_AUTOSUGGEST_USE_ASYNC="true"
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=244"
+# }}}
+
+# {{{ completion settings
 autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
@@ -162,10 +186,6 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' l
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.<->.<->' '^[-[:alnum:]]##(.[-[:alnum:]]##)##' '*@*'
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 # }}}
-# {{{zsh-autosuggestions
-export ZSH_AUTOSUGGEST_USE_ASYNC="true"
-export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=244"
-# }}}
 
 # load zgen
 source "${HOME}/.zgen/zgen.zsh"
@@ -189,17 +209,12 @@ if ! zgen saved; then
     zgen load zsh-users/zsh-completions
     zgen load zsh-users/zsh-history-substring-search
     zgen load djui/alias-tips  # 如果使用的不是缩写命令，会自动提醒你之前定义的alias
+    zgen load urbainvaes/fzf-marks
+    zgen load hlissner/zsh-autopair
     zgen load peterhurford/git-it-on.zsh  # open your current folder, on your current branch, in GitHub or GitLab
                                           # NOTE: This was built on a Mac. 在Linux不一定有效, 并且只有当文件夹名字和远程仓库一致才有效
-    zgen load changyuheng/fz    # 为z添加<tab>后的fuzzy补全列表
+    zgen load changyuheng/fz    # 为z添加<tab>后的fuzzy补全列表, 并提供进入非历史目录的功能(即cd)
                                 # NOTE: 需要在z之后source, 依赖fzf
-
-    # zgen load
-    # zgen load
-    # zgen load
-    # zgen load
-    # zgen load
-    # zgen load
     zgen load StackExchange/blackbox  # 在VCS里选择性加密文件 you don't have to worry about storing your VCS repo on an untrusted server
     zgen load unixorn/autoupdate-zgen  # 自动更新zgen及相关插件
 
@@ -219,6 +234,7 @@ alias vi='nvim'
 # alias vim='nvim'
 alias dot='/usr/bin/git --git-dir=/home/yy/.dotfiles/ --work-tree=/home/yy'   # 用于存放dotfiles
 alias rm='trash'
+alias nnn='PAGER= nnn'
 
 # 采纳补全建议
 bindkey ',' autosuggest-accept
@@ -258,29 +274,173 @@ bindkey -s '^ ' ' git status --short^M'  # Ctrl+space: print Git status
 # Change ls colours
 LS_COLORS="ow=01;36;40" && export LS_COLORS
 # }}}
-# export PATH variables{{{
-export TERM=xterm-256color
-export NNN_USE_EDITOR=1                                 # use the $EDITOR when opening text files
-export EDITOR=vim
-# 下面这条选项会让git的输出用nvim来打开
-# export PAGER="nvim --cmd 'let g:vimManPager = 1' -c MANPAGER -"
-export MANPAGER="nvim --cmd 'let g:vimManPager = 1' -c MANPAGER -"
-export BROWSER="chromium"
-export NNN_COLORS="2136"                        # use a different color for each context
-export NNN_TRASH=1     # trash (needs trash-cli) instead of delete
-export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color? [Yes, No, Abort, Edit] "
-export FuzzyFinder="fzf"
-
+# {{{ 命令行浏览Reddit的工具: rtv
+export RTV_EDITOR="vim"
+export RTV_BROWSER="w3m"
+export RTV_URLVIEWER="urlscan"
 # }}}
-# Options{{{
-ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc)  # .zshrc修改时自动更新zgen
-setopt COMPLETEALIASES     # complete alias
-setopt correctall
-
-
-
-#########  completion #########
+# {{{fzf
+# export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_DEFAULT_OPTS="
+-m --height=50%
+--layout=reverse
+--prompt='➤ '
+--ansi
+--tabstop=4
+--color=dark
+--color=bg:-1,hl:2,fg+:4,bg+:-1,hl+:2
+--color=info:11,prompt:2,pointer:5,marker:1,spinner:3,header:11
+"
 # }}}
+# {{{fzf-marks
+# Usage: mark fzm C-d
+FZF_MARKS_FILE="$HOME/.cache/fzf-marks"
+FZF_MARKS_COMMAND="fzf"
+FZF_MARKS_COLOR_RHS="249"
+# }}}
+# {{{Utility Functions 可以在命令行直接使用
+test_cmd_pre() { # {{{
+    command -v "$1" >/dev/null
+} # }}}
+test_cmd() { # {{{
+    test_cmd_pre "$1" && echo 'yes' || echo 'no'
+} # }}}
+# {{{FuzzyFinder
+# fuzzy match dirs and cd
+cdf() {
+    local dir
+    dir=$(find ${1:-.} -path '*/\.*' -prune \
+        -o -type d -print 2> /dev/null | "$FuzzyFinder") &&
+        cd "$dir"
+    }
+# include hidden dirs
+cdf-all() {
+    local dir
+    dir=$(find ${1:-.} -type d 2> /dev/null | grep -v ".git/" | "$FuzzyFinder") && cd "$dir"
+}
+# job to fore
+job-fore() {
+    JOB_ID=$(jobs | grep "[[[:digit:]]*]" | "$FuzzyFinder" | grep -o "[[[:digit:]]*]" | grep -o "[[:digit:]]*")
+    fg %"$JOB_ID"
+}
+
+# job to back
+job-back() {
+    JOB_ID=$(jobs | grep "[[[:digit:]]*]" | "$FuzzyFinder" | grep -o "[[[:digit:]]*]" | grep -o "[[:digit:]]*")
+    bg %"$JOB_ID"
+}
+
+# job kill
+job-kill() {
+    JOB_ID=$(jobs | grep "[[[:digit:]]*]" | "$FuzzyFinder" | grep -o "[[[:digit:]]*]" | grep -o "[[:digit:]]*")
+    kill %"$JOB_ID"
+}
+
+# ps ls
+ps-ls() {
+    PROC_ID_ORIGIN=$(ps -alf | "$FuzzyFinder")
+    if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+        PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+        echo "$PROC_ID_ORIGIN"
+    fi
+}
+
+# ps ls all
+ps-ls-all() {
+    PROC_ID_ORIGIN=$(ps -elf | "$FuzzyFinder")
+    if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+        PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+        echo "$PROC_ID_ORIGIN"
+    fi
+}
+
+# ps info
+ps-info() {
+    PROC_ID_ORIGIN=$(ps -alf | "$FuzzyFinder")
+    if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+        PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+        top -p "$PROC_ID"
+    fi
+}
+
+# ps info all
+ps-info-all() {
+    PROC_ID_ORIGIN=$(ps -elf | "$FuzzyFinder")
+    if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+        PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+        top -p "$PROC_ID"
+    fi
+}
+
+# ps tree
+ps-tree() {
+    PROC_ID_ORIGIN=$(ps -alf | "$FuzzyFinder")
+    if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+        PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+        pstree -p "$PROC_ID"
+    fi
+}
+
+# ps tree all
+ps-tree-all() {
+    PROC_ID_ORIGIN=$(ps -elf | "$FuzzyFinder")
+    if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+        PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+        pstree -p "$PROC_ID"
+    fi
+}
+
+# ps kill
+ps-kill() {
+    PROC_ID_ORIGIN=$(ps -alf | "$FuzzyFinder")
+    if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+        PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+        kill -9 "$PROC_ID"
+    fi
+}
+
+# ps kill
+ps-kill-all() {
+    PROC_ID_ORIGIN=$(ps -elf | "$FuzzyFinder")
+    if [[ $(echo "$PROC_ID_ORIGIN" | grep "UID[[:blank:]]*PID")x == ""x ]]; then
+        PROC_ID=$(echo "$PROC_ID_ORIGIN" | grep -o '^[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*[[:blank:]]*[^[:blank:]]*' | grep -o '[[:digit:]]*$')
+        kill -9 "$PROC_ID"
+    fi
+}
+# }}}
+# {{{zcomp-gen
+zcomp-gen () {
+    echo "[1] manpage  [2] help"
+    read -r var
+    if [[ "$var"x == ""x ]]; then
+        var=1
+    fi
+    if [[ "$var"x == "1"x ]]; then
+        TARGET=$(find -L /usr/share/man -type f -print -o -type l \
+            -print -o  \( -path '*/\.*' -o -fstype 'devfs' -o -fstype 'devtmpfs' -o -fstype 'proc' \) \
+            -prune 2> /dev/null |\
+            sed 's|\./||g' |\
+            sed '1i [cancel]' |\
+            fzf)
+        if [[ "$TARGET"x == "[cancel]"x ]]; then
+            echo ""
+        else
+            echo "$TARGET" | xargs -i sh ~/.zplugin/plugins/nevesnunes---sh-manpage-completions/gencomp-manpage {}
+            zpcompinit
+        fi
+    elif [[ "$var"x == "2"x ]]; then
+        TARGET=$(compgen -cb | sed '1i [cancel]' | fzf)
+        if [[ "$TARGET"x == "[cancel]"x ]]; then
+            echo ""
+        else
+            gencomp "$TARGET"
+            zpcompinit
+        fi
+    fi
+}
+# }}}
+# }}}
+
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
