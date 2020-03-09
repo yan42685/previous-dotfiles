@@ -61,7 +61,7 @@
 "}}}
 "==========================================
 " 【可选项】{{{
-"  1. 终端设置cursor不闪烁, <c-a>全选, <c-c>复制，<m-i>粘贴系统剪切板， 而Vim里面的<m-i>会被终端拦截，所以有相同的效果，
+"  1. 使用Alacritty终端模拟器 设置cursor不闪烁, <c-c>复制，<m-i>粘贴系统剪切板， 而Vim里面的<m-i>会被终端拦截，所以有相同的效果，
 "          然后在Vim映射<m-p>是粘贴0寄存器的内容. 设置透明终端, 用<leader>tt可以切换透明模式, 设置开启时窗口大小来达到启动max-size的目的
 "  2. 然后终端设置General-勾消Show menubar by default in new terminals
 "  3. 只能稍微调快一点键盘响应速度，调太快会导致一次按键多次响应
@@ -765,6 +765,8 @@ Plug 'tpope/vim-markdown'
 let g:markdown_fenced_languages = ['html', 'css', 'js=javascript', 'python', 'bash=sh']
 " MarkDown预览
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+let g:mkdp_command_for_global = 0  " 所有文件中可以使用预览markdown命令
+nmap <leader>mp <Plug>MarkdownPreviewToggle
 
 " Todo List 和 笔记，文档管理
 Plug 'vimwiki/vimwiki', {'on': ['VimwikiIndex']}

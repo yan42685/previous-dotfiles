@@ -1,0 +1,16 @@
+## 所安装的软件包
+- snap
+- python3
+- ccls
+- universal ctags
+- global (gtags)
+- lua
+- node
+- 终端字体: Sauce Code Pro Nerd Font
+- Alacritty
+- eslint prettier pylint autopep8 cppcheck clang-format
+- rg
+- nvim(appimage版)
+- zgen
+- bat
+- fzf
