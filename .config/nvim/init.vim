@@ -1,6 +1,4 @@
-﻿" TODO: 配置sesson自动保存
-" TODO: 增加tab的操作，整合coclist
-" TODO: 改掉Leader插件那里安装的特定tag(之前因为最新版会报错才指定了特定版本)
+﻿" TODO: 改掉Leader插件那里安装的特定tag(之前因为最新版会报错才指定了特定版本)
 " 只考虑NeoVim，不一定兼容Vim
 "
 " 我所理解的Vim哲学:
@@ -210,6 +208,9 @@ nnoremap <silent> gh :call CocActionAsync('doHover')<cr>
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+nnoremap gl :CocList --normal locationlist<cr>
+nnoremap gq :CocList --normal quickfix<cr>
+nnoremap gm :CocList --normal marks<cr>
 " 查看文档
 nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
 " 打开鼠标位置下的链接
@@ -278,7 +279,8 @@ nnoremap <silent> <leader>gr :Leaderf mru<cr>
 nnoremap <leader>gc :Leaderf cmdHistory<cr>
 nnoremap <leader>gs :Leaderf searchHistory<cr>
 " 当前buffer搜索文本行
-nnoremap <leader>gl :Leaderf line<cr>
+" nnoremap <leader>gl :Leaderf line<cr>
+"
 nnoremap <c-p> :Leaderf command<cr>
 " search word under cursor literally in all listed buffers
 nnoremap <leader>sb :<C-U><C-R>=printf("Leaderf! rg -F --all-buffers -e %s ", expand("<cword>"))<CR><cr>
@@ -692,8 +694,7 @@ nnoremap <leader>ot :Vista<cr>
 
 " 异步运行，测试
 Plug 'skywind3000/asyncrun.vim', { 'on': ['AsyncRun', 'AsyncStop', '<plug>(asyncrun-qftoggle)'] }
-" {{{
-" lazy load
+" {{{lazy load
 augroup asyncrun
     au!
     au User asyncrun.vim nnoremap <silent> <plug>(asyncrun-qftoggle) :call asyncrun#quickfix_toggle(10)<cr>
@@ -704,11 +705,12 @@ command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 " 任务完成自动打开qf{{{
 augroup auto_open_quickfix
     autocmd!
-    autocmd QuickFixCmdPost * botright copen 8 | nnoremap <c-j> :cnext<cr> | nnoremap <c-k> :cprevious<cr>
+    " autocmd QuickFixCmdPost * botright copen 8 | nnoremap <c-j> :cnext<cr> | nnoremap <c-k> :cprevious<cr>
+    " autocmd QuickFixCmdPost * execute 'CocList --normal quickfix' | nnoremap <c-j> :cnext<cr> | nnoremap <c-k> :cprevious<cr>
 augroup end
-nnoremap <leader>a :AsyncRun -mode=term -pos=bottom -rows=10 python "$(VIM_FILEPATH)"
 "}}}
-nmap gq <plug>(asyncrun-qftoggle)
+" nmap gq <plug>(asyncrun-qftoggle)
+nnoremap <leader>ma :AsyncRun -mode=term -pos=bottom -rows=10 python "$(VIM_FILEPATH)"
 
 " 插件适配
 Plug 'albertomontesg/lightline-asyncrun'
@@ -765,7 +767,7 @@ let g:markdown_fenced_languages = ['html', 'css', 'js=javascript', 'python', 'ba
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
 
 " Todo List 和 笔记，文档管理
-Plug 'vimwiki/vimwiki'
+Plug 'vimwiki/vimwiki', {'on': ['VimwikiIndex']}
 "{{{
 " 使用markdown而不是vimwiki的语法
 "let g:vimwiki_list = [{'path': '~/vimwiki/',
@@ -874,10 +876,11 @@ noremap <silent> <leader>h :wincmd h<cr>
 noremap <silent> <leader>l :wincmd l<cr>
 
 " Tab操作
-nnoremap th gT
-nnoremap tl gt
+nnoremap <leader><leader>h gT
+nnoremap <leader><leader>l gt
 nnoremap gxo :tabonly<cr>
 nnoremap <c-t> :tab split<cr>
+nnoremap <c-w> :tab close<cr>
 inoremap <c-t> <esc>:tab split<cr>
 
 " normal模式下切换到确切的tab

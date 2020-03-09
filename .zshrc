@@ -13,11 +13,9 @@ fi
 # export PATH variables{{{
 export TERM=xterm-256color
 export NNN_USE_EDITOR=1                                 # use the $EDITOR when opening text files
-export HISTFILE="$HOME/.zsh_history"
-export HISTSIZE=999999999
-export SAVEHIST=$HISTSIZE
 export EDITOR=vim
-export PAGER="nvim --cmd 'let g:vimManPager = 1' -c MANPAGER -"
+# 下面这条选项会让git的输出用nvim来打开
+# export PAGER="nvim --cmd 'let g:vimManPager = 1' -c MANPAGER -"
 export MANPAGER="nvim --cmd 'let g:vimManPager = 1' -c MANPAGER -"
 export BROWSER="chromium"
 export NNN_COLORS="2136"                        # use a different color for each context
@@ -27,9 +25,11 @@ export FuzzyFinder="fzf"
 
 # }}}
 # Options{{{
-ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc ${HOME}/.zshrc.local)  # .zshrc修改时自动更新
-setopt correct_all
+ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc)  # .zshrc修改时自动更新zgen
+# setopt correct_all
 # }}}
+# 插件设置
+GIT_AUTO_FETCH_INTERVAL=1200 #in seconds
 
 # load zgen
 source "${HOME}/.zgen/zgen.zsh"
@@ -37,7 +37,7 @@ source "${HOME}/.zgen/zgen.zsh"
 if ! zgen saved; then
     echo "Creating a zgen save"
 
-    zgen oh-my-zsh
+    zgen oh-my-zsh  # 加载oh-my-zsh的lib文件，但是不支持 DISABLE_LS_COLORS="true" 这样的 OMZ专属设置
     zgen oh-my-zsh plugins/git
     zgen oh-my-zsh plugins/sudo
     zgen oh-my-zsh plugins/z
@@ -46,12 +46,12 @@ if ! zgen saved; then
     zgen oh-my-zsh plugins/extract
     zgen oh-my-zsh plugins/colorize
     zgen oh-my-zsh plugins/z
+    zgen oh-my-zsh plugins/git-auto-fetch
     zgen load romkatv/powerlevel10k powerlevel10k
     zgen load zsh-users/zsh-syntax-highlighting
     zgen load zsh-users/zsh-autosuggestions
     zgen load zsh-users/zsh-completions
     zgen load zsh-users/zsh-history-substring-search
-    zgen load chrissicool/zsh-256color  # 自动开启终端的256色
     zgen load djui/alias-tips  # 如果使用的不是缩写命令，会自动提醒你之前定义的alias
     zgen load peterhurford/git-it-on.zsh  # open your current folder, on your current branch, in GitHub or GitLab
                                           # NOTE: This was built on a Mac. 在Linux不一定有效
@@ -123,7 +123,6 @@ LS_COLORS="ow=01;36;40" && export LS_COLORS
 # make cd use the ls colours
 zstyle ':completion:*' list-colors "${(@s.:.)LS_COLORS}"
 # }}}
-# 其他设置
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
