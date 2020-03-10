@@ -1,5 +1,4 @@
-# Colors (Gruvbox Material Dark Medium)
-# {{{
+# (Gruvbox Material Dark Medium) {{{
 colors:
   primary:
     background: '0x282828'
@@ -25,24 +24,52 @@ colors:
     cyan:    '0x89b482'
     white:   '0xdfbf8e'
 # }}}
+# {{{ Forest Night
+# colors:
+#   primary:
+#     background: '0x323d43'
+#     foreground: '0xd8caac'
+#
+#   normal:
+#     black:   '0x868d80'
+#     red:     '0xe68183'
+#     green:   '0xa7c080'
+#     yellow:  '0xd9bb80'
+#     blue:    '0x89beba'
+#     magenta: '0xd3a0bc'
+#     cyan:    '0x87c095'
+#     white:   '0xd8caac'
+#
+#   bright:
+#     black:   '0x868d80'
+#     red:     '0xe68183'
+#     green:   '0xa7c080'
+#     yellow:  '0xd9bb80'
+#     blue:    '0x89beba'
+#     magenta: '0xd3a0bc'
+#     cyan:    '0x87c095'
+#     white:   '0xd8caac'
+# }}}
 
 window:
+  # 启动时最大化
   startup_mode: 'Maximized'
 
 background_opacity: 0.65
 
 font:
   normal:
-    family: 'Sauce Code Pro Nerd Font'
+    family: source code pro
+    style: regular
   bold:
-    family: 'Sauce Code Pro Nerd Font Bold'
-    # family: 'Hack Bold'
-    # family: 'Monospace Bold'
-    # family: 'ubuntu mono bold'
+    family: Source Code Pro
+    style: Bold
   italic:
-    family: 'Sauce Code Pro Nerd Font Italic'
+    family: Source Code Pro
+    style: Italic
   bold_italic:
-    family: 'Sauce Code Pro Nerd Fond Bold Italic'
+    family: Source Code Pro
+    style: Bold_Italic
 
 key_bindings:
   - {key: I, mods: Alt, action: PasteSelection}
