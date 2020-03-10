@@ -57,22 +57,15 @@ window:
 
 background_opacity: 0.65
 
+# NOTE: 需要安装sauce code pro nerd font的 regular 和 italic, bold, bold italic
 font:
   normal:
-    family: source code pro
+    family: sauce code pro nerd font
     style: regular
-  bold:
-    family: Source Code Pro
-    style: Bold
-  italic:
-    family: Source Code Pro
-    style: Italic
-  bold_italic:
-    family: Source Code Pro
-    style: Bold_Italic
 
 key_bindings:
-  - {key: I, mods: Alt, action: PasteSelection}
+  # - {key: I, mods: Alt, action: PasteSelection}
+  - {key: I, mods: Alt, action: Paste}
   - {key: C, mods: Control, action: Copy}
     # NOTE:
     # FIXME:
