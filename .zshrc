@@ -267,7 +267,7 @@ zle -N insert-last-command-output
 # }}}
 bindkey '^[x' insert-last-command-output  # insert last command result
 bindkey -M menuselect '^M' .accept-line  # In menu completion, the Return key will accept the current selected match
-bindkey -s '^ ' ' git status --short^M'  # Ctrl+space: print Git status
+# bindkey -s '^ ' ' git status --short^M'  # Ctrl+space: print Git status
 
 
 ############################################################

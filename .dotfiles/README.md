@@ -14,3 +14,4 @@
 - bat
 - fzf
 - tmux
+- 手动安装Sauce Code Pro 的Regular, bold, italic, bold italic字体
