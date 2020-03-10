@@ -218,8 +218,8 @@ nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
 nmap <silent> <leader>re <Plug>(coc-rename)
 
 " coc-translator
-nmap ,t <Plug>(coc-translator-p)
-vmap ,t <Plug>(coc-translator-pv)
+nmap tt <Plug>(coc-translator-p)
+vmap tt <Plug>(coc-translator-pv)
 
 " keymap提示
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
@@ -1170,24 +1170,11 @@ nnoremap <c-g><c-g> :call ScrollAnotherWindow(5)<CR>
 nnoremap <c-s-g> :call ScrollAnotherWindow(6)<CR>
 
 " 切换透明模式, 需要预先设置好终端的透明度
+" {{{
 let s:palette = {
               \ 'bg0':        ['#282828',   '235',  'Black'],
               \ 'bg1':        ['#302f2e',   '236',  'DarkGrey'],
               \ 'bg2':        ['#32302f',   '236',  'DarkGrey'],
-              \ 'bg3':        ['#45403d',   '237',  'DarkGrey'],
-              \ 'bg4':        ['#45403d',   '237',  'DarkGrey'],
-              \ 'bg5':        ['#5a524c',   '239',  'DarkGrey'],
-              \ 'bg_grey0':   ['#7c6f64',   '243',  'DarkGrey'],
-              \ 'bg_grey1':   ['#a89984',   '246',  'LightGrey'],
-              \ 'bg_red':     ['#ea6962',   '167',  'Red'],
-              \ 'bg_green':   ['#a9b665',   '142',  'Green'],
-              \ 'bg_yellow':  ['#d8a657',   '214',  'Yellow'],
-              \ 'bg_green1':  ['#34381b',   '22',   'DarkGreen'],
-              \ 'bg_green2':  ['#3b4439',   '22',   'DarkGreen'],
-              \ 'bg_red1':    ['#402120',   '52',   'DarkRed'],
-              \ 'bg_red2':    ['#4c3432',   '52',   'DarkRed'],
-              \ 'bg_blue1':   ['#0e363e',   '17',   'DarkBlue'],
-              \ 'bg_blue2':   ['#374141',   '17',   'DarkBlue'],
               \ 'fg0':        ['#d4be98',   '223',  'White'],
               \ 'fg1':        ['#ddc7a1',   '223',  'White'],
               \ 'red':        ['#ea6962',   '167',  'Red'],
@@ -1246,7 +1233,6 @@ endfunction
 call s:Enable_normal_scheme()
 
 
-"{{{
 let t:is_transparent = 0
 function! Toggle_transparent_background()
   if t:is_transparent == 1
