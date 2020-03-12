@@ -10,7 +10,7 @@
 "   1. 有意义，容易记忆.
 "   2. 每个指令均衡左右手指击键, 如果都在同一手上则尽量用不同的手指击键，尽量减小手指移动距离
 "
-"  推荐使用appimage来安装neovim，这样在每个平台都很方便使用
+"  不建议用appimge安装，因为这样的话将nvim作为manpager会出现奇怪的权限问题
 "==========================================
 " 【依赖说明】{{{
 "  coc.nvim补全插件需要安装node.js和npm LeaderF依赖Python3, vista依赖global-ctags
@@ -79,7 +79,7 @@
 "  7.  "coc-tabnine需要设置'ignore_all_lsp': true来加强补全效果
 "}}}
 " ========================================
-" 【必看】配置文件的坑:{{{
+" 【初次配置Vim必看】配置文件的坑:{{{
 "   1. 映射<Plug>(...)必须用递归映射, 否则不生效
 "   2. 映射ex命令的时候不能用noremap, 因为这会导致按键出现奇奇怪怪的结果, 应该改成nnoremap
 "   3. vimrc文件let语句的等号两边不能写空格, 写了不生效!
@@ -91,6 +91,9 @@
 " 【可自行调整的重要参数】
 let s:enable_file_autosave = 1  " 是否自动保存
 set updatetime=400  " 检测CursorHold事件的时间间隔,影响性能的主要因素
+let s:colorscheme_mode = 0
+let s:colorschemes = ['quantum', 'gruvbox-material', 'forest-night']
+let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night']
 
 
 let mapleader=' '  " 此条命令的位置应在插件之前
@@ -118,6 +121,7 @@ let g:clever_f_smart_case = 1  " smart case
 let g:clever_f_chars_match_any_signs = 1  " 可以搜索所有的字符,比如;,.
 let g:clever_f_repeat_last_char_inputs = ["\<CR>", "\<Tab>"]  " 使用上次的输入
 let g:clever_f_mark_char_color = 'MyHack'
+let g:clever_f_across_no_line = 1
 
 
 " 快速移动
@@ -145,7 +149,10 @@ map <c-_> <plug>NERDCommenterToggle
 imap <c-_> <esc><plug>NERDCommenterToggle
 
 " 文件树 (现在用的是coc-explorer)
-nmap <leader>er :CocCommand explorer<CR>
+function ToggleCocExplorer()
+  execute 'CocCommand explorer --toggle --width=35 --sources=buffer+,file+ ' . getcwd()
+endfunction
+nmap <silent> <leader>er :call ToggleCocExplorer()<CR>
 
 " COC自动补全框架
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -209,7 +216,6 @@ nnoremap <silent> gh :call CocActionAsync('doHover')<cr>
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
-nnoremap gl :CocList --normal locationlist<cr>
 nnoremap gq :CocList --normal quickfix<cr>
 nnoremap gm :CocList --normal marks<cr>
 " 查看文档
@@ -226,6 +232,26 @@ Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 nnoremap <silent> <leader> :WhichKey '<space>'<cr>
 nnoremap <silent> , :WhichKey ','<cr>
 nnoremap <silent> g :WhichKey 'g'<cr>
+
+" 可视化merge
+Plug 'samoshkin/vim-mergetool'
+
+let g:mergetool_layout = 'mr'  " `l`, `b`, `r`, `m`
+let g:mergetool_prefer_revision = 'local'  " `local`, `base`, `remote`
+nmap <leader>gmt <plug>(MergetoolToggle)
+nnoremap <silent> <leader>cml :<C-u>call MergetoolLayoutCustom()<CR>
+let g:mergetool_layout_custom = 0
+function! MergetoolLayoutCustom()
+  if g:mergetool_layout_custom == 0
+    let g:mergetool_layout_custom = 1
+    execute 'MergetoolToggleLayout lbr,m'
+  else
+    let g:mergetool_layout_custom = 0
+    execute 'MergetoolToggleLayout mr'
+  endif
+endfunction
+
+
 
 " git
 Plug 'tpope/vim-fugitive'
@@ -248,18 +274,31 @@ nnoremap ,gw :Gwrite<CR><CR>
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式
 Plug 'Yggdroot/LeaderF', { 'tag': 'd6a2c7b94df2e7b65a2009fee01b999004aa9076','do': './install.sh' }
 "{{{
+let g:Lf_PreviewResult = {
+      \ 'File': 0,
+      \ 'Buffer': 0,
+      \ 'Mru': 0,
+      \ 'Tag': 0,
+      \ 'BufTag': 0,
+      \ 'Function': 0,
+      \ 'Line': 0,
+      \ 'Colorscheme': 0,
+      \ 'Rg': 0,
+      \ 'Gtags': 0
+      \}
+let g:Lf_RgConfig = [
+      \ '--glob=!\.git/*',
+      \ '--glob=!\.vscode/*',
+      \ '--glob=!\.svn/*',
+      \ '--glob=!\.hg/*',
+      \ '--multiline',
+      \ '--hidden'
+      \ ]
 let g:Lf_WildIgnore = {
             \ 'dir': ['.svn','.git','.hg','.vscode','.wine','.deepinwine','.oh-my-zsh'],
             \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]']
             \}
 
-let g:Lf_RgConfig = [
-    \ "--max-columns=150",
-    \ "--type-add web:*.{html,css,js}*",
-    \ "--glob=!git/*",
-    \ "--hidden",
-    \
-\ ]
 let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2"  }
 let g:Lf_PreviewInPopup = 1  " <c-p>预览弹出窗口
 let g:Lf_CursorBlink = 0  " 取消光标闪烁
@@ -277,21 +316,12 @@ let g:Lf_ShortcutF = '<leader>gf'  " 这两项是为了覆盖默认设置的键�
 let g:Lf_ShortcutB = '<leader>gb'
 let g:Lf_CommandMap = {'<C-]>':['<C-L>']}  " 搜索后<c-h>在右侧窗口打开文件
 nnoremap <silent> <leader>gr :Leaderf mru<cr>
-nnoremap <leader>gc :Leaderf cmdHistory<cr>
-nnoremap <leader>gs :Leaderf searchHistory<cr>
-" 当前buffer搜索文本行
-" nnoremap <leader>gl :Leaderf line<cr>
-"
+nnoremap <silent> <leader>gc :Leaderf cmdHistory<cr>
+nnoremap <silent> <leader>gs :Leaderf searchHistory<cr>
 nnoremap <c-p> :Leaderf command<cr>
-" search word under cursor literally in all listed buffers
-nnoremap <leader>sb :<C-U><C-R>=printf("Leaderf! rg -F --all-buffers -e %s ", expand("<cword>"))<CR><cr>
-" search word under cursor in *.h and *.cpp *.c files.
-nnoremap <leader>sc :<C-U><C-R>=printf("Leaderf! rg -e %s -g *.{h,cpp,c}", expand("<cword>"))<CR><cr>
+nnoremap <leader>rg :<C-U>Leaderf! rg -S -e --hidden<space>
+nnoremap <leader>rG :<C-U>Leaderf! rg -S -e<space>
 
-" search visually selected text literally
-nnoremap <leader>sw :<C-U><C-R>=printf("Leaderf! rg -F -e %s", expand("<cword>"))<CR><cr>
-vnoremap <leader>sv :<C-U><C-R>=printf("Leaderf! rg -F -e %s ", leaderf#Rg#visual())<CR><cr>
-nnoremap <leader>rg :<C-U><C-R>=printf("Leaderf! rg -S -e")<CR><space>
 
 " 缩进虚线
 Plug 'Yggdroot/indentLine', {'for': 'python'}
@@ -340,7 +370,14 @@ Plug 'arp242/undofile_warn.vim'
 " 拼写检查
 Plug 'kamykn/spelunker.vim'
 "{{{
-highlight SpelunkerComplexOrCompoundWord cterm=underline ctermfg=247 gui=underline guifg=#9e9e9e
+set nospell
+" let g:spelunker_disable_auto_group = 1  " Disable default autogroup. (default: 0)
+let g:spelunker_highlight_type = 2  " Highlight only SpellBad.
+augroup my_highlight_spellbad
+    autocmd!
+    autocmd VimEnter * highlight SpelunkerSpellBad cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
+augroup end
+"
 " let g:spelunker_check_type = 2  " FIXME 如果打开大文件很慢就尝试开启此项 Spellcheck displayed words in buffer. Fast and dynamic
 "}}}
 
@@ -436,9 +473,18 @@ function! RemoveLabelOnTopRight() abort
     " return "\ue61b"
     return ""
 endfunction
+
+function! Get_session_name() abort
+    let l:session_name = fnamemodify(v:this_session,':t')
+    if l:session_name != ''
+        return '<' . fnamemodify(v:this_session,':t') . '>'
+    else
+        return ''
+endfunction
 "}}}
 
-let g:lightline = {'colorscheme' : 'quantum'}
+let g:lightline = {}
+let g:lightline.colorscheme = s:lightline_schemes[s:colorscheme_mode]
 let g:lightline.separator = { 'left': "\ue0b8", 'right': "\ue0be" }
 " let g:lightline.subseparator = { 'left': "\ue0b9", 'right': "\ue0b9" }
 let g:lightline.tabline_separator = { 'left': "\ue0bc", 'right': "\ue0ba" }
@@ -452,6 +498,7 @@ let g:lightline#asyncrun#indicator_run = 'Running...'
 let g:lightline.active = {
         \ 'left': [ [ 'mode', 'paste' ],
         \           [  'filename', 'readonly', 'gitbranch', 'modified'] ,
+        \           [ 'session_name' ],
         \
         \],
         \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
@@ -505,11 +552,13 @@ let g:lightline.component = {
       \ 'winnr': '%{winnr()}',
       \ 'close': '%999X X ',
       \ }
+
 let g:lightline.component_function = {
       \   'gitbranch': 'LightlineFugitive',
       \   'modified': 'Sy_stats_wrapper',
       \   'fileencoding': "LightlineFileencoding",
       \   'method': 'NearestMethodOrFunction',
+      \   'session_name': 'Get_session_name'
       \ }
 let g:lightline.component_expand = {
       \ 'linter_checking': 'lightline#ale#checking',
@@ -648,7 +697,7 @@ nnoremap <silent> <m-m> :botright Ttoggle<cr><c-w>w<c-\><c-n>i
 nnoremap <silent> <m-j> :botright Topen<cr><c-w>w<c-\><c-n>i
 inoremap <silent> <m-j> <esc>:botright Topen<cr>
 " 内置终端
-tnoremap <c-d> <c-\><c-n>:Tclose<cr>
+tnoremap <silent> <c-d> <c-\><c-n>:Tclose<cr>
 tnoremap <m-h> <c-\><c-n><c-w>h
 tnoremap <m-l> <c-\><c-n><c-w>l
 tnoremap <m-j> <c-\><c-n><c-w>j
@@ -727,6 +776,11 @@ command! W w suda://%
 
 " 用vim看man
 Plug 'lambdalisue/vim-manpager'
+augroup temporar_change_manpager_mapping
+    autocmd!
+    autocmd FileType man nmap <silent> <buffer> <C-j> ]t
+    autocmd FileType man nmap <silent> <buffer> <C-k> [t
+augroup end
 
 " FIXME: this source invode vim function that could be quite slow, so make sure your coc.preferences.timeout is not too low, otherwise it may timeout.
 Plug 'Shougo/neoinclude.vim' | Plug 'jsfaint/coc-neoinclude'
@@ -737,10 +791,8 @@ Plug 'APZelos/blamer.nvim'
 " 自动开启
 let g:blamer_enabled = 1
 "}}}
-"
-"working directory跳转到project目录
-"Plug 'airblade/vim-rooter'
-"
+
+
 " 自动解决绝大部分编码问题
 Plug 'mbbill/fencview', { 'on': [ 'FencAutoDetect', 'FencView' ] }
 "
@@ -759,13 +811,16 @@ autocmd FileType html,css EmmetInstall
 
 " 自动关闭标签
 Plug 'alvan/vim-closetag'
+"{{{
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.xml,*.jsx,*.tsx'
+"}}}
 
 " markdown代码内高亮
-Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-markdown', {'for': ['markdown', 'vimwiki']}
 " TODO: 不知道还能不能用其他语言的高亮
 let g:markdown_fenced_languages = ['html', 'css', 'js=javascript', 'python', 'bash=sh']
 " MarkDown预览
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for':['markdown', 'vimwiki'] }
 let g:mkdp_command_for_global = 0  " 所有文件中可以使用预览markdown命令
 nmap <leader>mp <Plug>MarkdownPreviewToggle
 
@@ -776,10 +831,38 @@ Plug 'vimwiki/vimwiki', {'on': ['VimwikiIndex']}
 "let g:vimwiki_list = [{'path': '~/vimwiki/',
             \ 'syntax': 'markdown', 'ext': '.md'}]
 "}}}
+"
+" 自动切换到project root
+" Plug 'airblade/vim-rooter'
+" let g:rooter_manual_only = 1  " 停止自动目录
+" let g:rooter_use_lcd = 1  " 只在当前window切换目录
+" nnoremap <leader>rd :Rooter  " 手动切换目录
+
+Plug 'alvan/vim-closetag'
+
+"
+" Sink沉浸写作模式
+Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
+Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
+"{{{
+augroup toggle_limelight_on_goyo
+    autocmd!
+    autocmd! User GoyoEnter Limelight
+    autocmd! User GoyoLeave Limelight!
+augroup end
+"}}}
+nnoremap ,sn :Goyo<cr>
+
+if executable('tmux') && filereadable(expand('~/.zshrc')) && $TMUX !=# ''
+    " 在tmux的pane间也能补全
+    Plug 'wellle/tmux-complete.vim'
+    let g:tmuxcomplete#trigger = ''
+endif
 
 " }}}
 
 call plug#end()
+
 
 "==========================================
 " HotKey Settings  自定义快捷键设置
@@ -869,7 +952,7 @@ nnoremap <silent> <m-h> :bn<cr>
 " flip two windows
 nnoremap <leader>wf <c-w><c-r>
 " split bottom window
-nnoremap <leader>ss <c-w>s<c-w>w
+nnoremap <leader>ws <c-w>s<c-w>w
 " 窗口最大化 leaving only the help window open/maximized
 nnoremap <leader>wo <c-w>ozz
 noremap <silent> <leader>v :wincmd v<cr>:wincmd w<cr>
@@ -920,7 +1003,8 @@ noremap ` '
 "==========================================
 set termguicolors  " 使用真色彩
 " NOTE: quantum主题是必开的, 用来提供lightline主题
-colorscheme quantum
+" colorscheme quantum
+exec 'colorscheme ' . s:colorschemes[s:colorscheme_mode]
 " colorscheme onedark
 
 " colorscheme gruvbox-material
@@ -1001,7 +1085,7 @@ highlight SpellLocal term=underline cterm=underline
 augroup tab_indent_settings_by_filetype
     autocmd!
     autocmd FileType python,ruby,javascript,html,css,xml,sass,scss set tabstop=4 shiftwidth=4 softtabstop=4 expandtab ai
-    autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown set filetype=markdown.mkd
+    autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown set filetype=markdown
     autocmd BufRead,BufNewFile *.part set filetype=html
     autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
     autocmd BufWinEnter *.php set mps-=<:>  " disable showmatch when use > in php
@@ -1061,11 +1145,12 @@ set formatoptions+=B  " 合并两行中文时，不在中间加空格
 augroup auto_actions_for_better_experience
     autocmd!
     " 自动source VIMRC
-    autocmd BufWritePost $MYVIMRC source $MYVIMRC | call lightline#enable()
+    autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
     " 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exec "normal! g'\" \| zz" | endif
     " 在右边窗口打开help
     autocmd BufEnter * if &buftype == 'help' | wincmd L | endif
+    " autocmd BufEnter,WinEnter * if &filetype == 'man' | wincmd L | endif
     " Test插件要求工作目录在project根目录
     " autocmd BufEnter * silent! lcd %:p:h  " 自动切换当前目录为当前文件的目录
     "
@@ -1111,6 +1196,9 @@ augroup highlight_my_keywords
     autocmd Syntax * call matchadd('MyHack',  '\W\zsHACK:')
 augroup end
 "}}}
+
+" 启动页面Header的颜色
+highlight! StartifyHeader cterm=bold ctermbg=75 ctermfg=black gui=bold guifg=#87bb7c
 
 " =============================================
 " 新增功能
@@ -1217,7 +1305,7 @@ function s:Enable_normal_scheme() abort
     call s:HL('SignColumn', s:palette.fg0, s:palette.none)
     call s:HL('OrangeSign', s:palette.orange, s:palette.none)
     call s:HL('PurpleSign', s:palette.purple, s:palette.none)
-    " kshenoy/vim-signature
+    " kshenoy/vim-signature 标记的配色
     highlight! link SignatureMarkText OrangeSign
     highlight! link SignatureMarkerText PurpleSign
 endfunction
