@@ -1316,6 +1316,8 @@ endfunction
 nnoremap <leader>tt :call Toggle_transparent_background()<CR>
 " 快速编辑init.vim
 nnoremap <leader>en :e $MYVIMRC<CR>
+" 快速编辑tmux配置文件
+nnoremap <leader>et :e $HOME/.tmux.conf<cr>
 " 删除隐藏的buffer
 "{{{
 function! DeleteHiddenBuffers()
