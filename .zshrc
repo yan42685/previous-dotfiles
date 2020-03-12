@@ -231,6 +231,7 @@ fi
 # }}}
 
 
+
 alias y='ydict'
 alias t='tmux'
 alias ts="trash"

@@ -18,7 +18,7 @@
 "==========================================
 " 【必做事项】{{{
 "  1. :PlugInstall
-"  2. 提供python和系统剪切板支持 sudo pip3 install pynvim && apt install xsel
+"  2. 提供python和系统剪切板支持 pip3 install pynvim && apt install xsel
 "  3. rm -rf ~/.viminfo 这样可以使自动回到上次编辑的地方功能生效, 然后重新打开vim(注意要以当前用户打开),vim会自动重建该文件.
 "  4. :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer coc-yank
 "  5. ubuntu下用snap包管理器安装ccls, 作为C、C++的LSP (推荐用snap安装, 因为ccls作者提供的编译安装方式似乎有问题, 反正Ubuntu18.04不行)
@@ -34,30 +34,6 @@
         " sudo apt install software-properties-common && sudo add-apt-repository ppa:hnakamur/universal-ctags && sudo apt update && sudo apt install universal-ctags
 "
 "  10. 在:CocConfig 写入下面的JSON设置
-"{{{
-" {
-"     // 补全启动时自动选择第一项
-"     "suggest.noselect": false,
-"     // 补全触发的最少字数
-"     "suggest.minTriggerInputLength": 1,
-"     "explorer.icon.enableNerdfont": true,
-"     "python.jediEnabled": false,
-"     // 只显示ale的lint信息, 不显示Coc的
-"     "diagnostic.displayByAle": true,
-"     "languageserver": {
-"         "ccls": {
-"             "command": "ccls",
-"             "filetypes": ["c", "cpp", "objc", "objcpp"],
-"             "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"],
-"             "initializationOptions": {
-"                 "cache": {
-"                     "directory": "/tmp/ccls"
-"                 }
-"             }
-"         }
-"     }
-" }
-"}}}
 "}}}
 "==========================================
 " 【可选项】{{{
@@ -67,11 +43,11 @@
 "  3. 只能稍微调快一点键盘响应速度，调太快会导致一次按键多次响应
 "  4. 静态代码检查linter与排版器formatter（记得先换源）:
 "        for javascript
-"            sudo npm install -g eslint && sudo npm install -g prettier
+"            npm install -g eslint && npm install -g prettier
 "        for python
-"            sudo pip install pylint && sudo pip install autopep8
+"            pip install pylint && pip install autopep8
 "        for C,CPP
-"            sudo apt install cppcheck -y && sudo npm install -g clang-format
+"            sudo apt install cppcheck -y && npm install -g clang-format
 "  5. 安装riggrep 配合Leaderf rg使用, 快速搜索文本行:
 "            curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb && sudo dpkg -i ripgrep_11.0.2_amd64.deb
 "            FIXME: 如果在Leaderf里调用rg出现~/.config文件夹permission deny的情况 就需要 sudo chown -R $USER:$GROUP ~/.config
