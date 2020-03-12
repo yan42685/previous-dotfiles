@@ -23,6 +23,8 @@ export NNN_COLORS="2136"                        # use a different color for each
 export NNN_TRASH=1     # trash (needs trash-cli) instead of delete
 export SPROMPT="Correct $fg[red]%R$reset_color to $fg[green]%r$reset_color? [Yes, No, Abort, Edit] "
 export FuzzyFinder="fzf"
+# fzf查询隐藏文件
+export FZF_DEFAULT_COMMAND='rg --hidden --ignore .git -g ""'
 
 # }}}
 
