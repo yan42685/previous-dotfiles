@@ -57,11 +57,23 @@ window:
 
 background_opacity: 0.65
 
-# NOTE: 需要安装sauce code pro nerd font的 regular 和 italic, bold, bold italic
+# NOTE: 需要安装SauceCodePro NF的 regular 和 italic, bold, bold italic
 font:
   normal:
-    family: sauce code pro nerd font
+    family: SauceCodePro NF
     style: regular
+
+  bold:
+    family: SauceCodePro NF
+    style: bold
+
+  italic:
+    family: SauceCodePro NF
+    style: italic
+
+  bold_italic:
+    family: SauceCodePro NF
+    style: bold italic
 
 key_bindings:
   # - {key: I, mods: Alt, action: PasteSelection}
@@ -71,3 +83,11 @@ key_bindings:
     # FIXME:
     # TODO:
     # BUG:
+
+# 自动开启tmux FIXME: Windows下要修改文件目录
+shell:
+  program: /bin/bash
+  args:
+    - -l
+    - -c
+    - "tmux attach || tmux"
