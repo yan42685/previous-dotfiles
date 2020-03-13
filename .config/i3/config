@@ -19,10 +19,14 @@ bindsym $mod+w kill
 
 # rofi
 # bindsym $mod+f exec rofi -show
-bindsym $mod+f exec rofi -drun
-bindsym Control+Control exec rofi -drun
+bindsym $mod+f exec rofi -show
 
 # change focus
+bindsym $mod+shift+h focus left
+bindsym $mod+Shift+j focus down
+bindsym $mod+Shift+k focus up
+bindsym $mod+shift+l focus right
+
 bindsym $mod+Left focus left
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
@@ -41,12 +45,12 @@ bindsym $mod+V split v
 # Note: $mod+v & $mod+h to split current container
 
 # focus the parent container
-bindsym $mod+Shift+k focus parent
+# bindsym $mod+Shift+k focus parent
 # focus the child container
-bindsym $mod+Shift+j focus child
+# bindsym $mod+Shift+j focus child
 
 # enter fullscreen mode for the focused container
-bindsym $mod+z fullscreen toggle
+bindsym $mod+o fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 # bindsym $mod+Shift+s layout stacking
@@ -158,7 +162,7 @@ client.unfocused            #ebdbb2     #ebdbb2         #654735
 
 # Font
 # font pango:WenQuanYi Micro Hei Mono 11
-font pango:DroidSansMono NF 12
+font pango:DroidSansMono NF 11
 
 # workspace <ws> gaps [inner|outer|horizontal|vertical|top|left|bottom|right] <px>
 
@@ -197,6 +201,8 @@ workspace_layout tabbed
 
 # exec --no-startup-id i3-msg 'workspace 1:Alpha; layout tabbed; exec tilix; exec /usr/bin/firefox-developer-edition'
 # exec tilix -e "zsh -c 'source ~/.zshrc; tmux-start'"
-# }}}
+# 设置键盘响应速度
+exec xset r rate 200 40
 # background image
 exec feh --bg-fill ~/.config/desktop_background/ubuntu-desktop-background.png
+# }}}

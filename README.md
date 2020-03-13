@@ -6,7 +6,8 @@
 - python3
 - lua
 - node, npm
-- ccls
+- trash
+- ccls （from snap)
 - universal ctags
 - global
 - 终端字体: SauceCodePro NF (regular+bold+italic+bold italic) + DroidSansMono NF
