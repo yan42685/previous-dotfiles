@@ -247,7 +247,7 @@ alias vimm='\vim'   # 用转义符防止递归映射
 alias dot='/usr/bin/git --git-dir=/home/yy/.dotfiles/ --work-tree=/home/yy'   # 用于存放dotfiles
 alias rm='trash'
 alias nnn='PAGER= nnn'
-alias zho='z ~'
+alias zz='z ~'
 alias zh='z -I -t .'  # MRU
 alias zb='z -b'  # 项目目录
 alias zc='z -c' # 严格匹配当前路径的子路径

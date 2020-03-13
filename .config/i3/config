@@ -160,10 +160,21 @@ font pango:DroidSansMono NF 12
 
 # workspace <ws> gaps [inner|outer|horizontal|vertical|top|left|bottom|right] <px>
 
+# gap NOTE: gap配置只能在i3-gap中使用，而普通的i3不能用
+for_window [class=".*"] border pixel 0
+smart_gaps on
+smart_borders no_gaps
+# gaps [inner|outer|horizontal|vertical|top|left|bottom|right] <px>
+gaps inner 10
+gaps outer 6
+gaps bottom 35
+gaps horizontal 10
 # hide titlebar
 new_window pixel
 
 # border
+# default_floating_border normal|none|pixel <px>
+default_floating_border pixel 3
 # hide screen edge border
 # hide_edge_borders none|vertical|horizontal|both|smart
 hide_edge_borders vertical

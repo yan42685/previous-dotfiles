@@ -7,7 +7,7 @@ configuration {
         dpi: 200;
         kb-primary-paste: "Control+V,Shift+Insert,Alt+i";
         kb-secondary-paste: "Control+v,Insert";
-/*      kb-clear-line: "Control+w";*/
+        kb-clear-line: "";
         kb-move-front: "Control+h";
         kb-move-end: "Control+l";
 /*      kb-move-word-back: "Alt+b,Control+Left";*/

@@ -14,8 +14,8 @@
 - rg
 - fzf
 - tmux (tmux-finger插件依赖gawk包, sudo apt install gawk)
-- i3
-- poybar
+- i3-gap
+- polybar
 - rofi
 
 可有可无的软件
