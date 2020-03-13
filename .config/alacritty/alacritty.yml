@@ -74,7 +74,7 @@ font:
   bold_italic:
     family: SauceCodePro NF
     style: bold italic
-  size: 12
+  size: 11
 
 key_bindings:
   # - {key: I, mods: Alt, action: PasteSelection}

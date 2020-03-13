@@ -277,6 +277,7 @@ bindkey '^j' history-substring-search-down
 bindkey ',' autosuggest-accept  # 采纳补全建议
 bindkey -M vicmd 'H' vi-beginning-of-line
 bindkey -M vicmd 'L' vi-end-of-line
+bindkey -s '^e' '^[[3~'
 
 
 # {{{
