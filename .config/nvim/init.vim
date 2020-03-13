@@ -321,6 +321,8 @@ Plug 'ap/vim-css-color', {'for': ['css']}
 
 " Vim-Surround快捷操作
 Plug 'tpope/vim-surround'
+nmap ysw ysiw
+nmap ysW ysiW
 
 " 让. 可以重复插件的操作, 和surround是绝配
 Plug 'tpope/vim-repeat'

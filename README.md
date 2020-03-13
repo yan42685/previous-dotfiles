@@ -15,8 +15,8 @@
 - rg
 - fzf
 - tmux (tmux-finger插件依赖gawk包, sudo apt install gawk)
+- nnn
 
 可有可无的软件
 - bat
 - 无道词典
-- zathura (sudo apt install zathura)
