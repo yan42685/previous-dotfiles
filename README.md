@@ -19,3 +19,4 @@
 可有可无的软件
 - bat
 - 无道词典
+- zathura (sudo apt install zathura)
