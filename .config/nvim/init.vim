@@ -512,7 +512,7 @@ let g:lightline.component = {
       \ 'mode': '%{lightline#mode()}',
       \ 'absolutepath': '%F',
       \ 'relativepath': '%f',
-      \ 'filename': ' %t',
+      \ 'filename': '%t',
       \ 'filesize': "%{HumanSize(line2byte('$') + len(getline('$')))}",
       \ 'fileencoding': '%{&fenc!=#""?&fenc:&enc}',
       \ 'fileformat': '%{&fenc!=#""?&fenc:&enc}[%{&ff}]',
@@ -852,7 +852,7 @@ inoremap kj <esc>
 noremap ; :
 nnoremap zo zazz
 noremap ,; ;
-nnoremap ,w :w<cr>zMzz
+" nnoremap ,w :w<cr>zMzz
 vnoremap v <esc>
 " 我喜欢使用分号作为插入模式的 leader 键，因为分号后面除了空格和换行之外几乎不会接任何其他字符
 " 快速在行末写分号并换行
@@ -972,7 +972,7 @@ noremap Y y$
 noremap <c-a> ggVG
 inoremap <c-a> <esc>ggVG
 " 保存后全部折叠
-cnoremap w<cr> w<cr>zMzz
+" cnoremap w<cr> w<cr>zMzz
 " 交换 ' `, 使得可以快速使用'跳到marked相同的位置
 noremap ' `
 noremap ` '
