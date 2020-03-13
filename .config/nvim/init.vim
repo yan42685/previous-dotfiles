@@ -913,14 +913,17 @@ cnoremap <c-k> <up>
 cnoremap <c-j> <down>
 cnoremap <c-h> <home>
 cnoremap <c-l> <end>
-cnoremap <c-d> <delete>
-inoremap <c-d> <delete>
+cnoremap <c-e> <delete>
 cnoremap <m-p> <c-r>0
-inoremap <m-p> <c-r>0
-nnoremap <m-p> "0p
 
 inoremap <c-h> <esc>I
 inoremap <c-l> <esc>A
+nnoremap <c-h> ^
+nnoremap <c-l> $
+inoremap <c-e> <delete>
+inoremap <m-p> <c-r>0
+nnoremap <m-p> "0p
+
 nnoremap <silent> <m-l> :bp<cr>
 nnoremap <silent> <m-h> :bn<cr>
 
