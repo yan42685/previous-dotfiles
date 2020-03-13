@@ -18,7 +18,9 @@ bindsym $mod+b exec sh ~/.config/polybar/scripts/toggle-bar.sh
 bindsym $mod+w kill
 
 # rofi
-bindsym $mod+z exec rofi -show
+# bindsym $mod+f exec rofi -show
+bindsym $mod+f exec rofi -drun
+bindsym Control+Control exec rofi -drun
 
 # change focus
 bindsym $mod+Left focus left
@@ -44,7 +46,7 @@ bindsym $mod+Shift+k focus parent
 bindsym $mod+Shift+j focus child
 
 # enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen toggle
+bindsym $mod+z fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 # bindsym $mod+Shift+s layout stacking
@@ -196,4 +198,5 @@ workspace_layout tabbed
 # exec --no-startup-id i3-msg 'workspace 1:Alpha; layout tabbed; exec tilix; exec /usr/bin/firefox-developer-edition'
 # exec tilix -e "zsh -c 'source ~/.zshrc; tmux-start'"
 # }}}
+# background image
 exec feh --bg-fill ~/.config/desktop_background/ubuntu-desktop-background.png
