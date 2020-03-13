@@ -9,6 +9,7 @@ set $mod Mod4
 floating_modifier $mod
 
 bindsym $mod+t exec alacritty
+bindsym $mod+Enter exec alacritty
 bindsym $mod+e exec nautilus
 bindsym $mod+l exec sh ~/.config/polybar/scripts/toggle_tray.sh
 bindsym $mod+b exec sh ~/.config/polybar/scripts/toggle-bar.sh
@@ -155,7 +156,7 @@ client.unfocused            #ebdbb2     #ebdbb2         #654735
 
 # Font
 # font pango:WenQuanYi Micro Hei Mono 11
-font pango:DroidSansMono NF 11
+font pango:DroidSansMono NF 12
 
 # workspace <ws> gaps [inner|outer|horizontal|vertical|top|left|bottom|right] <px>
 
