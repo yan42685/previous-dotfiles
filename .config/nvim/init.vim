@@ -1012,7 +1012,7 @@ set nobackup nowritebackup  " 取消备份文件
 set updatecount =100  " FIXME:如果编辑大文件很慢那么考虑调大这个值 After typing this many characters the swap file will be written to disk
 set cursorline  " 突出显示当前行
 set synmaxcol=200  " 每次只渲染200行而不是整个文件
-set t_ti= t_te=  " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉, 好处：误删什么的，如果以前屏幕打开，可以找回
+" set t_ti= t_te=  " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉, 好处：误删什么的，如果以前屏幕打开，可以找回
 set mouse=r  " 启用鼠标, 可以用右键使用系统剪切板来复制粘贴
 set title  " change the terminal's title
 set novisualbell  " 去掉输入错误的提示声音
