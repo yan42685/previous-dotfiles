@@ -105,10 +105,10 @@ Plug 'easymotion/vim-easymotion', {'on': '<Plug>(easymotion-bd-f)'}
 map <silent> <leader>f <Plug>(easymotion-bd-f)
 
 " 主题配色
-Plug 'joshdick/onedark.vim'
+" Plug 'joshdick/onedark.vim'
 Plug 'tyrannicaltoucan/vim-quantum'
-Plug 'KeitaNakamura/neodark.vim'
-Plug 'trevordmiller/nova-vim'
+" Plug 'KeitaNakamura/neodark.vim'
+" Plug 'trevordmiller/nova-vim'
 Plug 'sainnhe/gruvbox-material'
 Plug 'sainnhe/forest-night'
 
@@ -328,7 +328,7 @@ nmap ysW ysiW
 Plug 'tpope/vim-repeat'
 
 " uodo历史及持久化
-Plug 'simnalamburt/vim-mundo'
+Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
 " reference: https://vi.stackexchange.com/questions/6/how-can-i-use-the-undofile
 " {{{
 if !isdirectory($HOME."/.vim")
@@ -839,7 +839,7 @@ if executable('tmux') && filereadable(expand('~/.zshrc')) && $TMUX !=# ''
 endif
 
 " 更方便地调整window
-Plug 'simeji/winresizer'
+Plug 'simeji/winresizer', {'on': 'WinResizerStartResize'}
 "{{{
 let g:winresizer_gui_enable = 1  " gui的vim也能调整窗口大小
 let g:winresizer_start_key = ''
