@@ -831,11 +831,18 @@ augroup end
 "}}}
 nnoremap ,sn :Goyo<cr>
 
+" 与tmux整合的插件
 if executable('tmux') && filereadable(expand('~/.zshrc')) && $TMUX !=# ''
     " 在tmux的pane间也能补全
     Plug 'wellle/tmux-complete.vim'
     let g:tmuxcomplete#trigger = ''
 endif
+
+Plug 'simeji/winresizer'
+let g:winresizer_gui_enable = 1
+
+let g:winresizer_start_key = '<C-T>'
+
 
 " }}}
 
