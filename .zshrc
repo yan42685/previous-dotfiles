@@ -10,7 +10,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 # }}}
-
 # export PATH variables{{{
 export TERM=xterm-256color
 export NNN_USE_EDITOR=1                                 # use the $EDITOR when opening text files
@@ -27,7 +26,6 @@ export FuzzyFinder="fzf"
 # export FZF_DEFAULT_COMMAND='rg --hidden --ignore .git -g ""'
 
 # }}}
-
 # General settings{{{
 set -o monitor
 set +o nonotify
@@ -37,7 +35,6 @@ setopt correctall                               # enable auto correction
 setopt autopushd pushdignoredups                # auto push dir into stack and and don’t duplicate them
 autoload -U promptinit && promptinit  # FIXME: 不太了解这句话的作用
 # }}}
-
 # Plugin settings{{{
 ZGEN_RESET_ON_CHANGE=(${HOME}/.zshrc)  # .zshrc修改时自动更新zgen
 ZGEN_AUTOLOAD_COMPINIT=0  # 不要使用ZGEN的compinit
@@ -47,7 +44,6 @@ export ZSH_AUTOSUGGEST_USE_ASYNC="true"
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=244"
 FZ_HISTORY_CD_CMD="_zlua"  # NOTE: 必须在fz加载之前
 # }}}
-
 # {{{ completion settings
 autoload -U +X compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
@@ -231,6 +227,7 @@ if ! zgen saved; then
     zgen save
 fi
 # }}}
+
 
 
 
