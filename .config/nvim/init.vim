@@ -67,7 +67,7 @@
 " 【可自行调整的重要参数】
 let s:enable_file_autosave = 1  " 是否自动保存
 set updatetime=400  " 检测CursorHold事件的时间间隔,影响性能的主要因素
-let s:colorscheme_mode = 1
+let s:colorscheme_mode = 0
 let s:colorschemes = ['quantum', 'gruvbox-material', 'forest-night']
 let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night']
 
