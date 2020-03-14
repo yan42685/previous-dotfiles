@@ -854,7 +854,7 @@ inoremap kj <esc>
 noremap ; :
 nnoremap zo zazz
 noremap ,; ;
-" nnoremap ,w :w<cr>zMzz
+nnoremap ,w :w<cr>
 vnoremap v <esc>
 " 我喜欢使用分号作为插入模式的 leader 键，因为分号后面除了空格和换行之外几乎不会接任何其他字符
 " 快速在行末写分号并换行
