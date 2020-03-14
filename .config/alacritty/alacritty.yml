@@ -80,6 +80,7 @@ key_bindings:
   # - {key: I, mods: Alt, action: PasteSelection}
   - {key: I, mods: Alt, action: Paste}
   - {key: C, mods: Control, action: Copy}
+  - {key: F11, action: ToggleFullscreen}
     # NOTE:
     # FIXME:
     # TODO:

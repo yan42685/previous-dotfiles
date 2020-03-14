@@ -838,11 +838,16 @@ if executable('tmux') && filereadable(expand('~/.zshrc')) && $TMUX !=# ''
     let g:tmuxcomplete#trigger = ''
 endif
 
+" 更方便地调整window
 Plug 'simeji/winresizer'
-let g:winresizer_gui_enable = 1
-
-let g:winresizer_start_key = '<C-T>'
-
+"{{{
+let g:winresizer_gui_enable = 1  " gui的vim也能调整窗口大小
+let g:winresizer_start_key = ''
+let g:winresizer_gui_start_key = ''
+let g:winresizer_vert_resize = 3  " 每次移动的步幅
+"}}}
+" usage: 进入resize模式后，hjkl可以调整窗口大小，enter确认，q取消
+nnoremap <leader>wr :WinResizerStartResize<cr>
 
 " }}}
 
