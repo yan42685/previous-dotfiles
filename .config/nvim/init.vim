@@ -248,7 +248,7 @@ nnoremap ,gr :Gread<CR>
 nnoremap ,gw :Gwrite<CR><CR>
 
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式
-Plug 'Yggdroot/LeaderF', { 'tag': 'd6a2c7b94df2e7b65a2009fee01b999004aa9076','do': './install.sh' }
+Plug 'Yggdroot/LeaderF', {'do': './install.sh' }
 "{{{
 let g:Lf_PreviewResult = {
       \ 'File': 0,
@@ -848,6 +848,14 @@ let g:winresizer_vert_resize = 3  " 每次移动的步幅
 "}}}
 " usage: 进入resize模式后，hjkl可以调整窗口大小，enter确认，q取消
 nnoremap <leader>wr :WinResizerStartResize<cr>
+
+Plug 'octol/vim-cpp-enhanced-highlight', {'for': 'cpp'}
+let g:cpp_class_scope_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_class_decl_highlight = 1
+let g:cpp_posix_standard = 1
+let g:cpp_experimental_simple_template_highlight = 1
+let g:cpp_concepts_highlight = 1
 
 " }}}
 
