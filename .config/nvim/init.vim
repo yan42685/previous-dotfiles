@@ -849,13 +849,17 @@ let g:winresizer_vert_resize = 3  " 每次移动的步幅
 " usage: 进入resize模式后，hjkl可以调整窗口大小，enter确认，q取消
 nnoremap <leader>wr :WinResizerStartResize<cr>
 
-Plug 'octol/vim-cpp-enhanced-highlight', {'for': 'cpp'}
+" Plug 'octol/vim-cpp-enhanced-highlight', {'for': 'cpp'}
+"{{{
 let g:cpp_class_scope_highlight = 1
 let g:cpp_member_variable_highlight = 1
 let g:cpp_class_decl_highlight = 1
 let g:cpp_posix_standard = 1
 let g:cpp_experimental_simple_template_highlight = 1
 let g:cpp_concepts_highlight = 1
+"}}}
+
+
 
 " }}}
 

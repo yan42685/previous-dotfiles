@@ -230,9 +230,6 @@ fi
 
 
 
-
-alias polybar='polybar-git'
-alias y='ydict'
 alias t='tmux'
 alias ts="trash"
 # 安全的cp和mv，防止误操作覆盖同名文件
