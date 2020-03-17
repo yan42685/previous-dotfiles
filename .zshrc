@@ -235,7 +235,6 @@ alias ts="trash"
 # 安全的cp和mv，防止误操作覆盖同名文件
 alias cp="cp -ip"
 alias mv="mv -i"
-alias cat='bat'
 alias vi='nvim'
 alias vim='nvim'
 alias vimm='\vim'   # 用转义符防止递归映射
