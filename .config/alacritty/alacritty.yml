@@ -79,13 +79,13 @@ font:
 key_bindings:
   # - {key: I, mods: Alt, action: PasteSelection}
   - {key: I, mods: Alt, action: Paste}
-  # - {key: C, mods: Control, action: Copy}
   - {key: F11, action: ToggleFullscreen}
     # NOTE:
     # FIXME:
     # TODO:
     # BUG:
-
+    #
+    #
 # 自动开启tmux FIXME: Windows下要修改文件目录
 shell:
   program: /bin/bash
