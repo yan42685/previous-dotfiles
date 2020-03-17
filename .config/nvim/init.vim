@@ -900,7 +900,7 @@ nnoremap <leader>su :%s///gc<left><left><left>
 vnoremap <leader>su :s///gc<left><left><left>
 " 退出系列
 noremap <silent> <leader>q <esc>:q<cr>
-noremap <silent> <leader><leader>q <esc>:qa!<cr>
+noremap <silent> <leader><leader>q <esc>:qa<cr>
 
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
