@@ -717,7 +717,19 @@ nnoremap <leader>ot :Vista<cr>
 "Plug 'andymass/vim-matchup'
 "
 " 类似VSCode的编译/测试/部署 任务工具
-"Plug 'skywind3000/asynctasks.vim'
+Plug 'skywind3000/asynctasks.vim'
+"{{{
+let g:asyncrun_open = 6
+let g:asyncrun_rootmarks = ['.git', '.svn', '.root', '.project', '.hg']
+let g:asynctasks_term_pos = 'bottom' " tab
+let g:asynctasks_term_rows = 10
+let g:asynctasks_config_name = '.git/tasks.ini'
+"}}}
+noremap <silent> <leader><leader>e :AsyncTaskEdit<cr>
+noremap <silent> <leader>rf :AsyncTask file-run<cr>
+noremap <silent> <leader>bf :AsyncTask file-build<cr>
+noremap <silent> <leader>rp :AsyncTask project-run<cr>
+noremap <silent> <leader>bp :AsyncTask project-build<cr>
 
 " 异步运行，测试
 Plug 'skywind3000/asyncrun.vim', { 'on': ['AsyncRun', 'AsyncStop', '<plug>(asyncrun-qftoggle)'] }
@@ -850,7 +862,20 @@ nnoremap <leader>wr :WinResizerStartResize<cr>
 
 " 多语言debug支持 FIXME: 这个插件还在开发阶段，可能会有很多bug
 " Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c'}
-
+" nmap <F5> :call vimspector#Launch()<cr>
+" nmap <F5> <Plug>VimspectorContinue
+" nmap <S-F5> :VimspectorReset<cr>
+" nmap <leader>bb :call vimspector#ToggleBreakpoint()<cr>
+" nmap <F7> <Plug>VimspectorStepOver
+" nmap <F8> <Plug>VimspectorStepInto
+" nmap <F9> <Plug>VimspectorStepOut
+"
+" nmap <Plug>VimspectorContinue
+" nmap <Plug>VimspectorStop
+" nmap <Plug>VimspectorRestart
+" nmap <Plug>VimspectorPause
+" nmap <Plug>VimspectorToggleBreakpoint
+" nmap <Plug>VimspectorAddFunctionBreakpoint
 
 
 " }}}
@@ -965,7 +990,7 @@ nnoremap <leader><leader>h gT
 nnoremap <leader><leader>l gt
 nnoremap gxo :tabonly<cr>
 nnoremap <c-t> :tab split<cr>
-nnoremap <c-w> :tab close<cr>
+nnoremap <c-w> :tabclose<cr>
 inoremap <c-t> <esc>:tab split<cr>
 
 " normal模式下切换到确切的tab
