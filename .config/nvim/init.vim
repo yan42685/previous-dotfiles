@@ -1422,13 +1422,6 @@ augroup enable_comment_highlighting_for_json
 augroup end
 "}}}
 
-"自动make
-augroup my_auto_make
-    autocmd!
-    autocmd FileType c set makeprg=if\ \[\ -f\ \"Makefile\"\ \];then\ make\ $*;else\ gcc\ -O2\ -g\ -Wall\ -Wextra\ -o'%<'\ '%'\ -lm;fi
-    autocmd FileType cpp set makeprg=if\ \[\ -f\ \"Makefile\"\ \];then\ make\ $*;else\ g++\ -O2\ -g\ -Wall\ -Wextra\ -o'%<'\ '%'\ -lm;fi
-augroup end
-
 " 添加空白行
 "{{{
 function! s:BlankUp(count) abort
