@@ -860,9 +860,15 @@ let g:winresizer_vert_resize = 3  " 每次移动的步幅
 " usage: 进入resize模式后，hjkl可以调整窗口大小，enter确认，q取消
 nnoremap <leader>wr :WinResizerStartResize<cr>
 
+" 这插件似乎是最好的debug插件了，但我一直没法成功使用, 官方文档写的计较模糊，郁闷...
 " 多语言debug支持 FIXME: 这个插件还在开发阶段，可能会有很多bug
-" Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c'}
-" nmap <F5> :call vimspector#Launch()<cr>
+Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c'}
+"{{{
+sign define vimspectorBP text=🔴 texthl=Normal
+sign define vimspectorBPDisabled text=🔵 texthl=Normal
+sign define vimspectorPC text=🔶 texthl=SpellBad
+"}}}
+" nmap <F5> :call vimspector#launch()<cr>
 " nmap <F5> <Plug>VimspectorContinue
 " nmap <S-F5> :VimspectorReset<cr>
 " nmap <leader>bb :call vimspector#ToggleBreakpoint()<cr>
