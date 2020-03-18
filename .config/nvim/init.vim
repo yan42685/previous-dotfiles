@@ -188,9 +188,9 @@ endfunction
 " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 " 触发鼠标悬浮事件
 nnoremap <silent> gh :call CocActionAsync('doHover')<cr>
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gd <Plug>(coc-definition)zz
+nmap <silent> gi <Plug>(coc-implementation)zz
+nmap <silent> gr <Plug>(coc-references)zz
 nnoremap gq :CocList --normal quickfix<cr>
 nnoremap gm :CocList --normal marks<cr>
 " 查看文档
@@ -848,15 +848,8 @@ let g:winresizer_vert_resize = 3  " 每次移动的步幅
 " usage: 进入resize模式后，hjkl可以调整窗口大小，enter确认，q取消
 nnoremap <leader>wr :WinResizerStartResize<cr>
 
-" Plug 'octol/vim-cpp-enhanced-highlight', {'for': 'cpp'}
-"{{{
-let g:cpp_class_scope_highlight = 1
-let g:cpp_member_variable_highlight = 1
-let g:cpp_class_decl_highlight = 1
-let g:cpp_posix_standard = 1
-let g:cpp_experimental_simple_template_highlight = 1
-let g:cpp_concepts_highlight = 1
-"}}}
+" 多语言debug支持 FIXME: 这个插件还在开发阶段，可能会有很多bug
+" Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c'}
 
 
 
@@ -894,6 +887,8 @@ nnoremap gb %zz
 nnoremap gi gi<esc>zzi
 nnoremap '' ''zz
 nnoremap '. '.zz
+nnoremap <c-o> <c-o>zz
+nnoremap <c-i> <c-i>zz
 
 " 替换模式串用法: 先用 / 查找, 然后再按下面的快捷键, subtitute查找域为空时会默认使用上次查找的内容
 nnoremap <leader>su :%s///gc<left><left><left>
@@ -1366,7 +1361,7 @@ function! s:synstack()
     echo join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ' -> ')
 endfunction
 "}}}
-nnoremap <F8> :<C-u>call <SID>synstack()<CR>
+" nnoremap <F8> :<C-u>call <SID>synstack()<CR>
 "自动保存
 " {{{
 function! s:Autosave(timed)

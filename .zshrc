@@ -205,6 +205,8 @@ if ! zgen saved; then
     zgen oh-my-zsh plugins/command-not-found
     zgen oh-my-zsh plugins/extract
     zgen oh-my-zsh plugins/colorize
+
+
     # zgen oh-my-zsh plugins/git-auto-fetch
     zgen load romkatv/powerlevel10k powerlevel10k
     zgen load zsh-users/zsh-syntax-highlighting
