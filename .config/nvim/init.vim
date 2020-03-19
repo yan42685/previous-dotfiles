@@ -861,7 +861,7 @@ let g:winresizer_vert_resize = 3  " 每次移动的步幅
 nnoremap <leader>wr :WinResizerStartResize<cr>
 
 " 多语言debug支持 FIXME: 这个插件还在开发阶段，可能会有很多bug
-Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c'}
+Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python'}
 "{{{
 sign define vimspectorBP text=🔴 texthl=Normal
 sign define vimspectorBPDisabled text=🔵 texthl=Normal

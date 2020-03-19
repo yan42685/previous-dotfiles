@@ -11,7 +11,7 @@
         "stopOnEntry": true,
         "console": "externalTerminal",
         "debugOptions": [],
-        "program": "${file}",
+        "program": "${workspaceRoot}/a.py",
       }
     }
   }
