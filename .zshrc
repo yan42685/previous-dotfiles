@@ -187,6 +187,7 @@ zstyle ':completion:*:(ssh|scp|rsync):*:hosts-domain' ignored-patterns '<->.<->.
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 # }}}
 
+# FIXME: 如果ohmyzsh的插件安装失败，那就把.zgen/robbyrussell这个文件夹删了，再zgen reset  下次进入终端会卡一段时间(重新下载robbyrussell) 然后就没问题了
 # load zgen Plugins
 # {{{
 source "${HOME}/.zgen/zgen.zsh"
@@ -239,8 +240,8 @@ alias ts="trash"
 alias cp="cp -ip"
 alias mv="mv -i"
 alias vi='nvim'
-alias vim='nvim'
-alias vimm='\vim'   # 用转义符防止递归映射
+# alias vim='nvim'
+# alias vimm='\vim'   # 用转义符防止递归映射
 alias dot='/usr/bin/git --git-dir=/home/yy/.dotfiles/ --work-tree=/home/yy'   # 用于存放dotfiles
 alias rm='trash'
 alias nnn='PAGER= nnn'
