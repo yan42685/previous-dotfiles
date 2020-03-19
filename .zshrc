@@ -686,3 +686,6 @@ fi
 
   unfunction _pp_c _pp_s
 } "$@"
+
+# Created by `userpath` on 2020-03-18 21:41:57
+export PATH="$PATH:/root/.local/bin"
