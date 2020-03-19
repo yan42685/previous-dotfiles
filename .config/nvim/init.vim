@@ -1118,6 +1118,7 @@ augroup tab_indent_settings_by_filetype
     autocmd BufRead,BufNewFile *.part set filetype=html
     autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
     autocmd BufWinEnter *.php set mps-=<:>  " disable showmatch when use > in php
+    autocmd FileType make setlocal noexpandtab shiftwidth=4 softtabstop=0
 augroup end
 "}}}
 " Display Settings 展示/排版等界面格式设置{{{
