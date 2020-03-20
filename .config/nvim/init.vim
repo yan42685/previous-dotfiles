@@ -463,7 +463,7 @@ endfunction
 let g:lightline = {}
 let g:lightline.colorscheme = s:lightline_schemes[s:colorscheme_mode]
 let g:lightline.separator = { 'left': "\ue0b8", 'right': "\ue0be" }
-" let g:lightline.subseparator = { 'left': "\ue0b9", 'right': "\ue0b9" }
+let g:lightline.subseparator = { 'left': "\ue0b9", 'right': "\ue0b9" }
 let g:lightline.tabline_separator = { 'left': "\ue0bc", 'right': "\ue0ba" }
 let g:lightline.tabline_subseparator = { 'left': "\ue0bb", 'right': "\ue0bb" }
 let g:lightline#ale#indicator_checking = "\uf110 "
@@ -474,13 +474,11 @@ let g:lightline#asyncrun#indicator_none = ''
 let g:lightline#asyncrun#indicator_run = 'Running...'
 let g:lightline.active = {
         \ 'left': [ [ 'mode', 'paste' ],
-        \           [  'filename', 'readonly', 'gitbranch', 'modified'] ,
-        \           [ 'session_name' ],
-        \
-        \],
+        \           [  'filename', 'readonly', 'gitbranch', 'modified', 'session_name' ],
+        \         ],
         \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
-        \            [ 'lineinfo' ],
-        \            [ 'asyncrun_status', 'filetype', 'fileformat']
+        \            [ 'filetype', 'fileformat', 'lineinfo' ],
+        \            [ 'asyncrun_status']
         \          ]
         \ }
 let g:lightline.inactive = {
