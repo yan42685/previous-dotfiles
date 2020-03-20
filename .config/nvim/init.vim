@@ -90,18 +90,146 @@ call plug#begin('~/.vim/plugged')
 
 " {{{插件
 
+"========================================================
+" 没有设置快捷键的，在后台默默运行的插件
+"{{{
+" 缩进虚线
+Plug 'Yggdroot/indentLine', {'for': 'python'}
+
 " 极大增强f和t查找能力 , f<cr>会重复上次搜索的字母, f会自动重复搜索
 Plug 'rhysd/clever-f.vim'
+"{{{
 let g:clever_f_smart_case = 1  " smart case
 let g:clever_f_chars_match_any_signs = 1  " 可以搜索所有的字符,比如;,.
 let g:clever_f_repeat_last_char_inputs = ["\<CR>", "\<Tab>"]  " 使用上次的输入
 let g:clever_f_mark_char_color = 'MyHack'
 let g:clever_f_across_no_line = 1
+"}}}
 
+" 高亮书签marker
+" 取消默认的快捷键{{{
+let g:SignatureMap = {
+\ 'Leader'             :  "m", 'PlaceNextMark'     :  "",  'ToggleMarkAtLine'   :  "",
+\ 'PurgeMarksAtLine'   :  "", 'DeleteMark'         :  "",  'PurgeMarks'         :  "",
+\ 'PurgeMarkers'       :  "", 'GotoNextLineAlpha'  :  "",  'GotoPrevLineAlpha'  :  "",
+\ 'GotoNextSpotAlpha'  :  "", 'GotoPrevSpotAlpha'  :  "",  'GotoNextLineByPos'  :  "",
+\ 'GotoPrevLineByPos'  :  "", 'GotoNextSpotByPos'  :  "",  'GotoPrevSpotByPos'  :  "",
+\ 'GotoNextMarker'     :  "", 'GotoPrevMarker'     :  "",  'GotoNextMarkerAny'  :  "",
+\ 'GotoPrevMarkerAny'  :  "", 'ListBufferMarks'    :  "",  'ListBufferMarkers'  :  ""
+\ }
+"}}}
+Plug 'kshenoy/vim-signature'
 
-" 快速移动
-Plug 'easymotion/vim-easymotion', {'on': '<Plug>(easymotion-bd-f)'}
-map <silent> <leader>f <Plug>(easymotion-bd-f)
+" 实时显示HEX颜色，比如#245984
+Plug 'ap/vim-css-color', {'for': ['css']}
+
+" 让. 可以重复插件的操作, 和surround是绝配
+Plug 'tpope/vim-repeat'
+
+" Undo到上次保存前的历史操作(使用undofile时)就发警告来提醒
+Plug 'arp242/undofile_warn.vim'
+
+" 拼写检查
+Plug 'kamykn/spelunker.vim'
+"{{{
+set nospell
+" let g:spelunker_disable_auto_group = 1  " Disable default autogroup. (default: 0)
+let g:spelunker_highlight_type = 2  " Highlight only SpellBad.
+augroup my_highlight_spellbad
+    autocmd!
+    autocmd VimEnter * highlight SpelunkerSpellBad cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
+augroup end
+"
+" let g:spelunker_check_type = 2  " FIXME 如果打开大文件很慢就尝试开启此项 Spellcheck displayed words in buffer. Fast and dynamic
+"}}}
+
+" 140+种语言的语法高亮包
+Plug 'sheerun/vim-polyglot'
+
+" 括号配对优化
+Plug 'jiangmiao/auto-pairs'
+"{{{
+" 取消自动在括号内自动加一个空格
+let g:AutoPairsMapSpace=0
+" 不要在插入模式下映射<c-h>为<backspace>
+let g:AutoPairsMapCh=0
+" 取消自带快捷键
+let g:AutoPairsShortcutJump = ''
+let g:AutoPairsShortcutToggle = ''
+let g:AutoPairsShortcutFastWrap = ''
+let g:AutoPairsShortcutBackInsert = ''
+
+"}}}
+
+" 多彩括号
+Plug 'luochen1990/rainbow'
+"{{{
+let g:rainbow_active = 1
+"}}}
+
+" 【可能影响性能】侧栏显示git diff情况(要求vim8+)
+Plug 'mhinz/vim-signify'
+
+" coc-snippets是框架,这个是内容
+Plug 'honza/vim-snippets'
+"
+" 自动进入粘贴模式
+Plug 'ConradIrwin/vim-bracketed-paste'
+
+" 插件适配
+Plug 'albertomontesg/lightline-asyncrun'
+
+" FIXME: this source invode vim function that could be quite slow, so make sure your coc.preferences.timeout is not too low, otherwise it may timeout.
+Plug 'Shougo/neoinclude.vim' | Plug 'jsfaint/coc-neoinclude'
+
+" 像gitlens一样每行显示gitblame
+Plug 'APZelos/blamer.nvim'
+"{{{
+" 自动开启
+let g:blamer_enabled = 1
+"}}}
+
+" 自动解决绝大部分编码问题
+Plug 'mbbill/fencview', { 'on': [ 'FencAutoDetect', 'FencView' ] }
+
+" Emmet支持
+Plug 'mattn/emmet-vim'
+"{{{
+" 只在特定文件加载
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
+"}}}
+
+" 自动关闭标签
+Plug 'alvan/vim-closetag'
+"{{{
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.xml,*.jsx,*.tsx'
+"}}}
+
+" markdown代码内高亮
+Plug 'tpope/vim-markdown', {'for': ['markdown', 'vimwiki']}
+" TODO: 不知道还能不能用其他语言的高亮
+let g:markdown_fenced_languages = ['html', 'css', 'js=javascript', 'python', 'bash=sh']
+"
+" NOTE: 自动切换到project root
+Plug 'airblade/vim-rooter'
+"{{{
+" let g:rooter_manual_only = 1  " 停止自动目录
+" let g:rooter_use_lcd = 1  " 只在当前window切换目录
+" nnoremap <leader>rd :Rooter  " 手动切换目录
+"}}}
+
+" 与tmux整合的插件
+"{{{
+if executable('tmux') && filereadable(expand('~/.zshrc')) && $TMUX !=# ''
+    " 在tmux的pane间也能补全
+    Plug 'wellle/tmux-complete.vim'
+    let g:tmuxcomplete#trigger = ''
+endif
+"}}}
+"===========================================================================
+"}}}
+"========================================================
 
 " 主题配色
 " Plug 'joshdick/onedark.vim'
@@ -110,6 +238,10 @@ Plug 'tyrannicaltoucan/vim-quantum'
 " Plug 'trevordmiller/nova-vim'
 Plug 'sainnhe/gruvbox-material'
 Plug 'sainnhe/forest-night'
+
+" 快速移动
+Plug 'easymotion/vim-easymotion', {'on': '<Plug>(easymotion-bd-f)'}
+map <silent> <leader>f <Plug>(easymotion-bd-f)
 
 " 快速注释
 Plug 'preservim/nerdcommenter', {'on': '<plug>NERDCommenterToggle'}
@@ -124,9 +256,11 @@ map <c-_> <plug>NERDCommenterToggle
 imap <c-_> <esc><plug>NERDCommenterToggle
 
 " 文件树 (现在用的是coc-explorer)
+"{{{
 function ToggleCocExplorer()
   execute 'CocCommand explorer --toggle --width=35 --sources=buffer+,file+ ' . getcwd()
 endfunction
+"}}}
 nmap <silent> <leader>er :call ToggleCocExplorer()<CR>
 
 " COC自动补全框架
@@ -228,8 +362,6 @@ endfunction
 nmap <leader>gmt <plug>(MergetoolToggle)
 nnoremap <silent> <leader>cml :<C-u>call MergetoolLayoutCustom()<CR>
 
-
-
 " git
 Plug 'tpope/vim-fugitive'
 nnoremap ,ga :Git add %:p<CR><CR>
@@ -305,34 +437,10 @@ nnoremap <c-p> :Leaderf command<cr>
 nnoremap <leader>rg :<C-U>Leaderf! rg -S -e --hidden<space>
 nnoremap <leader>rG :<C-U>Leaderf! rg -S -e<space>
 
-
-" 缩进虚线
-Plug 'Yggdroot/indentLine', {'for': 'python'}
-
-" 高亮书签marker
-" 取消默认的快捷键{{{
-let g:SignatureMap = {
-\ 'Leader'             :  "m", 'PlaceNextMark'     :  "",  'ToggleMarkAtLine'   :  "",
-\ 'PurgeMarksAtLine'   :  "", 'DeleteMark'         :  "",  'PurgeMarks'         :  "",
-\ 'PurgeMarkers'       :  "", 'GotoNextLineAlpha'  :  "",  'GotoPrevLineAlpha'  :  "",
-\ 'GotoNextSpotAlpha'  :  "", 'GotoPrevSpotAlpha'  :  "",  'GotoNextLineByPos'  :  "",
-\ 'GotoPrevLineByPos'  :  "", 'GotoNextSpotByPos'  :  "",  'GotoPrevSpotByPos'  :  "",
-\ 'GotoNextMarker'     :  "", 'GotoPrevMarker'     :  "",  'GotoNextMarkerAny'  :  "",
-\ 'GotoPrevMarkerAny'  :  "", 'ListBufferMarks'    :  "",  'ListBufferMarkers'  :  ""
-\ }
-"}}}
-Plug 'kshenoy/vim-signature'
-
-" 实时显示HEX颜色，比如#245984
-Plug 'ap/vim-css-color', {'for': ['css']}
-
 " Vim-Surround快捷操作
 Plug 'tpope/vim-surround'
 nmap ysw ysiw
 nmap ysW ysiW
-
-" 让. 可以重复插件的操作, 和surround是绝配
-Plug 'tpope/vim-repeat'
 
 " uodo历史及持久化
 Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
@@ -349,29 +457,8 @@ set undofile
 "}}}
 nnoremap <leader>ut :MundoToggle<cr>
 
-" Undo到上次保存前的历史操作(使用undofile时)就发警告来提醒
-Plug 'arp242/undofile_warn.vim'
-
-" 拼写检查
-Plug 'kamykn/spelunker.vim'
-"{{{
-set nospell
-" let g:spelunker_disable_auto_group = 1  " Disable default autogroup. (default: 0)
-let g:spelunker_highlight_type = 2  " Highlight only SpellBad.
-augroup my_highlight_spellbad
-    autocmd!
-    autocmd VimEnter * highlight SpelunkerSpellBad cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
-augroup end
-"
-" let g:spelunker_check_type = 2  " FIXME 如果打开大文件很慢就尝试开启此项 Spellcheck displayed words in buffer. Fast and dynamic
-"}}}
-
 " 使用coc-yank
 nnoremap <silent> gy :<C-u>CocList --normal yank<cr>
-
-
-" 140+种语言的语法高亮包
-Plug 'sheerun/vim-polyglot'
 
 " ALE静态代码检查和自动排版
 Plug 'dense-analysis/ale'
@@ -612,36 +699,6 @@ nnoremap <leader>pl :SLoad<cr>
 nnoremap <leader>pc :SClose<cr>
 nnoremap <leader>pd :SDelete<cr>
 
-" 括号配对优化
-Plug 'jiangmiao/auto-pairs'
-"{{{
-" 取消自动在括号内自动加一个空格
-let g:AutoPairsMapSpace=0
-" 不要在插入模式下映射<c-h>为<backspace>
-let g:AutoPairsMapCh=0
-" 取消自带快捷键
-let g:AutoPairsShortcutJump = ''
-let g:AutoPairsShortcutToggle = ''
-let g:AutoPairsShortcutFastWrap = ''
-let g:AutoPairsShortcutBackInsert = ''
-
-"}}}
-
-" 多彩括号
-Plug 'luochen1990/rainbow'
-"{{{
-let g:rainbow_active = 1
-"}}}
-
-" 【可能影响性能】侧栏显示git diff情况(要求vim8+)
-Plug 'mhinz/vim-signify'
-
-" coc-snippets是框架,这个是内容
-Plug 'honza/vim-snippets'
-"
-" 自动进入粘贴模式
-Plug 'ConradIrwin/vim-bracketed-paste'
-
 " 为内置终端提供方便接口
 Plug 'kassio/neoterm'
 "{{{
@@ -684,9 +741,6 @@ tnoremap <m-n> <c-\><c-n>
 tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
 tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
 
-" 多光标
-" Plug 'mg979/vim-visual-multi'
-
 " 异步自动生成tags
 Plug 'jsfaint/gen_tags.vim'
 let g:loaded_gentags#gtags = 1  " 设1关闭gtags功能, 这样可以关闭警告
@@ -706,16 +760,6 @@ let g:vista#renderer#icons = {
 "}}}
 nnoremap <leader>ot :Vista<cr>
 
-
-" 似乎是vim唯一的test插件, 支持CI
-" Plug 'janko/vim-test'
-
-" 新增文本对象
-" Plug 'targets.vim'
-"
-" %匹配对象增强, 建议把%改成m
-"Plug 'andymass/vim-matchup'
-"
 " 类似VSCode的编译/测试/部署 任务工具
 Plug 'skywind3000/asynctasks.vim'
 "{{{
@@ -751,9 +795,6 @@ augroup end
 nmap gq <plug>(asyncrun-qftoggle)
 nnoremap <leader>ma :AsyncRun -mode=term -pos=bottom -rows=10 python "$(VIM_FILEPATH)"
 
-" 插件适配
-Plug 'albertomontesg/lightline-asyncrun'
-
 " sudo for neovim  (原来的tee trick只对vim有用，对neovim无效)
 Plug 'lambdalisue/suda.vim'
 "{{{suda.vim-usage
@@ -770,44 +811,10 @@ augroup temporar_change_manpager_mapping
     autocmd FileType man nmap <silent> <buffer> <C-j> ]t
     autocmd FileType man nmap <silent> <buffer> <C-k> [t
 augroup end
-
-" FIXME: this source invode vim function that could be quite slow, so make sure your coc.preferences.timeout is not too low, otherwise it may timeout.
-Plug 'Shougo/neoinclude.vim' | Plug 'jsfaint/coc-neoinclude'
-
-" 像gitlens一样每行显示gitblame
-Plug 'APZelos/blamer.nvim'
-"{{{
-" 自动开启
-let g:blamer_enabled = 1
-"}}}
-
-
-" 自动解决绝大部分编码问题
-Plug 'mbbill/fencview', { 'on': [ 'FencAutoDetect', 'FencView' ] }
 "
 " 查看各个插件启动时间
 Plug 'tweekmonster/startuptime.vim', { 'on': 'StartupTime' }
-" Emmet支持
-Plug 'mattn/emmet-vim'
-"{{{
-" 只在特定文件加载
-let g:user_emmet_install_global = 0
-autocmd FileType html,css EmmetInstall
-"}}}
 
-" 内嵌代码辅助缩进
-" Plug 'AndrewRadev/inline_edit.vim'
-
-" 自动关闭标签
-Plug 'alvan/vim-closetag'
-"{{{
-let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.xml,*.jsx,*.tsx'
-"}}}
-
-" markdown代码内高亮
-Plug 'tpope/vim-markdown', {'for': ['markdown', 'vimwiki']}
-" TODO: 不知道还能不能用其他语言的高亮
-let g:markdown_fenced_languages = ['html', 'css', 'js=javascript', 'python', 'bash=sh']
 " MarkDown预览
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for':['markdown', 'vimwiki'] }
 let g:mkdp_command_for_global = 0  " 所有文件中可以使用预览markdown命令
@@ -820,16 +827,7 @@ Plug 'vimwiki/vimwiki', {'on': ['VimwikiIndex']}
 "let g:vimwiki_list = [{'path': '~/vimwiki/',
             \ 'syntax': 'markdown', 'ext': '.md'}]
 "}}}
-"
-" NOTE: 自动切换到project root
-Plug 'airblade/vim-rooter'
-" let g:rooter_manual_only = 1  " 停止自动目录
-" let g:rooter_use_lcd = 1  " 只在当前window切换目录
-" nnoremap <leader>rd :Rooter  " 手动切换目录
 
-Plug 'alvan/vim-closetag'
-
-"
 " Sink沉浸写作模式
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
@@ -841,13 +839,6 @@ augroup toggle_limelight_on_goyo
 augroup end
 "}}}
 nnoremap ,sn :Goyo<cr>
-
-" 与tmux整合的插件
-if executable('tmux') && filereadable(expand('~/.zshrc')) && $TMUX !=# ''
-    " 在tmux的pane间也能补全
-    Plug 'wellle/tmux-complete.vim'
-    let g:tmuxcomplete#trigger = ''
-endif
 
 " 更方便地调整window
 Plug 'simeji/winresizer', {'on': 'WinResizerStartResize'}
@@ -883,7 +874,32 @@ nmap <F10> :VimspectorReset
 " nmap <Plug>VimspectorAddFunctionBreakpoint
 
 
+
+
+
+
+
+
+
+" 打算以后再体验的插件
+
+" 内嵌代码辅助缩进
+" Plug 'AndrewRadev/inline_edit.vim'
+" 多光标
+" Plug 'mg979/vim-visual-multi'
+
+" 似乎是vim唯一的test插件, 支持CI
+" Plug 'janko/vim-test'
+
+" 新增文本对象
+" Plug 'targets.vim'
+"
+" %匹配对象增强, 建议把%改成m
+"Plug 'andymass/vim-matchup'
+"
+"
 " }}}
+
 
 call plug#end()
 
