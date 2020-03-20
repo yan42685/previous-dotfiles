@@ -249,7 +249,7 @@ nnoremap ,ge :Gedit<CR>
     " Rename the file in git repo.
     " Reload the file into the current buffer.
     " Preserve undo history.
-nnoremap ,gr :Gwrite<cr>:Gmove<space>
+nnoremap ,gr :Gwrite<cr>:Gmove <c-r>%
 nnoremap ,gw :Gwrite<CR><CR>
 
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式
@@ -825,8 +825,8 @@ Plug 'vimwiki/vimwiki', {'on': ['VimwikiIndex']}
             \ 'syntax': 'markdown', 'ext': '.md'}]
 "}}}
 "
-" 自动切换到project root
-" Plug 'airblade/vim-rooter'
+" NOTE: 自动切换到project root
+Plug 'airblade/vim-rooter'
 " let g:rooter_manual_only = 1  " 停止自动目录
 " let g:rooter_use_lcd = 1  " 只在当前window切换目录
 " nnoremap <leader>rd :Rooter  " 手动切换目录
