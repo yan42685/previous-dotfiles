@@ -192,7 +192,7 @@ nmap <silent> gd <Plug>(coc-definition)zz
 nmap <silent> gi <Plug>(coc-implementation)zz
 nmap <silent> gr <Plug>(coc-references)zz
 nmap <silent> gf <Plug>(coc-refactor)
-nnoremap gq :CocList --normal quickfix<cr>
+" nnoremap gq :CocList --normal quickfix<cr>
 nnoremap gm :CocList --normal marks<cr>
 " 查看文档
 nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
@@ -211,11 +211,9 @@ nnoremap <silent> g :WhichKey 'g'<cr>
 
 " 可视化merge
 Plug 'samoshkin/vim-mergetool'
-
+"{{{
 let g:mergetool_layout = 'mr'  " `l`, `b`, `r`, `m`
 let g:mergetool_prefer_revision = 'local'  " `local`, `base`, `remote`
-nmap <leader>gmt <plug>(MergetoolToggle)
-nnoremap <silent> <leader>cml :<C-u>call MergetoolLayoutCustom()<CR>
 let g:mergetool_layout_custom = 0
 function! MergetoolLayoutCustom()
   if g:mergetool_layout_custom == 0
@@ -226,6 +224,9 @@ function! MergetoolLayoutCustom()
     execute 'MergetoolToggleLayout mr'
   endif
 endfunction
+"}}}
+nmap <leader>gmt <plug>(MergetoolToggle)
+nnoremap <silent> <leader>cml :<C-u>call MergetoolLayoutCustom()<CR>
 
 
 
@@ -668,7 +669,7 @@ endfunction
 "}}}
 " 一键运行
 nnoremap <leader>rn :call AutoCompileAndRun()<cr>
-nnoremap <silent> <m-m> :botright Ttoggle<cr><c-w>w<c-\><c-n>i
+nnoremap <silent> <m-m> :botright Ttoggle<cr><c-w>w<c-\><c-n>
 " 任何时候进入neoterm都是插入模式
 nnoremap <silent> <m-j> :botright Topen<cr><c-w>w<c-\><c-n>i
 inoremap <silent> <m-j> <esc>:botright Topen<cr>
@@ -747,7 +748,7 @@ augroup auto_open_quickfix
     " autocmd QuickFixCmdPost * execute 'CocList --normal quickfix' | nnoremap <c-j> :cnext<cr> | nnoremap <c-k> :cprevious<cr>
 augroup end
 "}}}
-" nmap gq <plug>(asyncrun-qftoggle)
+nmap gq <plug>(asyncrun-qftoggle)
 nnoremap <leader>ma :AsyncRun -mode=term -pos=bottom -rows=10 python "$(VIM_FILEPATH)"
 
 " 插件适配
