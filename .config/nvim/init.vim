@@ -243,7 +243,13 @@ nnoremap ,gm :Gmove<Space>
 nnoremap ,gb :Git branch<Space>
 nnoremap .go :Git checkout<Space>
 nnoremap ,ge :Gedit<CR>
-nnoremap ,gr :Gread<CR>
+" 重命名git项目下的文件
+" This will:
+    " Rename your file on disk.
+    " Rename the file in git repo.
+    " Reload the file into the current buffer.
+    " Preserve undo history.
+nnoremap ,gr :Gwrite<cr>:Gmove<space>
 nnoremap ,gw :Gwrite<CR><CR>
 
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式
