@@ -249,7 +249,7 @@ nnoremap ,ge :Gedit<CR>
     " Rename the file in git repo.
     " Reload the file into the current buffer.
     " Preserve undo history.
-nnoremap ,gr :Gwrite<cr>:Gmove <c-r>%
+nnoremap ,gr :Gwrite<cr>:Gmove %:h/
 nnoremap ,gw :Gwrite<CR><CR>
 
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式
@@ -957,6 +957,8 @@ nnoremap gg gg
 nnoremap gv gvzz
 " 去掉搜索高亮
 nnoremap <silent> <leader>/ :nohls<cr>zz
+" 编辑和当前文件同目录的文件
+nnoremap <leader>ef :e %:h/
 
 " Buffer操作
 " Close current buffer
