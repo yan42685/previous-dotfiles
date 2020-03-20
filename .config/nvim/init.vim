@@ -904,7 +904,6 @@ nmap <F10> :VimspectorReset
 
 call plug#end()
 
-
 "==========================================
 " HotKey Settings  自定义快捷键设置
 "==========================================
@@ -943,8 +942,6 @@ vnoremap <leader>su :s///gc<left><left><left>
 " 退出系列
 noremap <silent> <leader>q <esc>:q<cr>
 noremap <silent> <leader><leader>q <esc>:qa<cr>
-" 当把vim作为git的difftool时，设置 git config --global difftool.trustExitCode true && git config --global mergetool.trustExitCode true
-" 在git difftool或git mergetool之后  可以用:cq进行强制退出diff/merge模式，而不会不停地recall another diff/merge file
 
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
@@ -1219,8 +1216,10 @@ augroup auto_actions_for_better_experience
             nnoremap <c-j> :cnext<cr>
             nnoremap <c-k> :cprevious<cr>
         else
-            nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>
-            nnoremap <c-k> :call ScrollAnotherWindow(1)<CR>
+            if !&diff
+                nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>
+                nnoremap <c-k> :call ScrollAnotherWindow(1)<CR>
+            endif
         endif
     endfunction
     "}}}
@@ -1465,3 +1464,12 @@ endfunction
 "}}}
 nnoremap [<space> :<c-u>call <sid>BlankDown(v:count1)<cr>
 nnoremap ]<space> :<c-u>call <sid>BlankUp(v:count1)<cr>
+
+" 当把vim作为git的difftool时，设置 git config --global difftool.trustExitCode true && git config --global mergetool.trustExitCode true
+" 在git difftool或git mergetool之后  可以用:cq进行强制退出diff/merge模式，而不会不停地recall another diff/merge file
+if &diff
+    noremap Q <esc>:cq<cr>
+    " 在diff间跳转
+    noremap  <c-j> ]czz
+    noremap <c-k> [czz
+endif
