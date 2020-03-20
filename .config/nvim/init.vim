@@ -191,6 +191,7 @@ nnoremap <silent> gh :call CocActionAsync('doHover')<cr>
 nmap <silent> gd <Plug>(coc-definition)zz
 nmap <silent> gi <Plug>(coc-implementation)zz
 nmap <silent> gr <Plug>(coc-references)zz
+nmap <silent> gf <Plug>(coc-refactor)
 nnoremap gq :CocList --normal quickfix<cr>
 nnoremap gm :CocList --normal marks<cr>
 " 查看文档
@@ -414,38 +415,43 @@ Plug 'itchyny/lightline.vim'
 " functions
 "{{{
 function! Sy_stats_wrapper()
-  let symbols = ['+', '-', '~']
+  let l:symbols = ['+', '-', '~']
   let [added, modified, removed] = sy#repo#get_stats()
-  let stats = [added, removed, modified]  " reorder
+  let l:stats = [added, removed, modified]  " reorder
   let hunkline = ''
   for i in range(3)
-    if stats[i] > 0
-      let hunkline .= printf('%s%s ', symbols[i], stats[i])
+    if l:stats[i] > 0
+      let hunkline .= printf('%s%s ', l:symbols[i], l:stats[i])
     endif
   endfor
   if !empty(hunkline)
     let hunkline = printf('[%s]', hunkline[:-2])
   endif
-  return hunkline
+  return winwidth(0) > 70 ? hunkline : ''
 endfunction
 
 function! LightlineFugitive()
+    let l:result = ''
     if &ft !~? 'vimfiler' && exists('*FugitiveHead')
-        return FugitiveHead()
+        let l:result = FugitiveHead()
     endif
-    return ''
+    return winwidth(0) > 45 ? l:result : ''
 endfunction
 
 function! LightlineFileformat()
-    return winwidth(0) > 70 ? &fileformat : ''
+    let l:result = &fenc != "" ? &fenc : &enc
+    let l:result = l:result . '[' . &ff . ']'
+    return winwidth(0) > 70 ? l:result : ''
 endfunction
 
-function! LightlineFileencoding()
-    return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
+function LightLineFiletype()
+    let l:result = &ft != "" ? &ft : "no ft"
+    return winwidth(0) > 70 ? l:result : ''
 endfunction
+
 
 function! NearestMethodOrFunction() abort
-  return get(b:, 'vista_nearest_method_or_function', '')
+  return winwidth(0) > 70 ? get(b:, 'vista_nearest_method_or_function', '') : ''
 endfunction
 
 function! Tab_num(n) abort
@@ -453,16 +459,12 @@ function! Tab_num(n) abort
 endfunction
 
 function! RemoveLabelOnTopRight() abort
-    " return "\ue61b"
     return ""
 endfunction
 
 function! Get_session_name() abort
     let l:session_name = fnamemodify(v:this_session,':t')
-    if l:session_name != ''
-        return '<' . fnamemodify(v:this_session,':t') . '>'
-    else
-        return ''
+    return l:session_name != '' ? '<' . l:session_name . '>' : ''
 endfunction
 "}}}
 
@@ -488,7 +490,7 @@ let g:lightline.active = {
         \          ]
         \ }
 let g:lightline.inactive = {
-    \ 'left': [ [ 'filename' , 'modified' ] ],
+    \ 'left': [ [ 'filename' , 'modified', 'session_name' ] ],
     \ 'right': [ [ 'lineinfo' , 'fileformat', 'filetype'] ]
     \ }
 let g:lightline.tabline = {
@@ -501,17 +503,12 @@ let g:lightline.tab = {
 let g:lightline.tab_component = {
       \ }
 let g:lightline.tab_component_function = {
-      \ 'artify_activetabnum': 'Artify_active_tab_num',
-      \ 'artify_inactivetabnum': 'Artify_inactive_tab_num',
-      \ 'artify_filename': 'Artify_lightline_tab_filename',
       \ 'filename': 'lightline#tab#filename',
       \ 'readonly': 'lightline#tab#readonly',
       \ 'tabnum': 'Tab_num'
       \ }
 
 let g:lightline.component = {
-      \ 'artify_mode': '%{Artify_lightline_mode()}',
-      \ 'artify_lineinfo': "%2{Artify_line_percent()}\uf295",
       \ 'bufinfo': '%{bufname("%")}:%{bufnr("%")}',
       \ 'vim_logo': "\ue7c5",
       \ 'mode': '%{lightline#mode()}',
@@ -519,9 +516,6 @@ let g:lightline.component = {
       \ 'relativepath': '%f',
       \ 'filename': '%t',
       \ 'filesize': "%{HumanSize(line2byte('$') + len(getline('$')))}",
-      \ 'fileencoding': '%{&fenc!=#""?&fenc:&enc}',
-      \ 'fileformat': '%{&fenc!=#""?&fenc:&enc}[%{&ff}]',
-      \ 'filetype': '%{&ft!=#""?&ft:"no ft"}',
       \ 'paste': '%{&paste?"PASTE":""}',
       \ 'readonly': '%R',
       \ 'charvalue': '%b',
@@ -537,9 +531,10 @@ let g:lightline.component = {
 let g:lightline.component_function = {
       \   'gitbranch': 'LightlineFugitive',
       \   'modified': 'Sy_stats_wrapper',
-      \   'fileencoding': "LightlineFileencoding",
       \   'method': 'NearestMethodOrFunction',
-      \   'session_name': 'Get_session_name'
+      \   'session_name': 'Get_session_name',
+      \   'fileformat': 'LightlineFileformat',
+      \   'filetype': 'LightLineFiletype'
       \ }
 let g:lightline.component_expand = {
       \ 'linter_checking': 'lightline#ale#checking',
@@ -957,7 +952,7 @@ nnoremap gg gg
 nnoremap gv gvzz
 " 去掉搜索高亮
 nnoremap <silent> <leader>/ :nohls<cr>zz
-" 编辑和当前文件同目录的文件
+" 编辑和当前文件同目录的文件,在命令行按tab会自动展开%:h
 nnoremap <leader>ef :e %:h/
 
 " Buffer操作
