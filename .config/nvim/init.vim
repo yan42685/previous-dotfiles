@@ -931,8 +931,8 @@ nnoremap <leader>rr @r
 nnoremap gb %zz
 " 查找当前单词
 nnoremap gi gi<esc>zzi
-nnoremap '' ''zz
-nnoremap '. '.zz
+nnoremap '' ``zz
+nnoremap '. `.zz
 nnoremap <c-o> <c-o>zz
 nnoremap <c-i> <c-i>zz
 
