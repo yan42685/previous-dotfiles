@@ -216,6 +216,7 @@ if ! zgen saved; then
     zgen load zsh-users/zsh-history-substring-search
     zgen load djui/alias-tips  # 如果使用的不是缩写命令，会自动提醒你之前定义的alias
     zgen load urbainvaes/fzf-marks
+    zgen load Aloxaf/fzf-tab
     zgen load hlissner/zsh-autopair
     zgen load peterhurford/git-it-on.zsh  # open your current folder, on your current branch, in GitHub or GitLab
                                           # NOTE: This was built on a Mac. 在Linux不一定有效, 并且只有当文件夹名字和远程仓库一致才有效
