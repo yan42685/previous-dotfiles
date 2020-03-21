@@ -5,6 +5,7 @@
 	email = 419725794@qq.com
 [core]
     editor = nvim
+    quotepath = false  # 解决git ls不显示中文的问题
 
 [diff]
 	tool = vimdiff3
