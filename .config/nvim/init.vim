@@ -207,7 +207,7 @@ let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.xml,*.jsx,*.tsx'
 "}}}
 
 " markdown代码内高亮
-Plug 'tpope/vim-markdown', {'for': ['markdown', 'vimwiki']}
+Plug 'tpope/vim-markdown', {'for': ['md', 'vimwiki']}
 " TODO: 不知道还能不能用其他语言的高亮
 let g:markdown_fenced_languages = ['html', 'css', 'js=javascript', 'python', 'bash=sh']
 "
@@ -1132,7 +1132,7 @@ highlight SpellLocal term=underline cterm=underline
 augroup tab_indent_settings_by_filetype
     autocmd!
     autocmd FileType python,ruby,javascript,html,css,xml,sass,scss set tabstop=4 shiftwidth=4 softtabstop=4 expandtab ai
-    autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown set filetype=markdown
+    autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown set filetype=md
     autocmd BufRead,BufNewFile *.part set filetype=html
     autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
     autocmd BufWinEnter *.php set mps-=<:>  " disable showmatch when use > in php
