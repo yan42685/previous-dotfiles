@@ -334,7 +334,7 @@ nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
 " 打开鼠标位置下的链接
 nmap <silent> <leader>re <Plug>(coc-rename)
 " 重构
-" nmap <silent> <c-m-v> <Plug>(coc-codeaction-extract-variable)
+imap <silent> <c-m-v> <esc><Plug>(coc-codeaction)
 nmap <silent> <c-m-v> <Plug>(coc-codeaction)
 vmap <silent> <c-m-n> <Plug>(coc-codeaction-selected)
 
