@@ -440,8 +440,7 @@ nnoremap <silent> <leader>gr :Leaderf mru<cr>
 nnoremap <silent> <leader>gc :Leaderf cmdHistory<cr>
 nnoremap <silent> <leader>gs :Leaderf searchHistory<cr>
 nnoremap <c-p> :Leaderf command<cr>
-nnoremap <leader>rg :<C-U>Leaderf! rg --hidden<space>
-nnoremap <leader>rG :<C-U>Leaderf! rg<space>
+nnoremap <leader>rg :<C-U>Leaderf rg<cr>
 noremap <Leader>sw :<C-U><C-R>=printf("Leaderf! rg %s", expand("<cword>"))<CR><cr>
 
 " Vim-Surround快捷操作
