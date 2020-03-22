@@ -324,11 +324,11 @@ endfunction
 " 触发鼠标悬浮事件
 nnoremap <silent> gh :call CocActionAsync('doHover')<cr>
 nmap <silent> gd <Plug>(coc-definition)zz
-" nmap <silent> gd <Plug>(coc-implementation)zz
+nmap <silent> gm <Plug>(coc-implementation)zz
 nmap <silent> gr <Plug>(coc-references)zz
 nmap <silent> gf <Plug>(coc-refactor)
 " nnoremap gq :CocList --normal quickfix<cr>
-nnoremap gm :CocList --normal marks<cr>
+nnoremap <leader>gm :CocList --normal marks<cr>
 " 查看文档
 nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
 " 打开鼠标位置下的链接
