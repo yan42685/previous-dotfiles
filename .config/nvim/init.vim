@@ -215,9 +215,9 @@ let g:markdown_fenced_languages = ['html', 'css', 'js=javascript', 'python', 'ba
 Plug 'airblade/vim-rooter'
 "{{{
 " let g:rooter_manual_only = 1  " 停止自动目录
-" let g:rooter_use_lcd = 1  " 只在当前window切换目录
 " nnoremap <leader>rd :Rooter  " 手动切换目录
-let g:rooter_use_lcd = 1  " 只改变本窗口的directory?
+let g:rooter_resolve_links = 1  " resolve软硬链接
+let g:rooter_silent_chdir = 1  " 静默change dir
 "}}}
 
 " 与tmux整合的插件
