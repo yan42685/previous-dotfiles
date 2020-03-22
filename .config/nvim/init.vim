@@ -336,7 +336,7 @@ nmap <silent> <leader>re <Plug>(coc-rename)
 " 重构
 " nmap <silent> <c-m-v> <Plug>(coc-codeaction-extract-variable)
 nmap <silent> <c-m-v> <Plug>(coc-codeaction)
-vmap <silent> <c-m-m> <Plug>(coc-codeaction-selected)
+vmap <silent> <c-m-n> <Plug>(coc-codeaction-selected)
 
 " coc-translator
 nmap tt <Plug>(coc-translator-p)
