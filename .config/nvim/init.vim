@@ -217,6 +217,7 @@ Plug 'airblade/vim-rooter'
 " let g:rooter_manual_only = 1  " 停止自动目录
 " let g:rooter_use_lcd = 1  " 只在当前window切换目录
 " nnoremap <leader>rd :Rooter  " 手动切换目录
+let g:rooter_use_lcd = 1  " 只改变本窗口的directory?
 "}}}
 
 " 与tmux整合的插件
@@ -323,7 +324,7 @@ endfunction
 " 触发鼠标悬浮事件
 nnoremap <silent> gh :call CocActionAsync('doHover')<cr>
 nmap <silent> gd <Plug>(coc-definition)zz
-nmap <silent> gi <Plug>(coc-implementation)zz
+" nmap <silent> gd <Plug>(coc-implementation)zz
 nmap <silent> gr <Plug>(coc-references)zz
 nmap <silent> gf <Plug>(coc-refactor)
 " nnoremap gq :CocList --normal quickfix<cr>
@@ -332,6 +333,10 @@ nnoremap gm :CocList --normal marks<cr>
 nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
 " 打开鼠标位置下的链接
 nmap <silent> <leader>re <Plug>(coc-rename)
+" 重构
+" nmap <silent> <c-m-v> <Plug>(coc-codeaction-extract-variable)
+nmap <silent> <c-m-v> <Plug>(coc-codeaction)
+vmap <silent> <c-m-m> <Plug>(coc-codeaction-selected)
 
 " coc-translator
 nmap tt <Plug>(coc-translator-p)
@@ -434,8 +439,8 @@ nnoremap <silent> <leader>gr :Leaderf mru<cr>
 nnoremap <silent> <leader>gc :Leaderf cmdHistory<cr>
 nnoremap <silent> <leader>gs :Leaderf searchHistory<cr>
 nnoremap <c-p> :Leaderf command<cr>
-nnoremap <leader>rg :<C-U>Leaderf! rg -S -e --hidden<space>
-nnoremap <leader>rG :<C-U>Leaderf! rg -S -e<space>
+nnoremap <leader>rg :<C-U>Leaderf! rg -S --hidden<space>
+nnoremap <leader>rG :<C-U>Leaderf! rg -S <space>
 
 " Vim-Surround快捷操作
 Plug 'tpope/vim-surround'

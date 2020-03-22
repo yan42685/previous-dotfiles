@@ -691,3 +691,7 @@ fi
 
 # Created by `userpath` on 2020-03-18 21:41:57
 export PATH="$PATH:/root/.local/bin"
+# pyenv
+export PATH=~/.pyenv/bin:$PATH
+export PYENV_ROOT=~/.pyenv
+eval "$(pyenv init -)"
