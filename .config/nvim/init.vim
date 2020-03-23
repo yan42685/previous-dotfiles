@@ -1,4 +1,4 @@
-﻿" 只考虑NeoVim，不一定兼容Vim
+﻿ " 只考虑NeoVim，不一定兼容Vim
 "
 " 经验之谈:
 "   1. 抓住主要问题, 用相对简单和有意义的按键映射出现频率高的操作, 而非常冷门的操作不设置快捷键，可以考虑用别的方式替代
@@ -1010,7 +1010,9 @@ noremap zk zkzz
 noremap J <C-f>zz
 noremap K <C-b>zz
 nnoremap gb %zz
+" 去上次修改的地方
 nnoremap gi gi<esc>zzi
+nnoremap g; gi<esc>zz
 nnoremap '' ``zz
 nnoremap '. `.zz
 nnoremap <c-o> <c-o>zz
@@ -1484,6 +1486,8 @@ function s:Enable_normal_scheme() abort
     " kshenoy/vim-signature 标记的配色
     highlight! link SignatureMarkText OrangeSign
     highlight! link SignatureMarkerText PurpleSign
+    highlight! LineNr guifg=#717172
+
 endfunction
 
 function s:Enable_transparent_scheme() abort
