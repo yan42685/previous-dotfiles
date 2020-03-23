@@ -53,14 +53,14 @@
 "  6. 使用vim-signify显示diff，必须要注册好git账户，比如git config --global user.name "username" && git config --global user.email "useremail@qq.com"
 "  7.  "coc-tabnine需要设置'ignore_all_lsp': true来加强补全效果
 "}}}
-" ========================================
+"==========================================
 " 【初次配置Vim必看】配置文件的坑:{{{
 "   1. 映射<Plug>(...)必须用递归映射, 否则不生效
 "   2. 映射ex命令的时候不能用noremap, 因为这会导致按键出现奇奇怪怪的结果, 应该改成nnoremap
 "   3. vimrc文件let语句的等号两边不能写空格, 写了不生效!
 "   4. 单引号是raw String 而双引号才可以转义， 所以设置unicode字体的时候应该用双引号比如"\ue0b0"
 "}}}
-" ========================================
+"==========================================
 
 " ==========================================
 " 【可自行调整的重要参数】
@@ -322,7 +322,7 @@ let g:lightline.active = {
         \ }
 let g:lightline.inactive = {
     \ 'left': [ [ 'filename' , 'modified', 'session_name' ] ],
-    \ 'right': [ [ 'filetype', 'fileformat', 'lineinfo' ] ]
+    \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ], [ 'filetype', 'fileformat', 'lineinfo' ] ]
     \ }
 let g:lightline.tabline = {
     \ 'left': [ [ 'vim_logo', 'tabs' ] ],
