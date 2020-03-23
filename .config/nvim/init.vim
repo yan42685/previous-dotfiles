@@ -1231,7 +1231,7 @@ set hlsearch  " 高亮search命中的文本
 set incsearch  " 打开增量搜索模式,随着键入即时搜索
 set ignorecase  " 搜索时忽略大小写
 set smartcase  " 有一个或以上大写字母时变成大小写敏感
-set foldenable  " 代码折叠
+set foldenable  " 代码折叠 zM全部折叠 zR全部打开 zo开关一个折叠
 
 function Change_fold_method_by_filetype()
     let s:marker_fold_list = ['vim', 'markdown', 'txt']  " 根据文件类型选择不同的折叠模式
@@ -1242,6 +1242,8 @@ function Change_fold_method_by_filetype()
         set foldmethod=syntax
         set foldlevel=99
     endif
+    " 让viewport居中
+    execute 'normal! zz'
 endfunction
 
 augroup auto_change_fold_method
@@ -1280,8 +1282,6 @@ set formatoptions+=B  " 合并两行中文时，不在中间加空格
 "}}}
 "==========================================
 " 自动行为设置
-
-
 augroup auto_actions_for_better_experience
     autocmd!
     " 自动source VIMRC
