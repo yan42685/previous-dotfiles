@@ -228,6 +228,19 @@ if executable('tmux') && filereadable(expand('~/.zshrc')) && $TMUX !=# ''
     let g:tmuxcomplete#trigger = ''
 endif
 "}}}
+
+" 高亮与光标下单词相同的单词
+Plug 'RRethy/vim-illuminate'
+"{{{
+" 让高亮与visual显色一致
+hi link illuminatedWord Visual
+" 选择不高亮的文件类型
+let g:Illuminate_ftblacklist = ['vim', 'txt', 'md']
+"}}}
+
+
+
+"===========================================================================
 "===========================================================================
 "}}}
 "========================================================
