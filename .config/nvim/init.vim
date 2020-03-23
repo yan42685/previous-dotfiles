@@ -1188,7 +1188,7 @@ highlight SpellLocal term=underline cterm=underline
 augroup tab_indent_settings_by_filetype
     autocmd!
     autocmd FileType python,ruby,javascript,html,css,xml,sass,scss set tabstop=4 shiftwidth=4 softtabstop=4 expandtab ai
-    autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown set filetype=md
+    autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown set filetype=markdown
     autocmd BufRead,BufNewFile *.part set filetype=html
     autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
     autocmd BufWinEnter *.php set mps-=<:>  " disable showmatch when use > in php
