@@ -134,6 +134,7 @@ Plug 'kamykn/spelunker.vim'
 "{{{
 set nospell
 " let g:spelunker_disable_auto_group = 1  " Disable default autogroup. (default: 0)
+let g:spelunker_check_type = 2  " 只在window内动态check, 对大文件十分友好
 let g:spelunker_highlight_type = 2  " Highlight only SpellBad.
 augroup my_highlight_spellbad
     autocmd!
@@ -1327,7 +1328,13 @@ endfunc
 nnoremap <F2> :call ToggleColumnNumber()<cr>
 
 " F6 语法开关，关闭语法可以加快大文件的展示
-nnoremap <F6> :exec exists('syntax_on') ? 'syn off' : 'syn on'<cr>
+" nnoremap <F4> :exec exists('syntax_on') ? 'syn off' : 'syn on'<cr>
+nnoremap <F4> :call Faster_mode_for_large_file()<cr>
+function Faster_mode_for_large_file()
+    " 开关spelunker拼写检查插件
+    execute 'normal ZT'
+    execute 'SignifyToggle'
+endfunction
 
 " 当有两个窗口时, Scroll另一个窗口
 "{{{
