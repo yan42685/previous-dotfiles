@@ -88,11 +88,8 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-" {{{插件
-
-"========================================================
-" 没有设置快捷键的，在后台默默运行的插件
-"{{{
+" {{{没有设置快捷键的，在后台默默运行的插件
+"
 " 缩进虚线
 Plug 'Yggdroot/indentLine', {'for': 'python'}
 
@@ -177,9 +174,6 @@ Plug 'honza/vim-snippets'
 " 自动进入粘贴模式
 Plug 'ConradIrwin/vim-bracketed-paste'
 
-" 插件适配
-Plug 'albertomontesg/lightline-asyncrun'
-
 " FIXME: this source invode vim function that could be quite slow, so make sure your coc.preferences.timeout is not too low, otherwise it may timeout.
 Plug 'Shougo/neoinclude.vim' | Plug 'jsfaint/coc-neoinclude'
 
@@ -240,15 +234,170 @@ Plug 'michaeljsmith/vim-indent-object'
 
 " 自动隐藏搜索的高亮
 Plug 'romainl/vim-cool'
+"{{{
 let g:CoolTotalMatches = 1
+"}}}
 
 " 实时预览substitute命令的情况
 Plug 'markonm/traces.vim'
 
+" 状态栏
+Plug 'itchyny/lightline.vim'
+"{{{
+" functions
+"{{{
+function! Sy_stats_wrapper()
+  let l:symbols = ['+', '-', '~']
+  let [added, modified, removed] = sy#repo#get_stats()
+  let l:stats = [added, removed, modified]  " reorder
+  let hunkline = ''
+  for i in range(3)
+    if l:stats[i] > 0
+      let hunkline .= printf('%s%s ', l:symbols[i], l:stats[i])
+    endif
+  endfor
+  if !empty(hunkline)
+    let hunkline = printf('[%s]', hunkline[:-2])
+  endif
+  return winwidth(0) > 70 ? hunkline : ''
+endfunction
+
+function! LightlineFugitive()
+    let l:result = ''
+    if &ft !~? 'vimfiler' && exists('*FugitiveHead')
+        let l:result = FugitiveHead()
+    endif
+    return winwidth(0) > 45 ? l:result : ''
+endfunction
+
+function! LightlineFileformat()
+    let l:result = &fenc != "" ? &fenc : &enc
+    let l:result = l:result . '[' . &ff . ']'
+    return winwidth(0) > 70 ? l:result : ''
+endfunction
+
+function LightLineFiletype()
+    let l:result = &ft != "" ? &ft : "no ft"
+    return winwidth(0) > 70 ? l:result : ''
+endfunction
+
+
+function! NearestMethodOrFunction() abort
+  return winwidth(0) > 70 ? get(b:, 'vista_nearest_method_or_function', '') : ''
+endfunction
+
+function! Tab_num(n) abort
+  return a:n
+endfunction
+
+function! RemoveLabelOnTopRight() abort
+    return ""
+endfunction
+
+function! Get_session_name() abort
+    let l:session_name = fnamemodify(v:this_session,':t')
+    return l:session_name != '' ? '<' . l:session_name . '>' : ''
+endfunction
+"}}}
+
+let g:lightline = {}
+let g:lightline.colorscheme = s:lightline_schemes[s:colorscheme_mode]
+let g:lightline.separator = { 'left': "\ue0b8", 'right': "\ue0be" }
+let g:lightline.subseparator = { 'left': "\ue0b9", 'right': "\ue0b9" }
+let g:lightline.tabline_separator = { 'left': "\ue0bc", 'right': "\ue0ba" }
+let g:lightline.tabline_subseparator = { 'left': "\ue0bb", 'right': "\ue0bb" }
+let g:lightline#ale#indicator_checking = "\uf110 "
+let g:lightline#ale#indicator_warnings = "\uf529 "
+let g:lightline#ale#indicator_errors = "\uf00d "
+let g:lightline#ale#indicator_ok = "\uf00c "
+let g:lightline#asyncrun#indicator_none = ''
+let g:lightline#asyncrun#indicator_run = 'Running...'
+let g:lightline.active = {
+        \ 'left': [ [ 'mode', 'paste' ],
+        \           [  'filename', 'readonly', 'gitbranch', 'modified', 'session_name' ],
+        \         ],
+        \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
+        \            [ 'filetype', 'fileformat', 'lineinfo' ],
+        \            [ 'asyncrun_status']
+        \          ]
+        \ }
+let g:lightline.inactive = {
+    \ 'left': [ [ 'filename' , 'modified', 'session_name' ] ],
+    \ 'right': [ [ 'filetype', 'fileformat', 'lineinfo' ] ]
+    \ }
+let g:lightline.tabline = {
+    \ 'left': [ [ 'vim_logo', 'tabs' ] ],
+    \ 'right': [['RemoveLabelOnTopRight']]}
+let g:lightline.tab = {
+    \ 'active': [ 'filename', 'modified' ],
+    \ 'inactive': [ 'filename', 'modified' ] }
+
+let g:lightline.tab_component = {
+      \ }
+let g:lightline.tab_component_function = {
+      \ 'filename': 'lightline#tab#filename',
+      \ 'readonly': 'lightline#tab#readonly',
+      \ 'tabnum': 'Tab_num'
+      \ }
+
+let g:lightline.component = {
+      \ 'bufinfo': '%{bufname("%")}:%{bufnr("%")}',
+      \ 'vim_logo': "\ue7c5",
+      \ 'mode': '%{lightline#mode()}',
+      \ 'absolutepath': '%F',
+      \ 'relativepath': '%f',
+      \ 'filename': '%t',
+      \ 'filesize': "%{HumanSize(line2byte('$') + len(getline('$')))}",
+      \ 'paste': '%{&paste?"PASTE":""}',
+      \ 'readonly': '%R',
+      \ 'charvalue': '%b',
+      \ 'charvaluehex': '%B',
+      \ 'lineinfo': '%2p%%',
+      \ 'percent': '%2p%%',
+      \ 'percentwin': '%P',
+      \ 'spell': '%{&spell?&spelllang:""}',
+      \ 'winnr': '%{winnr()}',
+      \ 'close': '%999X X ',
+      \ }
+
+let g:lightline.component_function = {
+      \   'gitbranch': 'LightlineFugitive',
+      \   'modified': 'Sy_stats_wrapper',
+      \   'method': 'NearestMethodOrFunction',
+      \   'session_name': 'Get_session_name',
+      \   'fileformat': 'LightlineFileformat',
+      \   'filetype': 'LightLineFiletype'
+      \ }
+let g:lightline.component_expand = {
+      \ 'linter_checking': 'lightline#ale#checking',
+      \ 'linter_warnings': 'lightline#ale#warnings',
+      \ 'linter_errors': 'lightline#ale#errors',
+      \ 'linter_ok': 'lightline#ale#ok',
+      \ 'RemoveLabelOnTopRight': 'RemoveLabelOnTopRight',
+      \ 'asyncrun_status': 'lightline#asyncrun#status',
+      \ }
+
+let g:lightline.component_type = {
+      \ 'linter_warnings': 'warning',
+      \ 'linter_errors': 'error'
+      \ }
+let g:lightline.component_visible_condition = {
+      \ }
+
+"}}}
+
+" ale和lightline插件适配器
+Plug 'maximbaz/lightline-ale'
+
+" asyncrun和lightline插件适配
+Plug 'albertomontesg/lightline-asyncrun'
+
+
 "===========================================================================
 "===========================================================================
 "}}}
-"========================================================
+
+" {{{需要知道快捷键的插件
 
 " 主题配色
 " Plug 'joshdick/onedark.vim'
@@ -467,6 +616,9 @@ Plug 'tpope/vim-surround'
 nmap ysw ysiw
 nmap ysW ysiW
 
+" 快速交换 cx{object} cxx行 可视模式用X  取消用cxc  可以用 . 重复上次命令
+Plug 'tommcdo/vim-exchange'
+
 " uodo历史及持久化
 Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
 " reference: https://vi.stackexchange.com/questions/6/how-can-i-use-the-undofile
@@ -482,12 +634,16 @@ set undofile
 "}}}
 nnoremap <leader>ut :MundoToggle<cr>
 
-" 使用coc-yank
+" 使用coc-yank (自带复制高亮)
 nnoremap <silent> gy :<C-u>CocList --normal yank<cr>
 
 " ALE静态代码检查和自动排版
 Plug 'dense-analysis/ale'
 "{{{
+let g:ale_set_highlights = 0  " 不要显示红色下划线
+let g:ale_sign_error = '✗'
+let g:ale_sign_warning = '⚡'
+
 " 不需要指定linters
 
 " 自动排版, 保存时自动删除末尾空白行和行末空格
@@ -514,161 +670,8 @@ let g:ale_cpp_ccls_init_options = {
 \   }
 \ }
 "}}}
-" 如果你觉得默认的 ale 提示符不好看，可以修改 ale 提示符使用 emoji 符号，换成萌萌的 emoji 表情
-let g:ale_set_highlights = 0  " 不要显示红色下划线
-let g:ale_sign_error = '✗'
-let g:ale_sign_warning = '⚡'
-" 切换到normal模式才更新lint信息
 nmap <silent> ge <Plug>(ale_next_wrap)
 nmap <silent> gE <Plug>(ale_previous_wrap)
-
-" 状态栏
-Plug 'itchyny/lightline.vim'
-"{{{
-" functions
-"{{{
-function! Sy_stats_wrapper()
-  let l:symbols = ['+', '-', '~']
-  let [added, modified, removed] = sy#repo#get_stats()
-  let l:stats = [added, removed, modified]  " reorder
-  let hunkline = ''
-  for i in range(3)
-    if l:stats[i] > 0
-      let hunkline .= printf('%s%s ', l:symbols[i], l:stats[i])
-    endif
-  endfor
-  if !empty(hunkline)
-    let hunkline = printf('[%s]', hunkline[:-2])
-  endif
-  return winwidth(0) > 70 ? hunkline : ''
-endfunction
-
-function! LightlineFugitive()
-    let l:result = ''
-    if &ft !~? 'vimfiler' && exists('*FugitiveHead')
-        let l:result = FugitiveHead()
-    endif
-    return winwidth(0) > 45 ? l:result : ''
-endfunction
-
-function! LightlineFileformat()
-    let l:result = &fenc != "" ? &fenc : &enc
-    let l:result = l:result . '[' . &ff . ']'
-    return winwidth(0) > 70 ? l:result : ''
-endfunction
-
-function LightLineFiletype()
-    let l:result = &ft != "" ? &ft : "no ft"
-    return winwidth(0) > 70 ? l:result : ''
-endfunction
-
-
-function! NearestMethodOrFunction() abort
-  return winwidth(0) > 70 ? get(b:, 'vista_nearest_method_or_function', '') : ''
-endfunction
-
-function! Tab_num(n) abort
-  return a:n
-endfunction
-
-function! RemoveLabelOnTopRight() abort
-    return ""
-endfunction
-
-function! Get_session_name() abort
-    let l:session_name = fnamemodify(v:this_session,':t')
-    return l:session_name != '' ? '<' . l:session_name . '>' : ''
-endfunction
-"}}}
-
-let g:lightline = {}
-let g:lightline.colorscheme = s:lightline_schemes[s:colorscheme_mode]
-let g:lightline.separator = { 'left': "\ue0b8", 'right': "\ue0be" }
-let g:lightline.subseparator = { 'left': "\ue0b9", 'right': "\ue0b9" }
-let g:lightline.tabline_separator = { 'left': "\ue0bc", 'right': "\ue0ba" }
-let g:lightline.tabline_subseparator = { 'left': "\ue0bb", 'right': "\ue0bb" }
-let g:lightline#ale#indicator_checking = "\uf110 "
-let g:lightline#ale#indicator_warnings = "\uf529 "
-let g:lightline#ale#indicator_errors = "\uf00d "
-let g:lightline#ale#indicator_ok = "\uf00c "
-let g:lightline#asyncrun#indicator_none = ''
-let g:lightline#asyncrun#indicator_run = 'Running...'
-let g:lightline.active = {
-        \ 'left': [ [ 'mode', 'paste' ],
-        \           [  'filename', 'readonly', 'gitbranch', 'modified', 'session_name' ],
-        \         ],
-        \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
-        \            [ 'filetype', 'fileformat', 'lineinfo' ],
-        \            [ 'asyncrun_status']
-        \          ]
-        \ }
-let g:lightline.inactive = {
-    \ 'left': [ [ 'filename' , 'modified', 'session_name' ] ],
-    \ 'right': [ [ 'filetype', 'fileformat', 'lineinfo' ] ]
-    \ }
-let g:lightline.tabline = {
-    \ 'left': [ [ 'vim_logo', 'tabs' ] ],
-    \ 'right': [['RemoveLabelOnTopRight']]}
-let g:lightline.tab = {
-    \ 'active': [ 'filename', 'modified' ],
-    \ 'inactive': [ 'filename', 'modified' ] }
-
-let g:lightline.tab_component = {
-      \ }
-let g:lightline.tab_component_function = {
-      \ 'filename': 'lightline#tab#filename',
-      \ 'readonly': 'lightline#tab#readonly',
-      \ 'tabnum': 'Tab_num'
-      \ }
-
-let g:lightline.component = {
-      \ 'bufinfo': '%{bufname("%")}:%{bufnr("%")}',
-      \ 'vim_logo': "\ue7c5",
-      \ 'mode': '%{lightline#mode()}',
-      \ 'absolutepath': '%F',
-      \ 'relativepath': '%f',
-      \ 'filename': '%t',
-      \ 'filesize': "%{HumanSize(line2byte('$') + len(getline('$')))}",
-      \ 'paste': '%{&paste?"PASTE":""}',
-      \ 'readonly': '%R',
-      \ 'charvalue': '%b',
-      \ 'charvaluehex': '%B',
-      \ 'lineinfo': '%2p%%',
-      \ 'percent': '%2p%%',
-      \ 'percentwin': '%P',
-      \ 'spell': '%{&spell?&spelllang:""}',
-      \ 'winnr': '%{winnr()}',
-      \ 'close': '%999X X ',
-      \ }
-
-let g:lightline.component_function = {
-      \   'gitbranch': 'LightlineFugitive',
-      \   'modified': 'Sy_stats_wrapper',
-      \   'method': 'NearestMethodOrFunction',
-      \   'session_name': 'Get_session_name',
-      \   'fileformat': 'LightlineFileformat',
-      \   'filetype': 'LightLineFiletype'
-      \ }
-let g:lightline.component_expand = {
-      \ 'linter_checking': 'lightline#ale#checking',
-      \ 'linter_warnings': 'lightline#ale#warnings',
-      \ 'linter_errors': 'lightline#ale#errors',
-      \ 'linter_ok': 'lightline#ale#ok',
-      \ 'RemoveLabelOnTopRight': 'RemoveLabelOnTopRight',
-      \ 'asyncrun_status': 'lightline#asyncrun#status',
-      \ }
-
-let g:lightline.component_type = {
-      \ 'linter_warnings': 'warning',
-      \ 'linter_errors': 'error'
-      \ }
-let g:lightline.component_visible_condition = {
-      \ }
-
-"}}}
-
-" ale和lightline插件适配器
-Plug 'maximbaz/lightline-ale'
 
 " 启动页面
 Plug 'mhinz/vim-startify'
@@ -925,8 +928,6 @@ let g:git_messenger_no_default_mappings = v:true
 " let g:git_messenger_always_into_popup = v:true
 nmap go <Plug>(git-messenger)
 
-" 快速交换 cx{object} cxx行 可视模式用X  取消用cxc  可以用 . 重复上次命令
-Plug 'tommcdo/vim-exchange'
 
 
 
@@ -948,7 +949,6 @@ Plug 'tommcdo/vim-exchange'
 "
 "
 " }}}
-
 
 call plug#end()
 
