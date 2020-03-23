@@ -456,6 +456,7 @@ let g:Lf_CommandMap = {'<C-]>':['<C-L>']}  " 搜索后<c-h>在右侧窗口打开
 nnoremap <silent> <leader>gr :Leaderf mru<cr>
 nnoremap <silent> <leader>gc :Leaderf cmdHistory<cr>
 nnoremap <silent> <leader>gs :Leaderf searchHistory<cr>
+nnoremap <silent> gl :Leaderf line<cr>
 nnoremap <c-p> :Leaderf command<cr>
 nnoremap <leader>rg :<C-U>Leaderf rg<cr>
 noremap <Leader>sw :<C-U><C-R>=printf("Leaderf! rg %s", expand("<cword>"))<CR><cr>
