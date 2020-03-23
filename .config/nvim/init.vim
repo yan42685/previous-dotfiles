@@ -241,6 +241,9 @@ Plug 'michaeljsmith/vim-indent-object'
 Plug 'romainl/vim-cool'
 let g:CoolTotalMatches = 1
 
+" 实时预览substitute命令的情况
+Plug 'markonm/traces.vim'
+
 "===========================================================================
 "===========================================================================
 "}}}
@@ -920,7 +923,8 @@ let g:git_messenger_no_default_mappings = v:true
 " let g:git_messenger_always_into_popup = v:true
 nmap go <Plug>(git-messenger)
 
-
+" 快速交换 cx{object} cxx行 可视模式用X  取消用cxc  可以用 . 重复上次命令
+Plug 'tommcdo/vim-exchange'
 
 
 
