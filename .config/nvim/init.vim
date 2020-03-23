@@ -918,7 +918,6 @@ nmap N <Plug>(anzu-N-with-echo)zz
 nmap * <Plug>(anzu-star-with-echo)zz
 nmap # <Plug>(anzu-sharp-with-echo)zz
 
-
 " 显示当前行的commit信息, o下一个commit，O上一个，d打开该commit在当前文件的diff hunks， D打开该commit的所有diff hunks
 Plug 'rhysd/git-messenger.vim'
 "{{{
@@ -933,16 +932,11 @@ nmap go <Plug>(git-messenger)
 
 " 打算以后再体验的插件
 
-" 内嵌代码辅助缩进
-" Plug 'AndrewRadev/inline_edit.vim'
 " 多光标
 " Plug 'mg979/vim-visual-multi'
 
 " 似乎是vim唯一的test插件, 支持CI
 " Plug 'janko/vim-test'
-
-" 新增文本对象
-" Plug 'targets.vim'
 "
 " %匹配对象增强, 建议把%改成m
 "Plug 'andymass/vim-matchup'
