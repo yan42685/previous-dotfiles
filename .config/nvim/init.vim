@@ -235,7 +235,7 @@ Plug 'RRethy/vim-illuminate'
 " 让高亮与visual显色一致
 hi link illuminatedWord Visual
 " 选择不高亮的文件类型
-let g:Illuminate_ftblacklist = ['vim', 'txt', 'md']
+let g:Illuminate_ftblacklist = ['vim', 'txt', 'md', 'css']
 "}}}
 
 
@@ -868,8 +868,10 @@ let g:winresizer_start_key = ''
 let g:winresizer_gui_start_key = ''
 let g:winresizer_vert_resize = 3  " 每次移动的步幅
 "}}}
-" usage: 进入resize模式后，hjkl可以调整窗口大小，enter确认，q取消
+" usage: 进入resize模式后，hjkl可以调整窗口大小，enter确认，q取消, m移动模式，
+" r调整窗口模式，f选择窗口模式
 nnoremap <leader>wr :WinResizerStartResize<cr>
+nnoremap <leader>wm :WinResizerStartResize<cr>m
 
 " 多语言debug支持 FIXME: 这个插件还在开发阶段，可能会有很多bug
 Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python'}
@@ -892,6 +894,7 @@ nmap <F10> :VimspectorReset
 " nmap <Plug>VimspectorPause
 " nmap <Plug>VimspectorToggleBreakpoint
 " nmap <Plug>VimspectorAddFunctionBreakpoint
+
 
 
 
@@ -1015,6 +1018,10 @@ nnoremap <silent> <m-l> :bp<cr>
 nnoremap <silent> <m-h> :bn<cr>
 
 " Window操作
+nnoremap <leader>wh <c-w>wH
+nnoremap <leader>wj <c-w>wJ
+nnoremap <leader>wk <c-w>wK
+nnoremap <leader>wl <c-w>wL
 " flip two windows
 nnoremap <leader>wf <c-w><c-r>
 " split bottom window
