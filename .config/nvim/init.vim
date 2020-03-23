@@ -182,13 +182,6 @@ Plug 'albertomontesg/lightline-asyncrun'
 " FIXME: this source invode vim function that could be quite slow, so make sure your coc.preferences.timeout is not too low, otherwise it may timeout.
 Plug 'Shougo/neoinclude.vim' | Plug 'jsfaint/coc-neoinclude'
 
-" 像gitlens一样每行显示gitblame
-Plug 'APZelos/blamer.nvim'
-"{{{
-" 自动开启
-let g:blamer_enabled = 1
-"}}}
-
 " 自动解决绝大部分编码问题
 Plug 'mbbill/fencview', { 'on': [ 'FencAutoDetect', 'FencView' ] }
 
@@ -917,6 +910,15 @@ nmap N <Plug>(anzu-N-with-echo)zz
 nmap * <Plug>(anzu-star-with-echo)zz
 nmap # <Plug>(anzu-sharp-with-echo)zz
 
+
+" 显示当前行的commit信息, o下一个commit，O上一个，d打开该commit在当前文件的diff hunks， D打开该commit的所有diff hunks
+Plug 'rhysd/git-messenger.vim'
+"{{{
+let g:git_messenger_no_default_mappings = v:true
+"}}}
+" 开启预览后光标始终进入popup window, 否则要再次使用快捷键才能让光标进入popup window
+" let g:git_messenger_always_into_popup = v:true
+nmap go <Plug>(git-messenger)
 
 
 
