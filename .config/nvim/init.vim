@@ -976,9 +976,16 @@ nnoremap R @r
 xnoremap <expr> R ":norm! @r<CR>"
 
 
-" 替换模式串用法: 先用 / 查找, 然后再按下面的快捷键, subtitute查找域为空时会默认使用上次查找的内容
-nnoremap <leader>su :%s///gc<left><left><left>
-vnoremap <leader>su :s///gc<left><left><left>
+" 替换模式串
+nnoremap <leader>su :%s///gc<left><left><left><left>
+" {{{ My_get_current_visual_text() 获取当前visual选择的文本
+function s:My_get_current_visual_text() abort
+    execute "normal! `<v`>y"
+    return @"
+endfunction
+"}}}
+xnoremap <silent> <leader>su :<C-U>%s/<C-R>=My_get_current_visual_text()<CR>//gc<left><left><left>
+" xnoremap <leader>su :s///gc<left><left><left>
 " 退出系列
 noremap <silent> <leader>q <esc>:q<cr>
 noremap <silent> <leader><leader>q <esc>:qa<cr>
@@ -1020,8 +1027,8 @@ nnoremap <leader>ef :e %:h/
 " 上下相比于<c-n> <c-p>更智能的地方:  可以根据已输入的字符补全历史命令
 cnoremap <c-k> <up>
 cnoremap <c-j> <down>
-cnoremap <c-h> <home>
-cnoremap <c-l> <end>
+cnoremap <c-h> <left>
+cnoremap <c-l> <right>
 cnoremap <c-e> <delete>
 cnoremap <m-p> <c-r>0
 
@@ -1517,4 +1524,4 @@ if &diff
 endif
 
 " copy current absolute filename into register
-nnoremap <leader>nm :let @"=expand('%:p:h')<CR>
+nnoremap <leader>nm :let @0=expand('%:p:h')<CR>
