@@ -932,7 +932,17 @@ let g:git_messenger_no_default_mappings = v:true
 " let g:git_messenger_always_into_popup = v:true
 nmap go <Plug>(git-messenger)
 
-
+" 折叠插件
+" Plug 'pseewald/vim-anyfold'
+"{{{
+" autocmd Filetype java,cpp,python,js AnyFoldActivate
+" let g:anyfold_fold_comments=1
+" hi Folded term=NONE cterm=NONE
+" augroup enable_anyfold_plugin
+    " autocmd!
+    " autocmd Filetype * AnyFoldActivate
+" augroup end
+"}}}
 
 
 " 打算以后再体验的插件
@@ -959,6 +969,7 @@ call plug#end()
 
 " 主要按键重定义
 inoremap kj <esc>
+nnoremap ? /
 noremap ; :
 nnoremap zo zazz
 noremap ,; ;
@@ -1221,8 +1232,22 @@ set incsearch  " 打开增量搜索模式,随着键入即时搜索
 set ignorecase  " 搜索时忽略大小写
 set smartcase  " 有一个或以上大写字母时变成大小写敏感
 set foldenable  " 代码折叠
-set foldmethod=marker  " marker    使用标记进行折叠, 默认标记是 {{{ 和 }}}
-set foldlevelstart=0  " 打开vim时自动折叠
+
+function Change_fold_method_by_filetype()
+    let s:marker_fold_list = ['vim', 'markdown', 'txt']  " 根据文件类型选择不同的折叠模式
+    if index(s:marker_fold_list, &filetype) >= 0
+        set foldmethod=marker  " marker    使用标记进行折叠, 默认标记是 {{{ 和 }}}
+        set foldlevel=0  " 打开vim时自动折叠
+    else
+        set foldmethod=syntax
+        set foldlevel=99
+    endif
+endfunction
+
+augroup auto_change_fold_method
+   autocmd!
+   autocmd BufWinEnter * call Change_fold_method_by_filetype()
+augroup end
 set smartindent  " Smart indent
 set autoindent  " never add copyindent, case error   " copy the previous indentation on autoindenting
 
@@ -1255,6 +1280,7 @@ set formatoptions+=B  " 合并两行中文时，不在中间加空格
 "}}}
 "==========================================
 " 自动行为设置
+
 
 augroup auto_actions_for_better_experience
     autocmd!
@@ -1528,3 +1554,5 @@ endif
 " copy current absolute filename into register
 nnoremap <leader>nm :let @0=expand('%:t')<CR>
 nnoremap <leader>pa :let @0=expand('%:p')<cr>
+" 向下选择多行, 向上就用-   g表示global，v表示converse-global  :.,$v/bar/d 删除从当前行到最后一行不包含bar的行
+" nnoremap S :.,+
