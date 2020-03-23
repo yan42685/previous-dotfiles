@@ -771,7 +771,8 @@ tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
 
 " 异步自动生成tags
 Plug 'jsfaint/gen_tags.vim'
-let g:loaded_gentags#gtags = 1  " 设1关闭gtags功能, 这样可以关闭警告
+" FIXME: 如果没有安装gtags和和global ctags就需要设置下两项为0 否则会报错
+let g:loaded_gentags#gtags = 1
 let g:loaded_gentags#ctags = 1
 let $GTAGSLABEL = 'native-pygments'  " FIXME: 当项目文件的路径包含非ASCII字符时，使用pygments会报UnicodeEncodeError
 " let $GTAGSCONF = '/path/to/share/gtags/gtags.conf'
@@ -1007,7 +1008,6 @@ nnoremap dh d0
 nnoremap dl d$
 nnoremap ch c0
 nnoremap cl c$
-
 
 nnoremap G Gzz
 " 定义这个是为了让which-key查询的时候不报错
@@ -1306,14 +1306,12 @@ highlight! StartifyHeader cterm=bold ctermbg=75 ctermfg=black gui=bold guifg=#87
 " =============================================
 " 新增功能
 " =============================================
-" F1 - F6 设置
-" F1 废弃这个键,防止调出系统帮助
+" 废弃<F1>调出系统帮助的功能
 noremap <F1> <nop>
 inoremap <F1> <nop>
 cnoremap <F1> <nop>
 
-" F2 行号开关，用于鼠标复制代码用, 为方便复制，用<F2>开启/关闭行号显示:
-" {{{
+" {{{ <F2> 行号开关，用于鼠标复制代码用, 为方便复制
 function! ToggleColumnNumber()
   if(&relativenumber == &number)
     set relativenumber! number!
@@ -1327,17 +1325,19 @@ endfunc
 " }}}
 nnoremap <F2> :call ToggleColumnNumber()<cr>
 
-" F6 语法开关，关闭语法可以加快大文件的展示
-" nnoremap <F4> :exec exists('syntax_on') ? 'syn off' : 'syn on'<cr>
-nnoremap <F4> :call Faster_mode_for_large_file()<cr>
+"{{{ <F4> 部分插件开关，提升大文件编辑体验
 function Faster_mode_for_large_file()
     " 开关spelunker拼写检查插件
     execute 'normal ZT'
     execute 'SignifyToggle'
 endfunction
+"}}}
+nnoremap <F4> :call Faster_mode_for_large_file()<cr>
 
-" 当有两个窗口时, Scroll另一个窗口
-"{{{
+" 代码高亮开关
+" nnoremap <F4> :exec exists('syntax_on') ? 'syn off' : 'syn on'<cr>
+
+"{{{当有两个窗口时, 滚动另一个窗口
 function! ScrollAnotherWindow(mode)
     if winnr('$') <= 1
         return
@@ -1366,8 +1366,7 @@ nnoremap <c-d> :call ScrollAnotherWindow(4)<CR>
 nnoremap <c-g><c-g> :call ScrollAnotherWindow(5)<CR>
 nnoremap <c-s-g> :call ScrollAnotherWindow(6)<CR>
 
-" 切换透明模式, 需要预先设置好终端的透明度
-" {{{
+" {{{切换透明模式, 需要预先设置好终端的透明度
 let s:palette = {
               \ 'bg0':        ['#282828',   '235',  'Black'],
               \ 'bg1':        ['#302f2e',   '236',  'DarkGrey'],
@@ -1445,14 +1444,14 @@ function! Toggle_transparent_background()
   endif
 endfunction
 "}}}
-
 nnoremap <leader>tt :call Toggle_transparent_background()<CR>
+
 " 快速编辑init.vim
 nnoremap <leader>en :e $MYVIMRC<CR>
 " 快速编辑tmux配置文件
 nnoremap <leader>et :e $HOME/.tmux.conf<cr>
-" 删除隐藏的buffer
-"{{{
+
+"{{{删除隐藏的buffer
 function! DeleteHiddenBuffers()
     let tpbl=[]
     let closed = 0
@@ -1465,15 +1464,15 @@ function! DeleteHiddenBuffers()
 endfunction
 "}}}
 nnoremap <leader>bc :call DeleteHiddenBuffers()<cr>
-" 查看highlighting group
-" Print stack of syntax highlighting groups for word under the cursor{{{
+"
+" {{{查看highlighting group
 function! s:synstack()
     echo join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ' -> ')
 endfunction
 "}}}
-" nnoremap <F8> :<C-u>call <SID>synstack()<CR>
-"自动保存
-" {{{
+nnoremap <F12> :<C-u>call <SID>synstack()<CR>
+
+" {{{自动保存
 function! s:Autosave(timed)
     if &readonly || mode() == 'c' || pumvisible()
         return
@@ -1500,15 +1499,13 @@ if s:enable_file_autosave
     augroup END
 endif
 "}}}
-" 让JSONC的注释显色正常
-"{{{
+"{{{让JSONC的注释显色正常
 augroup enable_comment_highlighting_for_json
     autocmd FileType json syntax match Comment +\/\/.\+$+
 augroup end
 "}}}
 
-" 添加空白行
-"{{{
+"{{{添加空白行
 function! s:BlankUp(count) abort
     put!=repeat(nr2char(10), a:count)
     ']+1
