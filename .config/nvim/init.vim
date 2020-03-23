@@ -594,23 +594,26 @@ let g:Lf_Gtagslabel =  "native-pygments"  " 如果不是gtags支持的文件类�
 let g:Lf_WorkingDirectoryMode = 'a'  " the nearest ancestor of current directory that contains one of directories
                                      " or files defined in |g:Lf_RootMarkers|. Fall back to 'c' if no such
                                      " ancestor directory found.
+let g:Lf_ShortcutF = ''  " 这两项是为了覆盖默认设置的键位
+let g:Lf_ShortcutB = ''
 "}}}
-let g:Lf_ShortcutF = '<leader>gf'  " 这两项是为了覆盖默认设置的键位
-let g:Lf_ShortcutB = '<leader>gb'
-let g:Lf_CommandMap = {'<C-]>':['<C-L>']}  " 搜索后<c-h>在右侧窗口打开文件
-nnoremap <c-p> :Leaderf command<cr>
+" let g:Lf_ShortcutF = '<leader>gf'  " 这两项是为了覆盖默认设置的键位
+let g:Lf_CommandMap = {'<C-]>':['<C-l>']}  " 搜索后<c-l>在右侧窗口打开文件
+nnoremap <silent> <c-p> :Leaderf command<cr>
+nnoremap <silent> <leader>gf :Leaderf file<cr>
+nnoremap <silent> <leader>gb :Leaderf buffer<cr>
 nnoremap <silent> <leader>gr :Leaderf mru<cr>
 nnoremap <silent> <leader>gc :Leaderf cmdHistory<cr>
 nnoremap <silent> <leader>gs :Leaderf searchHistory<cr>
 " 项目下即时搜索
-nnoremap <leader>rg :<C-U>Leaderf rg<cr>
-" 项目下搜索词
-nnoremap <Leader>sw :<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cword>"))<CR><cr>
-xnoremap <leader>sw :<C-U><C-R>=printf("Leaderf! rg -F %s ", leaderf#Rg#visual())<CR><cr>
+nnoremap <silent> <leader>rg :<C-U>Leaderf rg<cr>
+" 项目下搜索词 -F是fix 即不是正则模式
+nnoremap <silent> <Leader>sw :<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cword>"))<CR><cr>
+xnoremap <silent> <leader>sw :<C-U><C-R>=printf("Leaderf! rg -F %s ", leaderf#Rg#visual())<CR><cr>
 " buffer内即时搜索
 nnoremap <silent> / :Leaderf rg --current-buffer<cr>
 " buffer内搜索词
-xnoremap * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s ", leaderf#Rg#visual())<CR><cr>
+xnoremap <silent> * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s ", leaderf#Rg#visual())<CR><cr>
 
 " Vim-Surround快捷操作
 Plug 'tpope/vim-surround'
