@@ -1004,6 +1004,8 @@ nnoremap '' ``zz
 nnoremap '. `.zz
 nnoremap <c-o> <c-o>zz
 nnoremap <c-i> <c-i>zz
+nnoremap u uzz
+nnoremap <c-r> <c-r>zz
 nnoremap G Gzz
 " 定义这个是为了让which-key查询的时候不报错
 nnoremap gg gg
@@ -1524,4 +1526,5 @@ if &diff
 endif
 
 " copy current absolute filename into register
-nnoremap <leader>nm :let @0=expand('%:p:h')<CR>
+nnoremap <leader>nm :let @0=expand('%:t')<CR>
+nnoremap <leader>pa :let @0=expand('%:p')<cr>
