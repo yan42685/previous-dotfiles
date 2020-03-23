@@ -999,7 +999,7 @@ xnoremap <silent> <leader>su :<C-U>%s/<C-R>=My_get_current_visual_text()<CR>//gc
 " xnoremap <leader>su :s///gc<left><left><left>
 " 退出系列
 noremap <silent> <leader>q <esc>:q<cr>
-noremap <silent> <leader><leader>q <esc>:qa<cr>
+noremap <silent> Q <esc>:qa<cr>
 
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
@@ -1486,7 +1486,8 @@ function s:Enable_normal_scheme() abort
     " kshenoy/vim-signature 标记的配色
     highlight! link SignatureMarkText OrangeSign
     highlight! link SignatureMarkerText PurpleSign
-    highlight! LineNr guifg=#717172
+    " highlight! LineNr guifg=#717172
+    highlight! LineNr guifg=#9d9d9d
 
 endfunction
 
@@ -1549,7 +1550,8 @@ nnoremap [<space> :<c-u>call <sid>BlankUp(v:count1)<cr>
 " 当把vim作为git的difftool时，设置 git config --global difftool.trustExitCode true && git config --global mergetool.trustExitCode true
 " 在git difftool或git mergetool之后  可以用:cq进行强制退出diff/merge模式，而不会不停地recall another diff/merge file
 if &diff
-    noremap Q <esc>:cq<cr>
+    noremap <leader><leader>q <esc>:cq<cr>
+    noremap Q <esc>:qa<cr>
     " 在diff间跳转
     noremap  <c-j> ]czz
     noremap <c-k> [czz
