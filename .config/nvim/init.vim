@@ -598,13 +598,19 @@ let g:Lf_WorkingDirectoryMode = 'a'  " the nearest ancestor of current directory
 let g:Lf_ShortcutF = '<leader>gf'  " 这两项是为了覆盖默认设置的键位
 let g:Lf_ShortcutB = '<leader>gb'
 let g:Lf_CommandMap = {'<C-]>':['<C-L>']}  " 搜索后<c-h>在右侧窗口打开文件
+nnoremap <c-p> :Leaderf command<cr>
 nnoremap <silent> <leader>gr :Leaderf mru<cr>
 nnoremap <silent> <leader>gc :Leaderf cmdHistory<cr>
 nnoremap <silent> <leader>gs :Leaderf searchHistory<cr>
-nnoremap <silent> gl :Leaderf line<cr>
-nnoremap <c-p> :Leaderf command<cr>
+" 项目下即时搜索
 nnoremap <leader>rg :<C-U>Leaderf rg<cr>
-noremap <Leader>sw :<C-U><C-R>=printf("Leaderf! rg %s", expand("<cword>"))<CR><cr>
+" 项目下搜索词
+nnoremap <Leader>sw :<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cword>"))<CR><cr>
+xnoremap <leader>sw :<C-U><C-R>=printf("Leaderf! rg -F %s ", leaderf#Rg#visual())<CR><cr>
+" buffer内即时搜索
+nnoremap <silent> / :Leaderf rg --current-buffer<cr>
+" buffer内搜索词
+xnoremap * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s ", leaderf#Rg#visual())<CR><cr>
 
 " Vim-Surround快捷操作
 Plug 'tpope/vim-surround'
@@ -1506,3 +1512,6 @@ if &diff
     noremap  <c-j> ]czz
     noremap <c-k> [czz
 endif
+
+" copy current absolute filename into register
+nnoremap <leader>nm :let @"=expand('%:p:h')<CR>
