@@ -910,10 +910,12 @@ xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip=)
 nmap ga <Plug>(EasyAlign)
 
-" 显示搜索的的数量以及当前位置 g/可以去上一次搜索的位置
-Plug 'google/vim-searchindex'
-
-
+" 显示搜索的的数量以及当前位置
+Plug 'osyo-manga/vim-anzu'
+nmap n <Plug>(anzu-n-with-echo)zz
+nmap N <Plug>(anzu-N-with-echo)zz
+nmap * <Plug>(anzu-star-with-echo)zz
+nmap # <Plug>(anzu-sharp-with-echo)zz
 
 
 
@@ -999,11 +1001,6 @@ nnoremap ch c0
 nnoremap cl c$
 
 
-" Keep search pattern at the center of the screen.
-nnoremap <silent> n nzz
-nnoremap <silent> N Nzz
-nnoremap <silent> * *zz
-nnoremap <silent> # #zz
 nnoremap G Gzz
 " 定义这个是为了让which-key查询的时候不报错
 nnoremap gg gg
