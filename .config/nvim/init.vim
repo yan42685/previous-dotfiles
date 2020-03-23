@@ -14,7 +14,6 @@
 " 【依赖说明】{{{
 "  coc.nvim补全插件需要安装node.js和npm LeaderF依赖Python3, vista依赖global-ctags
 "}}}
-"==========================================
 " 【必做事项】{{{
 "  1. :PlugInstall
 "  2. 提供python和系统剪切板支持 pip3 install pynvim && apt install xsel
@@ -34,7 +33,6 @@
 "
 "  10. 在:CocConfig 写入下面的JSON设置
 "}}}
-"==========================================
 " 【可选项】{{{
 "  1. 使用Alacritty终端模拟器 设置cursor不闪烁, <c-c>复制，<m-i>粘贴系统剪切板， 而Vim里面的<m-i>会被终端拦截，所以有相同的效果，
 "          然后在Vim映射<m-p>是粘贴0寄存器的内容. 设置透明终端, 用<leader>tt可以切换透明模式, 设置开启时窗口大小来达到启动max-size的目的
@@ -53,14 +51,12 @@
 "  6. 使用vim-signify显示diff，必须要注册好git账户，比如git config --global user.name "username" && git config --global user.email "useremail@qq.com"
 "  7.  "coc-tabnine需要设置'ignore_all_lsp': true来加强补全效果
 "}}}
-"==========================================
-" 【初次配置Vim必看】配置文件的坑:{{{
+" 【初次配置Vim必看】配置文件的坑{{{
 "   1. 映射<Plug>(...)必须用递归映射, 否则不生效
 "   2. 映射ex命令的时候不能用noremap, 因为这会导致按键出现奇奇怪怪的结果, 应该改成nnoremap
 "   3. vimrc文件let语句的等号两边不能写空格, 写了不生效!
 "   4. 单引号是raw String 而双引号才可以转义， 所以设置unicode字体的时候应该用双引号比如"\ue0b0"
 "}}}
-"==========================================
 
 " ==========================================
 " 【可自行调整的重要参数】
@@ -966,7 +962,10 @@ inoremap ;; <c-o>A;<cr>
 imap [[ <esc>A<space>{<cr>
 " 重复上次执行的寄存器的命令
 nnoremap <leader>r; @:
-nnoremap <leader>rr @r
+nnoremap R @r
+" xnoremap <expr> @ ":norm! @".nr2char(getchar())."<CR>"
+xnoremap <expr> R ":norm! @r<CR>"
+
 
 " 替换模式串用法: 先用 / 查找, 然后再按下面的快捷键, subtitute查找域为空时会默认使用上次查找的内容
 nnoremap <leader>su :%s///gc<left><left><left>
@@ -1086,7 +1085,6 @@ nnoremap < <<
 nnoremap > >>
 
 noremap Y y$
-" select all
 noremap <c-a> ggVG
 inoremap <c-a> <esc>ggVG
 " 保存后全部折叠
