@@ -244,6 +244,9 @@ Plug 'wellle/targets.vim'
 " 新增indent object 在python里很好用 cii cai
 Plug 'michaeljsmith/vim-indent-object'
 
+" 自动隐藏搜索的高亮
+Plug 'romainl/vim-cool'
+let g:CoolTotalMatches = 1
 
 "===========================================================================
 "===========================================================================
@@ -907,6 +910,8 @@ xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip=)
 nmap ga <Plug>(EasyAlign)
 
+" 显示搜索的的数量以及当前位置 g/可以去上一次搜索的位置
+Plug 'google/vim-searchindex'
 
 
 
@@ -986,10 +991,13 @@ noremap J <C-f>zz
 noremap K <C-b>zz
 noremap H ^
 noremap L $
+nnoremap yh y^
+nnoremap yl y$
 nnoremap dh d0
 nnoremap dl d$
 nnoremap ch c0
 nnoremap cl c$
+
 
 " Keep search pattern at the center of the screen.
 nnoremap <silent> n nzz
