@@ -77,8 +77,7 @@ let g:mapleader=' '
 " =========================================
 " 插件管理
 " =========================================
-" vim-plug 自动安装
-" {{{
+" {{{ vim-plug 自动安装
 if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
   silent !curl --insecure -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -956,7 +955,6 @@ call plug#end()
 "==========================================
 " HotKey Settings  自定义快捷键设置
 "==========================================
-"
 " 如果需要覆盖插件定义的映射，可用如下方式
 " autocmd VimEnter * noremap <leader>cc echo "my purpose"
 
@@ -974,16 +972,7 @@ inoremap ;; <c-o>A;<cr>
 imap [[ <esc>A<space>{<cr>
 " 重复上次执行的寄存器的命令
 nnoremap <leader>r; @:
-" 执行宏r
 nnoremap <leader>rr @r
-" 快速在括号间跳转
-nnoremap gb %zz
-" 查找当前单词
-nnoremap gi gi<esc>zzi
-nnoremap '' ``zz
-nnoremap '. `.zz
-nnoremap <c-o> <c-o>zz
-nnoremap <c-i> <c-i>zz
 
 " 替换模式串用法: 先用 / 查找, 然后再按下面的快捷键, subtitute查找域为空时会默认使用上次查找的内容
 nnoremap <leader>su :%s///gc<left><left><left>
@@ -1000,6 +989,17 @@ noremap zj zjzz
 noremap zk zkzz
 noremap J <C-f>zz
 noremap K <C-b>zz
+nnoremap gb %zz
+nnoremap gi gi<esc>zzi
+nnoremap '' ``zz
+nnoremap '. `.zz
+nnoremap <c-o> <c-o>zz
+nnoremap <c-i> <c-i>zz
+nnoremap G Gzz
+" 定义这个是为了让which-key查询的时候不报错
+nnoremap gg gg
+nnoremap gv gvzz
+
 noremap H ^
 noremap L $
 nnoremap yh y^
@@ -1009,19 +1009,12 @@ nnoremap dl d$
 nnoremap ch c0
 nnoremap cl c$
 
-nnoremap G Gzz
-" 定义这个是为了让which-key查询的时候不报错
-nnoremap gg gg
-nnoremap gv gvzz
 " 去掉搜索高亮
 nnoremap <silent> <leader>/ :nohls<cr>zz
 " 编辑和当前文件同目录的文件,在命令行按tab会自动展开%:h
 nnoremap <leader>ef :e %:h/
 
-" Buffer操作
-" Close current buffer
-nnoremap <silent> <leader>bd :bd<cr>
-" 命令行模式增强
+" 命令行和插入模式增强
 " 上下相比于<c-n> <c-p>更智能的地方:  可以根据已输入的字符补全历史命令
 cnoremap <c-k> <up>
 cnoremap <c-j> <down>
@@ -1038,17 +1031,30 @@ inoremap <c-e> <delete>
 inoremap <m-p> <c-r>0
 nnoremap <m-p> "0p
 
+" Buffer操作
+nnoremap <silent> <leader>bd :bd<cr>
 nnoremap <silent> <m-l> :bp<cr>
 nnoremap <silent> <m-h> :bn<cr>
+"{{{删除隐藏的buffer
+function! DeleteHiddenBuffers()
+    let tpbl=[]
+    let closed = 0
+    call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
+    for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
+        silent execute 'bwipeout' buf
+        let closed += 1
+    endfor
+    echo "Closed ".closed." hidden buffers"
+endfunction
+"}}}
+nnoremap <leader>bc :call DeleteHiddenBuffers()<cr>
 
 " Window操作
 nnoremap <leader>wh <c-w>wH
 nnoremap <leader>wj <c-w>wJ
 nnoremap <leader>wk <c-w>wK
 nnoremap <leader>wl <c-w>wL
-" flip two windows
 nnoremap <leader>wf <c-w><c-r>
-" split bottom window
 nnoremap <leader>ws <c-w>s<c-w>w
 " 窗口最大化 leaving only the help window open/maximized
 nnoremap <leader>wo <c-w>ozz
@@ -1100,14 +1106,11 @@ noremap ` '
 "==========================================
 set termguicolors  " 使用真色彩
 " NOTE: quantum主题是必开的, 用来提供lightline主题
-" colorscheme quantum
 exec 'colorscheme ' . s:colorschemes[s:colorscheme_mode]
+" colorscheme quantum
 " colorscheme onedark
-
 " colorscheme gruvbox-material
-" let g:neodark#use_256color = 1
 " colorscheme neodark
-
 " colorscheme nova
 " colorscheme forest-night
 
@@ -1251,12 +1254,9 @@ augroup auto_actions_for_better_experience
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exec "normal! g'\" \| zz" | endif
     " 在右边窗口打开help
     autocmd BufEnter * if &buftype == 'help' | wincmd L | endif
-    " autocmd BufEnter,WinEnter * if &filetype == 'man' | wincmd L | endif
     " Test插件要求工作目录在project根目录
     " autocmd BufEnter * silent! lcd %:p:h  " 自动切换当前目录为当前文件的目录
-    "
-    " <c-j><c-k>移动quickfix
-    "{{{
+    "{{{ <c-j><c-k>移动quickfix
     function List_is_opened(type) abort
         if a:type == "quickfix"
             let g:my_check_quickfix_ids = getqflist({"winid" : 1})
@@ -1277,7 +1277,6 @@ augroup auto_actions_for_better_experience
     endfunction
     "}}}
     autocmd WinNew,WinEnter,WinLeave,BufLeave,BufEnter * call Change_ctrljk_for_quickfix()
-
 augroup end
 
 " 开启语法高亮
@@ -1306,6 +1305,39 @@ highlight! StartifyHeader cterm=bold ctermbg=75 ctermfg=black gui=bold guifg=#87
 " =============================================
 " 新增功能
 " =============================================
+" {{{自动保存
+function! s:Autosave(timed)
+    if &readonly || mode() == 'c' || pumvisible()
+        return
+    endif
+    let current_time = localtime()
+    let s:last_update = get(s:, 'last_update', 0)
+    let s:time_delta = current_time - s:last_update
+
+    if a:timed == 0 || s:time_delta >= 1
+        let s:last_update = current_time
+        checktime  " checktime with autoread will sync files on a last-writer-wins basis.
+        silent! doautocmd BufWritePre %  " needed for soft checks
+        silent! update  " only updates if there are changes to the file.
+        if a:timed == 0 || s:time_delta >= 4
+            silent! doautocmd BufWritePost %  " Periodically trigger BufWritePost.
+        endif
+    endif
+endfunction
+
+if s:enable_file_autosave
+    augroup WorkspaceToggle
+        au! BufLeave,FocusLost,FocusGained * call s:Autosave(0)
+        au! CursorHold * call s:Autosave(1)
+    augroup END
+endif
+"}}}
+"{{{让JSONC的注释显色正常
+augroup enable_comment_highlighting_for_json
+    autocmd FileType json syntax match Comment +\/\/.\+$+
+augroup end
+"}}}
+
 " 废弃<F1>调出系统帮助的功能
 noremap <F1> <nop>
 inoremap <F1> <nop>
@@ -1451,59 +1483,12 @@ nnoremap <leader>en :e $MYVIMRC<CR>
 " 快速编辑tmux配置文件
 nnoremap <leader>et :e $HOME/.tmux.conf<cr>
 
-"{{{删除隐藏的buffer
-function! DeleteHiddenBuffers()
-    let tpbl=[]
-    let closed = 0
-    call map(range(1, tabpagenr('$')), 'extend(tpbl, tabpagebuflist(v:val))')
-    for buf in filter(range(1, bufnr('$')), 'bufexists(v:val) && index(tpbl, v:val)==-1')
-        silent execute 'bwipeout' buf
-        let closed += 1
-    endfor
-    echo "Closed ".closed." hidden buffers"
-endfunction
-"}}}
-nnoremap <leader>bc :call DeleteHiddenBuffers()<cr>
-"
 " {{{查看highlighting group
 function! s:synstack()
     echo join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ' -> ')
 endfunction
 "}}}
 nnoremap <F12> :<C-u>call <SID>synstack()<CR>
-
-" {{{自动保存
-function! s:Autosave(timed)
-    if &readonly || mode() == 'c' || pumvisible()
-        return
-    endif
-    let current_time = localtime()
-    let s:last_update = get(s:, 'last_update', 0)
-    let s:time_delta = current_time - s:last_update
-
-    if a:timed == 0 || s:time_delta >= 1
-        let s:last_update = current_time
-        checktime  " checktime with autoread will sync files on a last-writer-wins basis.
-        silent! doautocmd BufWritePre %  " needed for soft checks
-        silent! update  " only updates if there are changes to the file.
-        if a:timed == 0 || s:time_delta >= 4
-            silent! doautocmd BufWritePost %  " Periodically trigger BufWritePost.
-        endif
-    endif
-endfunction
-
-if s:enable_file_autosave
-    augroup WorkspaceToggle
-        au! BufLeave,FocusLost,FocusGained * call s:Autosave(0)
-        au! CursorHold * call s:Autosave(1)
-    augroup END
-endif
-"}}}
-"{{{让JSONC的注释显色正常
-augroup enable_comment_highlighting_for_json
-    autocmd FileType json syntax match Comment +\/\/.\+$+
-augroup end
-"}}}
 
 "{{{添加空白行
 function! s:BlankUp(count) abort
