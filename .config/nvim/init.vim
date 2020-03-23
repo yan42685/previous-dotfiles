@@ -239,6 +239,11 @@ let g:Illuminate_ftblacklist = ['vim', 'txt', 'md', 'css']
 "}}}
 
 
+" 新增很多方便的text object, 比如 , argument in( il( 并且可以计数比如光标在a时 (((a)b)c)  --d2ab--> (c )
+Plug 'wellle/targets.vim'
+" 新增indent object 在python里很好用 cii cai
+Plug 'michaeljsmith/vim-indent-object'
+
 
 "===========================================================================
 "===========================================================================
@@ -882,10 +887,10 @@ sign define vimspectorPC text=🔶 texthl=SpellBad
 "}}}
 " nmap <F5> :call vimspector#launch()<cr>
 nmap <F5> <Plug>VimspectorContinue
-nmap <leader>bb :call vimspector#ToggleBreakpoint()<cr>
+nmap <F6> <Plug>VimspectorStepOver
 nmap <F7> <Plug>VimspectorStepInto
-nmap <F8> <Plug>VimspectorStepOver
-nmap <F9> <Plug>VimspectorStepOut
+nmap <F8> <Plug>VimspectorStepOut
+nmap <F9> :call vimspector#ToggleBreakpoint()<cr>
 nmap <F10> :VimspectorReset
 "
 " nmap <Plug>VimspectorContinue
@@ -895,6 +900,12 @@ nmap <F10> :VimspectorReset
 " nmap <Plug>VimspectorToggleBreakpoint
 " nmap <Plug>VimspectorAddFunctionBreakpoint
 
+" 快速对齐文本
+Plug 'junegunn/vim-easy-align'
+" Start interactive EasyAlign in visual mode (e.g. vipga=)
+xmap ga <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip=)
+nmap ga <Plug>(EasyAlign)
 
 
 
@@ -1491,8 +1502,8 @@ function! s:BlankDown(count) abort
     silent! call repeat#set("\<Plug>unimpairedBlankDown", a:count)
 endfunction
 "}}}
-nnoremap [<space> :<c-u>call <sid>BlankDown(v:count1)<cr>
-nnoremap ]<space> :<c-u>call <sid>BlankUp(v:count1)<cr>
+nnoremap ]<space> :<c-u>call <sid>BlankDown(v:count1)<cr>
+nnoremap [<space> :<c-u>call <sid>BlankUp(v:count1)<cr>
 
 " 当把vim作为git的difftool时，设置 git config --global difftool.trustExitCode true && git config --global mergetool.trustExitCode true
 " 在git difftool或git mergetool之后  可以用:cq进行强制退出diff/merge模式，而不会不停地recall another diff/merge file
