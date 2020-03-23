@@ -1117,6 +1117,9 @@ set lazyredraw  " redraw only when we need to.
 set nocompatible  " 去掉有关vi一致性模式，避免以前版本的bug和局限
 set wildmenu  " 增强模式中的命令行自动完成操作
 set wildmode=longest,full
+set showbreak=⤷▶  " 显示wrapline
+set backupcopy=yes  " Does not break hard/symbolic links on file save
+
 "}}}
 " 设置wildmenu忽略的文件{{{
 set wildignore+=*.o,*.out,*.obj,.git,*.rbc,*.rbo,*.class,.svn,*.gem  " Disable output and VCS files
