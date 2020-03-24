@@ -1,5 +1,4 @@
-﻿" TODO: 命令行自动删除一一对括号 col('.') getcommandline()
- " 只考虑NeoVim，不一定兼容Vim
+﻿ " 只考虑NeoVim，不一定兼容Vim
 "
 " 经验之谈:
 "   1. 抓住主要问题, 用相对简单和有意义的按键映射出现频率高的操作, 而非常冷门的操作不设置快捷键，可以考虑用别的方式替代
@@ -1633,8 +1632,9 @@ if &diff
 endif
 
 " copy current absolute filename into register
-nnoremap <leader>nm :let @0=expand('%:t')<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr><cr>
-nnoremap <leader>pa :let @0=expand('%:p')<cr>:echo printf('absolutepath yanked: %s', expand('%:p'))<cr><cr>
+nnoremap <leader>ynm :let @0=expand('%:t')<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
+nnoremap <leader>ypa :let @0=expand('%:p')<cr>:echo printf('absolutepath yanked: %s', expand('%:p'))<cr>
+nnoremap <leader>ydr :let @0=expand('%:p:h')<cr>:echo printf('absolutepath yanked: %s', expand('%:p:h'))<cr>
 " 向下选择多行, 向上就用-   g表示global，v表示converse-global  :.,$v/bar/d 删除从当前行到最后一行不包含bar的行
 " nnoremap S :.,+
 
