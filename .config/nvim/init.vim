@@ -1235,13 +1235,16 @@ set smartcase  " 有一个或以上大写字母时变成大小写敏感
 set foldenable  " 代码折叠 zM全部折叠 zR全部打开 zo开关一个折叠
 
 function Change_fold_method_by_filetype()
+    set foldlevel=99  " 默认进入文件时打开所有折叠
     let s:marker_fold_list = ['vim', 'markdown', 'txt']  " 根据文件类型选择不同的折叠模式
+    let s:indent_fold_list = ['python']
     if index(s:marker_fold_list, &filetype) >= 0
-        set foldmethod=marker  " marker    使用标记进行折叠, 默认标记是 {{{ 和 }}}
+        set foldmethod=marker  " marker    使用标记进行折叠, 默认标记是 { { { 和 } } }
         set foldlevel=0  " 打开vim时自动折叠
+    elseif index(s:indent_fold_list, &filetype) >= 0
+        set foldmethod=indent
     else
         set foldmethod=syntax
-        set foldlevel=99
     endif
     " 让viewport居中
     execute 'normal! zz'
