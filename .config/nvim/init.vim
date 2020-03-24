@@ -1307,14 +1307,12 @@ augroup auto_actions_for_better_experience
             nnoremap <c-j> :cnext<cr>
             nnoremap <c-k> :cprevious<cr>
         else
-            if !&diff
-                nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>
-                nnoremap <c-k> :call ScrollAnotherWindow(1)<CR>
-            endif
+            nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>
+            nnoremap <c-k> :call ScrollAnotherWindow(1)<CR>
         endif
     endfunction
     "}}}
-    autocmd WinNew,WinEnter,WinLeave,BufLeave,BufEnter * call Change_ctrljk_for_quickfix()
+    autocmd UIEnter,WinEnter,WinLeave,BufLeave,BufEnter * call Change_ctrljk_for_quickfix()
 augroup end
 
 " 开启语法高亮
@@ -1552,9 +1550,9 @@ nnoremap [<space> :<c-u>call <sid>BlankUp(v:count1)<cr>
 if &diff
     noremap <leader><leader>q <esc>:cq<cr>
     noremap Q <esc>:qa<cr>
-    " 在diff间跳转
-    noremap  <c-j> ]czz
-    noremap <c-k> [czz
+    " 在diff hunk之间跳转
+    noremap ]c ]czz
+    noremap [c [czz
 endif
 
 " copy current absolute filename into register
