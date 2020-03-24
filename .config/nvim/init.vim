@@ -222,10 +222,14 @@ let g:Illuminate_ftblacklist = ['vim', 'txt', 'md', 'css']
 "}}}
 
 
+" 自定义text-object 是vim-textobj-variable-segment插件的依赖
+Plug 'kana/vim-textobj-user'
 " 新增很多方便的text object, 比如 , argument in( il( 并且可以计数比如光标在a时 (((a)b)c)  --d2ab--> (c )
 Plug 'wellle/targets.vim'
 " 新增indent object 在python里很好用 cii cai
 Plug 'michaeljsmith/vim-indent-object'
+" iv av variabe-text-object 部分删除变量的名字 比如camel case: getJiggyY 以及 snake case: get_jinggyy
+Plug 'Julian/vim-textobj-variable-segment'
 
 " 自动隐藏搜索的高亮
 Plug 'romainl/vim-cool'
