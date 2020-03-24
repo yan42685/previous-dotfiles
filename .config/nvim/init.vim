@@ -387,6 +387,11 @@ Plug 'maximbaz/lightline-ale'
 " asyncrun和lightline插件适配
 Plug 'albertomontesg/lightline-asyncrun'
 
+" 保存viewport信息, 比如cursor,fold
+Plug 'zhimsel/vim-stay'
+"{{{
+set viewoptions=cursor,folds,slash,unix
+"}}}
 
 "===========================================================================
 "===========================================================================
@@ -1040,6 +1045,11 @@ nnoremap <leader>ef :e %:h/
 
 " 命令行和插入模式增强
 " 上下相比于<c-n> <c-p>更智能的地方:  可以根据已输入的字符补全历史命令
+cnoremap ' ''<left>
+cnoremap " ""<left>
+cnoremap ( ()<left>
+cnoremap < <><left>
+cnoremap [ []<left>
 cnoremap <c-k> <up>
 cnoremap <c-j> <down>
 cnoremap <c-h> <left>
@@ -1235,14 +1245,17 @@ set smartcase  " 有一个或以上大写字母时变成大小写敏感
 set foldenable  " 代码折叠 zM全部折叠 zR全部打开 zo开关一个折叠
 
 function Change_fold_method_by_filetype()
-    set foldlevel=99  " 默认进入文件时打开所有折叠
-    let s:marker_fold_list = ['vim', 'markdown', 'txt']  " 根据文件类型选择不同的折叠模式
+    " set foldlevel=99  " NOTE: 现在由vim-stay插件保存fold信息, 所以不用设置这项了
+    let s:marker_fold_list = ['vim', 'txt']  " 根据文件类型选择不同的折叠模式
     let s:indent_fold_list = ['python']
+    let s:expression_fold_list = ['markdown', 'rust']
     if index(s:marker_fold_list, &filetype) >= 0
         set foldmethod=marker  " marker    使用标记进行折叠, 默认标记是 { { { 和 } } }
-        set foldlevel=0  " 打开vim时自动折叠
+        " set foldlevel=0  " 打开vim时自动折叠
     elseif index(s:indent_fold_list, &filetype) >= 0
         set foldmethod=indent
+    elseif index(s:expression_fold_list, &filetype) >= 0
+        set foldmethod=expression
     else
         set foldmethod=syntax
     endif
@@ -1291,7 +1304,7 @@ augroup auto_actions_for_better_experience
     " 自动source VIMRC
     autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
     " 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写
-    autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exec "normal! g'\" \| zz" | endif
+    " autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exec "normal! g'\" \| zz" | endif
     " 在右边窗口打开help
     autocmd BufEnter * if &buftype == 'help' | wincmd L | endif
     " Test插件要求工作目录在project根目录
