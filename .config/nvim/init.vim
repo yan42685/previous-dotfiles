@@ -393,6 +393,12 @@ Plug 'zhimsel/vim-stay'
 set viewoptions=cursor,folds,slash,unix
 "}}}
 
+" python的indent折叠增强, 折叠import，折叠和预览doctring，
+Plug 'tmhedberg/SimpylFold', {'for': [ 'python' ]}
+"{{{
+let g:SimpylFold_docstring_preview = 1
+"}}}
+
 "===========================================================================
 "===========================================================================
 "}}}
@@ -977,6 +983,8 @@ inoremap kj <esc>
 nnoremap ? /
 noremap ; :
 nnoremap zo zazz
+nnoremap zm zMzz
+nnoremap zr zRzz
 noremap ,; ;
 nnoremap ,w :w<cr>
 vnoremap v <esc>
@@ -1018,6 +1026,7 @@ nnoremap gb %zz
 nnoremap gi gi<esc>zzi
 nnoremap g; gi<esc>zz
 nnoremap gv gvzz
+" 定义这个是为了让which-key查询的时候不报错
 nnoremap gg gg
 nnoremap '' ``zz
 nnoremap '. `.zz
@@ -1026,7 +1035,8 @@ nnoremap <c-i> <c-i>zz
 nnoremap u uzz
 nnoremap <c-r> <c-r>zz
 nnoremap G Gzz
-" 定义这个是为了让which-key查询的时候不报错
+nnoremap [z [zzz
+nnoremap ]z ]zzz
 
 noremap H ^
 noremap L $
@@ -1245,13 +1255,13 @@ set smartcase  " 有一个或以上大写字母时变成大小写敏感
 set foldenable  " 代码折叠 zM全部折叠 zR全部打开 zo开关一个折叠
 
 function Change_fold_method_by_filetype()
-    " set foldlevel=99  " NOTE: 现在由vim-stay插件保存fold信息, 所以不用设置这项了
+    set foldlevel=99  " 第一次进入时不折叠
     let s:marker_fold_list = ['vim', 'txt']  " 根据文件类型选择不同的折叠模式
     let s:indent_fold_list = ['python']
     let s:expression_fold_list = ['markdown', 'rust']
     if index(s:marker_fold_list, &filetype) >= 0
         set foldmethod=marker  " marker    使用标记进行折叠, 默认标记是 { { { 和 } } }
-        " set foldlevel=0  " 打开vim时自动折叠
+        set foldlevel=0  " 第一次进入时全部自动折叠
     elseif index(s:indent_fold_list, &filetype) >= 0
         set foldmethod=indent
     elseif index(s:expression_fold_list, &filetype) >= 0
