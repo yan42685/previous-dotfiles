@@ -253,6 +253,19 @@ alias zc='z -c' # 严格匹配当前路径的子路径
 alias zf='z -I' # 使用 fzf 对多个结果进行选择
 alias zbf='z -b -I'
 alias diff='nvim -d'
+alias ...='../..'
+alias ....='../../..'
+alias .....='../../../..'
+alias ......='../../../../..'
+# git with hub
+if command_exists hub; then
+  alias git='hub'
+fi
+# print file sizes in human readable format
+alias du='du -h'
+alias df='df -h'
+alias free='free -h'
+alias e="$EDITOR"
 
 # 下面的alias参考common-alias插件
 alias zshrc='${=EDITOR} ~/.zshrc' # Quick access to the ~/.zshrc file
