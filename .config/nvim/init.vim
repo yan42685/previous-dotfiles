@@ -399,6 +399,8 @@ Plug 'tmhedberg/SimpylFold', {'for': [ 'python' ]}
 let g:SimpylFold_docstring_preview = 1
 "}}}
 
+" 优化bd体验，关闭buffer但是不关闭窗口
+Plug 'mhinz/vim-sayonara', {'on': [ 'Sayonara','Sayonara!' ]}
 "===========================================================================
 "===========================================================================
 "}}}
@@ -1076,7 +1078,7 @@ inoremap <m-p> <c-r>0
 nnoremap <m-p> "0p
 
 " Buffer操作
-nnoremap <silent> <leader>bd :bd<cr>
+nnoremap <silent> <leader>bd :Sayonara!<cr>
 nnoremap <silent> <m-l> :bp<cr>
 nnoremap <silent> <m-h> :bn<cr>
 "{{{删除隐藏的buffer
