@@ -993,10 +993,27 @@ inoremap ;; <c-o>A;<cr>
 imap [[ <esc>A<space>{<cr>
 " 重复上次执行的寄存器的命令
 nnoremap <leader>r; @:
-nnoremap R @r
-" xnoremap <expr> @ ":norm! @".nr2char(getchar())."<CR>"
-xnoremap <expr> R ":norm! @r<CR>"
+" {{{ Quickly make a macro and use it with "."
+let s:simple_macro_active = 0
+function! s:my_simple_macro()
+  if s:simple_macro_active == 0
+    call feedkeys('qr', 'n')
+    let s:simple_macro_active = 1
 
+  elseif s:simple_macro_active == 1
+    normal! q
+    " remove trailing M
+    let @m = @r[0:-2]
+    call repeat#set(":\<c-u>call repeat#wrap('@m', 1)\<cr>", 1)
+    let s:simple_macro_active = 0
+
+  endif
+endfunction
+"}}}
+nnoremap M :call <SID>my_simple_macro()<cr>
+nnoremap R @r
+" xnoremap <expr> <leader>@ ":norm! @".nr2char(getchar())."<CR>"
+xnoremap <expr> R ":norm! @r<CR>"
 
 " 替换模式串
 nnoremap <leader>su :%s///gc<left><left><left><left>
@@ -1110,21 +1127,24 @@ nnoremap <leader><leader>h gT
 nnoremap <leader><leader>l gt
 nnoremap gxo :tabonly<cr>
 nnoremap <c-t> :tab split<cr>
-nnoremap <c-w> :tabclose<cr>
+" Quit tab, even if it's just one
+function! s:my_quit_tab() "{{{
+  for bufnr in tabpagebuflist()
+    if bufexists(bufnr)
+      let winnr = bufwinnr(bufnr)
+      exe winnr.'wincmd w'
+      quit
+    endif
+  endfor
+endfunction
+"}}}
+nnoremap <c-w> :call <SID>my_quit_tab()<cr>
 inoremap <c-t> <esc>:tab split<cr>
 
 " normal模式下切换到确切的tab
-nnoremap <leader>1 1gt
-" {{{
-noremap <leader>2 2gt
-noremap <leader>3 3gt
-noremap <leader>4 4gt
-noremap <leader>5 5gt
-noremap <leader>6 6gt
-noremap <leader>7 7gt
-noremap <leader>8 8gt
-noremap <leader>9 9gt
-" }}}
+for s:count_num in [1,2,3,4,5,6,7,8,9]
+    exec 'nnoremap <leader>' . s:count_num . ' ' . s:count_num . 'gt'
+endfor
 
 " 调整缩进后自动选中，方便再次操作
 vnoremap < <gv
