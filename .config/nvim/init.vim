@@ -391,20 +391,12 @@ Plug 'maximbaz/lightline-ale'
 " asyncrun和lightline插件适配
 Plug 'albertomontesg/lightline-asyncrun'
 
-" 保存viewport信息, 比如cursor,fold
-Plug 'zhimsel/vim-stay'
-"{{{
-set viewoptions=cursor,folds,slash,unix
-"}}}
-
 " python的indent折叠增强, 折叠import，折叠和预览doctring，
 Plug 'tmhedberg/SimpylFold', {'for': [ 'python' ]}
 "{{{
 let g:SimpylFold_docstring_preview = 1
 "}}}
 
-" 优化bd体验，关闭buffer但是不关闭窗口
-Plug 'mhinz/vim-sayonara', {'on': [ 'Sayonara','Sayonara!' ]}
 "===========================================================================
 "===========================================================================
 "}}}
@@ -949,17 +941,18 @@ let g:git_messenger_no_default_mappings = v:true
 " let g:git_messenger_always_into_popup = v:true
 nmap go <Plug>(git-messenger)
 
-" 折叠插件
-" Plug 'pseewald/vim-anyfold'
-"{{{
-" autocmd Filetype java,cpp,python,js AnyFoldActivate
-" let g:anyfold_fold_comments=1
-" hi Folded term=NONE cterm=NONE
-" augroup enable_anyfold_plugin
-    " autocmd!
-    " autocmd Filetype * AnyFoldActivate
-" augroup end
-"}}}
+" 优化bd体验，关闭buffer但是不关闭窗口
+Plug 'mhinz/vim-sayonara', {'on': [ 'Sayonara','Sayonara!' ]}
+nnoremap <silent> <leader>bd :Sayonara!<cr>
+
+" 移动参数，数组里的元素 html, css, js中object属性
+Plug 'AndrewRadev/sideways.vim', {'on': ['SidewaysLeft', 'SidewaysRight']}
+nnoremap tl :SidewaysRight<cr>
+nnoremap th :SidewaysLeft<cr>
+
+
+
+
 
 
 " 打算以后再体验的插件
@@ -989,8 +982,6 @@ inoremap kj <esc>
 nnoremap ? /
 noremap ; :
 nnoremap zo zazz
-nnoremap zm zMzz
-nnoremap zr zRzz
 noremap ,; ;
 nnoremap ,w :w<cr>
 vnoremap v <esc>
@@ -1082,7 +1073,6 @@ inoremap <m-p> <c-r>0
 nnoremap <m-p> "0p
 
 " Buffer操作
-nnoremap <silent> <leader>bd :Sayonara!<cr>
 nnoremap <silent> <m-l> :bp<cr>
 nnoremap <silent> <m-h> :bn<cr>
 "{{{删除隐藏的buffer
@@ -1320,7 +1310,7 @@ augroup auto_actions_for_better_experience
     " 自动source VIMRC
     autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
     " 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写
-    " autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exec "normal! g'\" \| zz" | endif
+    autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exec "normal! g'\" \| zz" | endif
     " 在右边窗口打开help
     autocmd BufEnter * if &buftype == 'help' | wincmd L | endif
     " Test插件要求工作目录在project根目录
