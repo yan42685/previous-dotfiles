@@ -550,7 +550,7 @@ nnoremap ,ge :Gedit<CR>
     " Rename the file in git repo.
     " Reload the file into the current buffer.
     " Preserve undo history.
-nnoremap ,gr :Gwrite<cr>:Gmove %:h/
+nnoremap ,gr :Gwrite<cr>:Gmove <c-r>=expand('%:p:h')<cr>/
 nnoremap ,gw :Gwrite<CR><CR>
 
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式
@@ -990,13 +990,12 @@ xnoremap <expr> R ":norm! @r<CR>"
 " 替换模式串
 nnoremap <leader>su :%s///gc<left><left><left><left>
 " {{{ My_get_current_visual_text() 获取当前visual选择的文本
-function s:My_get_current_visual_text() abort
+function My_get_current_visual_text() abort
     execute "normal! `<v`>y"
     return @"
 endfunction
 "}}}
-xnoremap <silent> <leader>su :<C-U>%s/<C-R>=My_get_current_visual_text()<CR>//gc<left><left><left>
-" xnoremap <leader>su :s///gc<left><left><left>
+xnoremap <silent> <leader>su :<C-U>%s/<C-R>=My_get_current_visual_text()<cr>//gc<left><left><left>
 " 退出系列
 noremap <silent> <leader>q <esc>:q<cr>
 noremap <silent> Q <esc>:qa<cr>
@@ -1013,6 +1012,8 @@ nnoremap gb %zz
 " 去上次修改的地方
 nnoremap gi gi<esc>zzi
 nnoremap g; gi<esc>zz
+nnoremap gv gvzz
+nnoremap gg gg
 nnoremap '' ``zz
 nnoremap '. `.zz
 nnoremap <c-o> <c-o>zz
@@ -1021,11 +1022,10 @@ nnoremap u uzz
 nnoremap <c-r> <c-r>zz
 nnoremap G Gzz
 " 定义这个是为了让which-key查询的时候不报错
-nnoremap gg gg
-nnoremap gv gvzz
 
 noremap H ^
 noremap L $
+noremap Y y$
 nnoremap yh y^
 nnoremap yl y$
 nnoremap dh d0
@@ -1115,7 +1115,6 @@ vnoremap > >gv
 nnoremap < <<
 nnoremap > >>
 
-noremap Y y$
 noremap <c-a> ggVG
 inoremap <c-a> <esc>ggVG
 " 保存后全部折叠
@@ -1560,3 +1559,10 @@ nnoremap <leader>nm :let @0=expand('%:t')<CR>
 nnoremap <leader>pa :let @0=expand('%:p')<cr>
 " 向下选择多行, 向上就用-   g表示global，v表示converse-global  :.,$v/bar/d 删除从当前行到最后一行不包含bar的行
 " nnoremap S :.,+
+
+" 快速在头文件和源文件之间跳转
+nnoremap <leader>eh :execute 'edit' fnamemodify(expand('%'), ':p:r') . '.h'<cr>
+autocmd BufLeave *.{c,cpp} mark C
+nnoremap <leader>ec :execute "normal 'C"<cr>
+" 编辑同目录下的文件
+nnoremap ,e :e <c-r>=expand('%:p:h')<cr>/
