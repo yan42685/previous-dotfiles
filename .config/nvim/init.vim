@@ -82,7 +82,6 @@ endif
 " }}}
 
 call plug#begin('~/.vim/plugged')
-
 " {{{没有设置快捷键的，在后台默默运行的插件
 "
 " 缩进虚线
@@ -322,7 +321,7 @@ let g:lightline.active = {
         \ }
 let g:lightline.inactive = {
     \ 'left': [ [ 'filename' , 'modified', 'session_name' ] ],
-    \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ], [ 'filetype', 'fileformat', 'lineinfo' ] ]
+    \ 'right': [ [ 'filetype', 'fileformat', 'lineinfo' ] ]
     \ }
 let g:lightline.tabline = {
     \ 'left': [ [ 'vim_logo', 'tabs' ] ],
@@ -400,7 +399,6 @@ let g:SimpylFold_docstring_preview = 1
 "===========================================================================
 "===========================================================================
 "}}}
-
 " {{{需要知道快捷键的插件
 
 " 主题配色
@@ -966,9 +964,10 @@ nnoremap th :SidewaysLeft<cr>
 " %匹配对象增强, 建议把%改成m
 "Plug 'andymass/vim-matchup'
 "
+"Plug 'junegunn/vim-emoji'
+"Plug 'junegunn/vim-github-dashboard'
 "
 " }}}
-
 call plug#end()
 
 "==========================================
