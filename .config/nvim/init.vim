@@ -1,4 +1,5 @@
-﻿ " 只考虑NeoVim，不一定兼容Vim
+﻿" TODO: 命令行自动删除一一对括号 col('.') getcommandline()
+ " 只考虑NeoVim，不一定兼容Vim
 "
 " 经验之谈:
 "   1. 抓住主要问题, 用相对简单和有意义的按键映射出现频率高的操作, 而非常冷门的操作不设置快捷键，可以考虑用别的方式替代
@@ -80,7 +81,6 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 " }}}
-
 call plug#begin('~/.vim/plugged')
 " {{{没有设置快捷键的，在后台默默运行的插件
 "
@@ -973,6 +973,41 @@ nnoremap th :SidewaysLeft<cr>
 call plug#end()
 
 "==========================================
+" 自定义命令
+"==========================================
+"{{{ Ctabs: Open all files in quickfix window in tabs
+command! Ctabs call s:Ctabs()
+function! s:Ctabs()
+  let files = {}
+  for entry in getqflist()
+    let filename = bufname(entry.bufnr)
+    let files[filename] = 1
+  endfor
+
+  for file in keys(files)
+    silent exe "tabedit ".file
+  endfor
+endfunction
+"}}}
+"{{{ Gfiles: Open all git-modified files in tabs
+command! Gfiles call s:Gfiles()
+function! s:Gfiles()
+  let files = split(system('git status -s -uall | cut -b 4-'), '\n')
+
+  for file in files
+    silent exe "tabedit ".file
+  endfor
+endfunction
+"}}}
+"{{{ Repeatable: Make the given command repeatable using repeat.vim
+command! -nargs=* Repeatable call s:Repeatable(<q-args>)
+function! s:Repeatable(command)
+  exe a:command
+  call repeat#set(':Repeatable '.a:command."\<cr>")
+endfunction
+"}}}
+
+"==========================================
 " HotKey Settings  自定义快捷键设置
 "==========================================
 " 如果需要覆盖插件定义的映射，可用如下方式
@@ -1598,8 +1633,8 @@ if &diff
 endif
 
 " copy current absolute filename into register
-nnoremap <leader>nm :let @0=expand('%:t')<CR>
-nnoremap <leader>pa :let @0=expand('%:p')<cr>
+nnoremap <leader>nm :let @0=expand('%:t')<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr><cr>
+nnoremap <leader>pa :let @0=expand('%:p')<cr>:echo printf('absolutepath yanked: %s', expand('%:p'))<cr><cr>
 " 向下选择多行, 向上就用-   g表示global，v表示converse-global  :.,$v/bar/d 删除从当前行到最后一行不包含bar的行
 " nnoremap S :.,+
 
