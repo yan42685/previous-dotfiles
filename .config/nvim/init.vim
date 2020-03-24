@@ -1633,7 +1633,7 @@ endif
 
 " copy current absolute filename into register
 nnoremap <leader>ynm :let @0=expand('%:t')<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
-nnoremap <leader>ypa :let @0=expand('%:p')<cr>:echo printf('absolutepath yanked: %s', expand('%:p'))<cr>
+nnoremap <leader>yap :let @0=expand('%:p')<cr>:echo printf('absolutepath yanked: %s', expand('%:p'))<cr>
 nnoremap <leader>ydr :let @0=expand('%:p:h')<cr>:echo printf('absolutepath yanked: %s', expand('%:p:h'))<cr>
 " 向下选择多行, 向上就用-   g表示global，v表示converse-global  :.,$v/bar/d 删除从当前行到最后一行不包含bar的行
 " nnoremap S :.,+
