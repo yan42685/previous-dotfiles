@@ -995,7 +995,7 @@ function My_get_current_visual_text() abort
     return @"
 endfunction
 "}}}
-xnoremap <silent> <leader>su :<C-U>%s/<C-R>=My_get_current_visual_text()<cr>//gc<left><left><left>
+xnoremap <silent> <leader>su :<c-u>%s/<c-r>=My_get_current_visual_text()<cr>//gc<left><left><left>
 " 退出系列
 noremap <silent> <leader>q <esc>:q<cr>
 noremap <silent> Q <esc>:qa<cr>
