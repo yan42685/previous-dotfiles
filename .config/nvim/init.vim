@@ -396,6 +396,8 @@ Plug 'tmhedberg/SimpylFold', {'for': [ 'python' ]}
 let g:SimpylFold_docstring_preview = 1
 "}}}
 
+" 动画api
+Plug 'camspiers/animate.vim'
 "===========================================================================
 "===========================================================================
 "}}}
@@ -837,7 +839,7 @@ nmap gq <plug>(asyncrun-qftoggle)
 nnoremap <leader>ma :AsyncRun -mode=term -pos=bottom -rows=10 python "$(VIM_FILEPATH)"
 
 " sudo for neovim  (原来的tee trick只对vim有用，对neovim无效)
-Plug 'lambdalisue/suda.vim'
+Plug 'lambdalisue/suda.vim', {'on': ['W', 'E']}
 "{{{suda.vim-usage
 " :E filename  sudo edit
 " :W       sudo edit
@@ -1260,7 +1262,7 @@ function Change_fold_method_by_filetype()
     elseif index(s:indent_fold_list, &filetype) >= 0
         set foldmethod=indent
     elseif index(s:expression_fold_list, &filetype) >= 0
-        set foldmethod=expression
+        set foldmethod=expr
     else
         set foldmethod=syntax
     endif
