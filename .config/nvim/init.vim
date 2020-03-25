@@ -158,9 +158,6 @@ Plug 'luochen1990/rainbow'
 let g:rainbow_active = 1
 "}}}
 
-" 【可能影响性能】侧栏显示git diff情况(要求vim8+)
-Plug 'mhinz/vim-signify'
-
 " coc-snippets是框架,这个是内容
 Plug 'honza/vim-snippets'
 "
@@ -536,6 +533,15 @@ endfunction
 "}}}
 nmap <leader>gmt <plug>(MergetoolToggle)
 nnoremap <silent> <leader>cml :<C-u>call MergetoolLayoutCustom()<CR>
+
+" 【可能影响性能】侧栏显示git diff情况(要求vim8+)
+Plug 'mhinz/vim-signify'
+augroup signify_remapping
+    autocmd!
+    " 在diff hunk之间跳转
+    autocmd VimEnter * nmap [c <plug>(signify-prev-hunk)zz
+    autocmd VimEnter * nmap ]c <plug>(signify-next-hunk)zz
+augroup end
 
 " git
 Plug 'tpope/vim-fugitive'
