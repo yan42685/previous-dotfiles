@@ -693,6 +693,8 @@ let g:startify_lists = [
             \ { 'type': 'files',     'header': ['   MRU']            },
             \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
             \ ]
+
+let g:startify_update_oldfiles = 1  " 自动更新文件
 let g:startify_session_persistence = 1  " 持久化session
 let g:startify_fortune_use_unicode = 1  " 首页banner使用utf-8字符编码
 let g:startify_enable_special = 0  " 不显示<empty buffer> 和 <quit>
@@ -737,7 +739,7 @@ nnoremap <leader>pi :Startify<cr>
 nnoremap <leader>ps :SSave<cr>
 nnoremap <leader>pl :SLoad<cr>
 nnoremap <leader>pc :SClose<cr>
-nnoremap <leader>pd :SDelete<cr>
+nnoremap <leader>pd :SDelete!<cr>
 
 " 为内置终端提供方便接口
 Plug 'kassio/neoterm'
@@ -1060,7 +1062,7 @@ endfunction
 xnoremap <silent> <leader>su :<c-u>%s/<c-r>=My_get_current_visual_text()<cr>//gc<left><left><left>
 " 退出系列
 noremap <silent> <leader>q <esc>:q<cr>
-noremap <silent> Q <esc>:qa<cr>
+noremap <silent> Q <esc>:SSave! auto_session<cr>:qa<cr>
 
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
@@ -1411,8 +1413,11 @@ augroup highlight_my_keywords
 augroup end
 "}}}
 
-" 启动页面Header的颜色
-highlight! StartifyHeader cterm=bold ctermbg=75 ctermfg=black gui=bold guifg=#87bb7c
+" 启动页面的颜色
+highlight! StartifyHeader cterm=bold ctermbg=black ctermfg=75 gui=bold guifg=#87bb7c
+" highlight! StartifyFile cterm=None ctermfg=75 gui=None guifg=#87bb7c
+highlight! StartifyFile cterm=None ctermfg=75 gui=None guifg=#d8b98a
+highlight! StartifyNumber cterm=None ctermfg=75 gui=None guifg=#d8b98a
 
 " =============================================
 " 新增功能
@@ -1597,6 +1602,12 @@ nnoremap <leader>tt :call Toggle_transparent_background()<CR>
 nnoremap <leader>en :e $MYVIMRC<CR>
 " 快速编辑tmux配置文件
 nnoremap <leader>et :e $HOME/.tmux.conf<cr>
+" 快速在头文件和源文件之间跳转
+nnoremap <leader>eh :execute 'edit' fnamemodify(expand('%'), ':p:r') . '.h'<cr>
+autocmd BufLeave *.{c,cpp} mark C
+nnoremap <leader>ec :execute "normal 'C"<cr>
+" 编辑同目录下的文件
+nnoremap ,e :e <c-r>=expand('%:p:h')<cr>/
 
 " {{{查看highlighting group
 function! s:synstack()
@@ -1632,15 +1643,8 @@ if &diff
 endif
 
 " copy current absolute filename into register
-nnoremap <leader>ynm :let @0=expand('%:t')<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
-nnoremap <leader>yap :let @0=expand('%:p')<cr>:echo printf('absolutepath yanked: %s', expand('%:p'))<cr>
-nnoremap <leader>ydr :let @0=expand('%:p:h')<cr>:echo printf('absolutepath yanked: %s', expand('%:p:h'))<cr>
+nnoremap <leader>nm :let @0=expand('%:t')<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
+nnoremap <leader>ap :let @0=expand('%:p')<cr>:echo printf('absolutepath yanked: %s', expand('%:p'))<cr>
+nnoremap <leader>dr :let @0=expand('%:p:h')<cr>:echo printf('absolutepath yanked: %s', expand('%:p:h'))<cr>
 " 向下选择多行, 向上就用-   g表示global，v表示converse-global  :.,$v/bar/d 删除从当前行到最后一行不包含bar的行
 " nnoremap S :.,+
-
-" 快速在头文件和源文件之间跳转
-nnoremap <leader>eh :execute 'edit' fnamemodify(expand('%'), ':p:r') . '.h'<cr>
-autocmd BufLeave *.{c,cpp} mark C
-nnoremap <leader>ec :execute "normal 'C"<cr>
-" 编辑同目录下的文件
-nnoremap ,e :e <c-r>=expand('%:p:h')<cr>/
