@@ -265,7 +265,6 @@ fi
 alias du='du -h'
 alias df='df -h'
 alias free='free -h'
-alias e="$EDITOR"
 
 # 下面的alias参考common-alias插件
 alias zshrc='${=EDITOR} ~/.zshrc' # Quick access to the ~/.zshrc file
