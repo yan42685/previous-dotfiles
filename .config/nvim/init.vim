@@ -1370,8 +1370,6 @@ augroup auto_actions_for_better_experience
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exec "normal! g'\" \| zz" | endif
     " 在右边窗口打开help
     autocmd BufEnter * if &buftype == 'help' | wincmd L | endif
-    " Test插件要求工作目录在project根目录
-    " autocmd BufEnter * silent! lcd %:p:h  " 自动切换当前目录为当前文件的目录
     "{{{ <c-j><c-k>移动quickfix
     function List_is_opened(type) abort
         if a:type == "quickfix"
@@ -1415,9 +1413,8 @@ augroup end
 
 " 启动页面的颜色
 highlight! StartifyHeader cterm=bold ctermbg=black ctermfg=75 gui=bold guifg=#87bb7c
-" highlight! StartifyFile cterm=None ctermfg=75 gui=None guifg=#87bb7c
 highlight! StartifyFile cterm=None ctermfg=75 gui=None guifg=#d8b98a
-highlight! StartifyNumber cterm=None ctermfg=75 gui=None guifg=#d8b98a
+highlight! StartifyNumber cterm=None ctermfg=75 gui=None guifg=#7daea3
 
 " =============================================
 " 新增功能
