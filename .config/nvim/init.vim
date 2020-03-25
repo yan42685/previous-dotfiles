@@ -1184,14 +1184,7 @@ inoremap <c-t> <esc>:tab split<cr>
 for s:count_num in [1,2,3,4,5,6,7,8,9]
     exec 'nnoremap <leader>' . s:count_num . ' ' . s:count_num . 'gt'
 endfor
-" 更方便的跳转标记
-let s:alphabet =['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
-            \'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-            \'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-            \'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',]
-for single_char in s:alphabet
-    exec "nnoremap '" . single_char . ' `' . single_char . 'zz'
-endfor
+
 
 " 调整缩进后自动选中，方便再次操作
 vnoremap < <gv
@@ -1464,6 +1457,15 @@ endif
 augroup enable_comment_highlighting_for_json
     autocmd FileType json syntax match Comment +\/\/.\+$+
 augroup end
+"}}}
+"{{{ 更方便的跳转标记
+let s:alphabet =['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+            \'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            \'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+            \'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',]
+for single_char in s:alphabet
+    exec "nnoremap '" . single_char . ' `' . single_char . 'zz'
+endfor
 "}}}
 
 " 废弃<F1>调出系统帮助的功能
