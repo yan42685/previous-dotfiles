@@ -623,6 +623,7 @@ nnoremap <silent> <leader>gs :Leaderf searchHistory<cr>
 nnoremap <silent> <leader>rg :<C-U>Leaderf rg<cr>
 " 项目下搜索词 -F是fix 即不是正则模式
 nnoremap <silent> <Leader>sw :<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cword>"))<CR><cr>
+nnoremap <silent> <Leader>sW :<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cWORD>"))<CR><cr>
 xnoremap <silent> <leader>sw :<C-U><C-R>=printf("Leaderf! rg -F %s ", leaderf#Rg#visual())<CR><cr>
 " buffer内即时搜索
 nnoremap <silent> / :Leaderf rg --current-buffer<cr>
@@ -1044,6 +1045,7 @@ xnoremap <expr> R ":norm! @r<CR>"
 
 " 替换模式串
 nnoremap <leader>su :%s/<c-r>=expand('<cword>')<cr>//gc<left><left><left>
+nnoremap <leader>sU :%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
 " {{{ My_get_current_visual_text() 获取当前visual选择的文本
 function My_get_current_visual_text() abort
     execute "normal! `<v`>y"
