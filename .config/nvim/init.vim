@@ -803,10 +803,11 @@ let g:asynctasks_term_reuse = 1  " 如果用tab模式打开终端，则会复用
 let g:asynctasks_config_name = '.git/tasks.ini'
 "}}}
 noremap <silent> <leader><leader>e :AsyncTaskEdit<cr>
-noremap <silent> <leader>rf :AsyncTask file-run<cr>
-noremap <silent> <leader>bf :AsyncTask file-build<cr>
-noremap <silent> <leader>rp :AsyncTask project-run<cr>
-noremap <silent> <leader>bp :AsyncTask project-build<cr>
+" 触发UIEnter事件方便自动修改mapping
+noremap <silent> <leader>rf :AsyncTask file-run<cr>:doautocmd UIEnter<cr>
+noremap <silent> <leader>bf :AsyncTask file-build<cr>:doautocmd UIEnter<cr>
+noremap <silent> <leader>rp :AsyncTask project-run<cr>:doautocmd UIEnter<cr>
+noremap <silent> <leader>bp :AsyncTask project-build<cr>:doautocmd UIEnter<cr>
 
 " 异步运行，测试
 Plug 'skywind3000/asyncrun.vim', { 'on': ['AsyncRun', 'AsyncStop', '<plug>(asyncrun-qftoggle)'] }
@@ -939,7 +940,6 @@ nnoremap <silent> <leader>bd :Sayonara!<cr>
 Plug 'AndrewRadev/sideways.vim', {'on': ['SidewaysLeft', 'SidewaysRight']}
 nnoremap tl :SidewaysRight<cr>
 nnoremap th :SidewaysLeft<cr>
-
 
 
 
@@ -1376,17 +1376,19 @@ augroup auto_actions_for_better_experience
         return get(g:my_check_quickfix_ids, "winid", 0) != 0
     endfunction
     "
-    function Change_ctrljk_for_quickfix() abort
+    function Change_mapping_for_quickfix() abort
         if List_is_opened("quickfix")
             nnoremap <c-j> :cnext<cr>
             nnoremap <c-k> :cprevious<cr>
+            nnoremap q :cclose<cr>
         else
             nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>
             nnoremap <c-k> :call ScrollAnotherWindow(1)<CR>
+            nnoremap q q
         endif
     endfunction
     "}}}
-    autocmd UIEnter,WinEnter,WinLeave,BufLeave,BufEnter * call Change_ctrljk_for_quickfix()
+    autocmd UIEnter,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
 augroup end
 
 " 开启语法高亮
