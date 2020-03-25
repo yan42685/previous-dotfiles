@@ -701,6 +701,7 @@ let g:startify_lists = [
             \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
             \ ]
 
+let g:startify_files_number = 15  " 首页显示的MRU文件数量
 let g:startify_update_oldfiles = 1  " 自动更新文件
 let g:startify_session_persistence = 1  " 持久化session
 let g:startify_fortune_use_unicode = 1  " 首页banner使用utf-8字符编码
