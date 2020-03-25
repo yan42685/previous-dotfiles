@@ -1380,6 +1380,7 @@ augroup auto_actions_for_better_experience
     autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
     " 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exec "normal! g'\" \| zz" | endif
+    " 进入新窗口始终让viewport居中
     autocmd WinEnter * exec 'normal! zz'
     " 在右边窗口打开help,man
     autocmd filetype man,help wincmd L
@@ -1424,10 +1425,11 @@ augroup highlight_my_keywords
 augroup end
 "}}}
 
-" 启动页面的颜色
+"{{{startify启动页面的颜色
 highlight! StartifyHeader cterm=bold ctermbg=black ctermfg=75 gui=bold guifg=#87bb7c
 highlight! StartifyFile cterm=None ctermfg=75 gui=None guifg=#d8b98a
 highlight! StartifyNumber cterm=None ctermfg=75 gui=None guifg=#7daea3
+"}}}
 
 " =============================================
 " 新增功能
@@ -1606,7 +1608,7 @@ function! Toggle_transparent_background()
   endif
 endfunction
 "}}}
-nnoremap <leader>tt :call Toggle_transparent_background()<CR>
+nnoremap <silent> <leader>tt :call Toggle_transparent_background()<CR>
 
 " 快速编辑init.vim
 nnoremap <leader>en :e $MYVIMRC<CR>
@@ -1648,6 +1650,7 @@ nnoremap [<space> :<c-u>call <sid>BlankUp(v:count1)<cr>
 " 当把vim作为git的difftool时，设置 git config --global difftool.trustExitCode true && git config --global mergetool.trustExitCode true
 " 在git difftool或git mergetool之后  可以用:cq进行强制退出diff/merge模式，而不会不停地recall another diff/merge file
 if &diff
+    " 强制退出difftool, 不再自动唤起difftool
     noremap <leader><leader>q <esc>:cq<cr>
     noremap Q <esc>:qa<cr>
     " 在diff hunk之间跳转
@@ -1660,4 +1663,4 @@ nnoremap <leader>nm :let @0=expand('%:t')<cr>:echo printf('filename yanked: %s',
 nnoremap <leader>ap :let @0=expand('%:p')<cr>:echo printf('absolutepath yanked: %s', expand('%:p'))<cr>
 nnoremap <leader>dr :let @0=expand('%:p:h')<cr>:echo printf('absolutepath yanked: %s', expand('%:p:h'))<cr>
 " 向下选择多行, 向上就用-   g表示global，v表示converse-global  :.,$v/bar/d 删除从当前行到最后一行不包含bar的行
-" nnoremap S :.,+
+nnoremap S :.,+
