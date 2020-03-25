@@ -1,4 +1,5 @@
-﻿ " 只考虑NeoVim，不一定兼容Vim
+﻿" TODO: c-o zz
+ " 只考虑NeoVim，不一定兼容Vim
 "
 " 经验之谈:
 "   1. 抓住主要问题, 用相对简单和有意义的按键映射出现频率高的操作, 而非常冷门的操作不设置快捷键，可以考虑用别的方式替代
@@ -393,8 +394,7 @@ Plug 'tmhedberg/SimpylFold', {'for': [ 'python' ]}
 let g:SimpylFold_docstring_preview = 1
 "}}}
 
-" 动画api
-Plug 'camspiers/animate.vim'
+
 "===========================================================================
 "===========================================================================
 "}}}
@@ -752,33 +752,15 @@ nnoremap <leader>pd :SDelete!<cr>
 " 为内置终端提供方便接口
 Plug 'kassio/neoterm'
 "{{{
+let g:neoterm_autojump = 1  " 自动进入终端
+let g:neoterm_autoinsert = 1  " 进入终端默认插入模式
 let g:neoterm_use_relative_path = 1
 let g:neoterm_autoscroll = 1
 let g:neoterm_size = 10  " 调整terminal的大小
-
-function! AutoCompileAndRun() abort
-    execute 'botright Topen'
-    execute 'Tclear'
-    if &filetype == 'python'
-        execute 'T python3 %'
-    elseif &filetype == 'c'
-        execute 'T gcc -Wall -g % -o %.out && ./%.out'
-    elseif &filetype == 'cpp'
-        execute 'T g++ -Wall -g -std=c++11 % -o %.out && ./%.out'
-    elseif &filetype == 'javascript'
-        execute 'T node %'
-    elseif &filetype == 'java'
-        execute 'T javac % && java -enableassertions %:p'
-    elseif &ifletype == 'go'
-        execute 'T go build % && ./%:p'
-    endif
-endfunction
 "}}}
 " 一键运行
-nnoremap <leader>rn :call AutoCompileAndRun()<cr>
-nnoremap <silent> <m-m> :botright Ttoggle<cr><c-w>w<c-\><c-n>
-" 任何时候进入neoterm都是插入模式
-nnoremap <silent> <m-j> :botright Topen<cr><c-w>w<c-\><c-n>i
+nnoremap <silent> <m-m> :botright Ttoggle<cr>
+nnoremap <silent> <m-j> :botright Topen<cr>
 inoremap <silent> <m-j> <esc>:botright Topen<cr>
 " 内置终端
 tnoremap <silent> <c-d> <c-\><c-n>:Tclose<cr>
@@ -1382,7 +1364,7 @@ augroup auto_actions_for_better_experience
     " 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exec "normal! g'\" \| zz" | endif
     " 进入新窗口始终让viewport居中
-    autocmd WinEnter * exec 'normal! zz'
+    autocmd BufWinEnter * exec 'normal! zz'
     " 在右边窗口打开help,man
     autocmd filetype man,help wincmd L
     "{{{ <c-j><c-k>移动quickfix
@@ -1661,7 +1643,7 @@ endif
 
 " copy current absolute filename into register
 nnoremap <leader>nm :let @0=expand('%:t')<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
-nnoremap <leader>ap :let @0=expand('%:p')<cr>:echo printf('absolutepath yanked: %s', expand('%:p'))<cr>
-nnoremap <leader>dr :let @0=expand('%:p:h')<cr>:echo printf('absolutepath yanked: %s', expand('%:p:h'))<cr>
+nnoremap <leader>ap :let @0=expand('%:p')<cr>:echo printf('absolute path yanked: %s', expand('%:p'))<cr>
+nnoremap <leader>dr :let @0=expand('%:p:h')<cr>:echo printf('absolute dir yanked: %s', expand('%:p:h'))<cr>
 " 向下选择多行, 向上就用-   g表示global，v表示converse-global  :.,$v/bar/d 删除从当前行到最后一行不包含bar的行
 nnoremap S :.,+
