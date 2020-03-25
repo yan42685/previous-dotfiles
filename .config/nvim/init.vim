@@ -393,7 +393,6 @@ Plug 'tmhedberg/SimpylFold', {'for': [ 'python' ]}
 let g:SimpylFold_docstring_preview = 1
 "}}}
 
-
 "===========================================================================
 "===========================================================================
 "}}}
@@ -1006,6 +1005,7 @@ endfunction
 
 " 主要按键重定义
 inoremap kj <esc>
+cnoremap kj <c-c>
 nnoremap ? /
 noremap ; :
 nnoremap zo zazz
@@ -1024,21 +1024,16 @@ nnoremap <leader>r; @:
 " {{{ Quickly make a macro and use it with "."
 let s:simple_macro_active = 0
 function! s:my_simple_macro()
-  if s:simple_macro_active == 0
-    call feedkeys('qr', 'n')
-    let s:simple_macro_active = 1
-
-  elseif s:simple_macro_active == 1
-    normal! q
-    " remove trailing M
-    let @m = @r[0:-2]
-    call repeat#set(":\<c-u>call repeat#wrap('@m', 1)\<cr>", 1)
-    let s:simple_macro_active = 0
-
-  endif
+    if s:simple_macro_active == 0
+        normal! qr
+        let s:simple_macro_active = 1
+    elseif s:simple_macro_active == 1
+        normal! q
+        let s:simple_macro_active = 0
+    endif
 endfunction
 "}}}
-nnoremap M :call <SID>my_simple_macro()<cr>
+nnoremap <silent> M :call <SID>my_simple_macro()<cr>
 nnoremap R @r
 " xnoremap <expr> <leader>@ ":norm! @".nr2char(getchar())."<CR>"
 xnoremap <expr> R ":norm! @r<CR>"
@@ -1082,6 +1077,10 @@ nnoremap g, g,zz
 nnoremap gv gvzz
 " 定义这个是为了让which-key查询的时候不报错
 nnoremap gg gg
+" 切换大小写
+nnoremap gu viw~
+nnoremap gU viW~
+vnoremap gu ~
 nnoremap '' ``zz
 nnoremap '. `.zz
 nnoremap <c-o> <c-o>zz
@@ -1092,8 +1091,10 @@ nnoremap G Gzz
 nnoremap [z [zzz
 nnoremap ]z ]zzz
 
-noremap H ^
-noremap L $
+nnoremap H ^
+nnoremap L $
+vnoremap H ^
+vnoremap L $h
 noremap Y y$
 nnoremap yh y^
 nnoremap yl y$
@@ -1182,6 +1183,14 @@ inoremap <c-t> <esc>:tab split<cr>
 " normal模式下切换到确切的tab
 for s:count_num in [1,2,3,4,5,6,7,8,9]
     exec 'nnoremap <leader>' . s:count_num . ' ' . s:count_num . 'gt'
+endfor
+" 更方便的跳转标记
+let s:alphabet =['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+            \'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            \'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+            \'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',]
+for single_char in s:alphabet
+    exec "nnoremap '" . single_char . ' `' . single_char . 'zz'
 endfor
 
 " 调整缩进后自动选中，方便再次操作
