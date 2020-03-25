@@ -1010,6 +1010,8 @@ noremap ; :
 nnoremap zo zazz
 noremap ,; ;
 nnoremap ,w :w<cr>
+" 解决通过命令let @" = {text}设置的@" 不能被p正确粘贴的问题
+nnoremap p ""p
 vnoremap v <esc>
 " 我喜欢使用分号作为插入模式的 leader 键，因为分号后面除了空格和换行之外几乎不会接任何其他字符
 " 快速在行末写分号并换行
@@ -1640,9 +1642,14 @@ if &diff
     noremap [c [czz
 endif
 
-" copy current absolute filename into register
-nnoremap <leader>nm :let @0=expand('%:t')<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
-nnoremap <leader>ap :let @0=expand('%:p')<cr>:echo printf('absolute path yanked: %s', expand('%:p'))<cr>
-nnoremap <leader>dr :let @0=expand('%:p:h')<cr>:echo printf('absolute dir yanked: %s', expand('%:p:h'))<cr>
-" 向下选择多行, 向上就用-   g表示global，v表示converse-global  :.,$v/bar/d 删除从当前行到最后一行不包含bar的行
-nnoremap S :.,+
+" 复制当前文件的名字，绝对路径，目录绝对路径
+function Copy_to_registers(text) abort  "{{{
+    let @" = a:text
+    let @0 = a:text
+    let @+ = a:text  " system clipboard on Linux
+    let @* = a:text  " system clipboard on Windows
+endfunction
+"}}}
+nnoremap <leader>nm :call Copy_to_registers(expand('%:t'))<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
+nnoremap <leader>ap :call Copy_to_registers(expand('%:p'))<cr>:echo printf('absolute path yanked: %s', expand('%:p'))<cr>
+nnoremap <leader>dr :call Copy_to_registers(expand('%:p:h'))<cr>:echo printf('absolute dir yanked: %s', expand('%:p:h'))<cr>
