@@ -1050,7 +1050,7 @@ nnoremap R @r
 xnoremap <expr> R ":norm! @r<CR>"
 
 " 替换模式串
-nnoremap <leader>su :%s///gc<left><left><left><left>
+nnoremap <leader>su :%s/<c-r>=expand('<cword>')<cr>//gc<left><left><left>
 " {{{ My_get_current_visual_text() 获取当前visual选择的文本
 function My_get_current_visual_text() abort
     execute "normal! `<v`>y"
