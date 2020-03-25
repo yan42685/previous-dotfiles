@@ -1115,8 +1115,6 @@ nnoremap <leader>ef :e %:h/
 cnoremap ' ''<left>
 cnoremap " ""<left>
 cnoremap ( ()<left>
-cnoremap < <><left>
-cnoremap [ []<left>
 cnoremap <c-k> <up>
 cnoremap <c-j> <down>
 cnoremap <c-h> <left>
