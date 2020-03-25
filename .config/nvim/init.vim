@@ -123,15 +123,16 @@ Plug 'arp242/undofile_warn.vim'
 Plug 'kamykn/spelunker.vim'
 "{{{
 set nospell
-" let g:spelunker_disable_auto_group = 1  " Disable default autogroup. (default: 0)
 let g:spelunker_check_type = 2  " 只在window内动态check, 对大文件十分友好
 let g:spelunker_highlight_type = 2  " Highlight only SpellBad.
 augroup my_highlight_spellbad
     autocmd!
     autocmd VimEnter * highlight SpelunkerSpellBad cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
+    autocmd VimEnter * highlight SpelunkerComplexOrCompoundWord cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
+    " 下两行 取消在startify中的拼写检查 前提是设置了 g:spelunker_check_type = 2:
+    let g:spelunker_disable_auto_group = 1
+    autocmd CursorHold * if &filetype != 'startify' | call spelunker#check_displayed_words() | endif
 augroup end
-"
-" let g:spelunker_check_type = 2  " FIXME 如果打开大文件很慢就尝试开启此项 Spellcheck displayed words in buffer. Fast and dynamic
 "}}}
 
 " 140+种语言的语法高亮包
@@ -1335,8 +1336,6 @@ function Change_fold_method_by_filetype()
     else
         set foldmethod=syntax
     endif
-    " 让viewport居中
-    execute 'normal! zz'
 endfunction
 
 augroup auto_change_fold_method
@@ -1381,8 +1380,9 @@ augroup auto_actions_for_better_experience
     autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
     " 打开自动定位到最后编辑的位置, 需要确认 .viminfo 当前用户可写
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exec "normal! g'\" \| zz" | endif
-    " 在右边窗口打开help
-    autocmd BufEnter * if &buftype == 'help' | wincmd L | endif
+    autocmd WinEnter * exec 'normal! zz'
+    " 在右边窗口打开help,man
+    autocmd filetype man,help wincmd L
     "{{{ <c-j><c-k>移动quickfix
     function List_is_opened(type) abort
         if a:type == "quickfix"
@@ -1614,7 +1614,10 @@ nnoremap <leader>en :e $MYVIMRC<CR>
 nnoremap <leader>et :e $HOME/.tmux.conf<cr>
 " 快速在头文件和源文件之间跳转
 nnoremap <leader>eh :execute 'edit' fnamemodify(expand('%'), ':p:r') . '.h'<cr>
-autocmd BufLeave *.{c,cpp} mark C
+augroup auto_mark_C
+    autocmd!
+    autocmd BufLeave *.{c,cpp} mark C
+augroup end
 nnoremap <leader>ec :execute "normal 'C"<cr>
 " 编辑同目录下的文件
 nnoremap ,e :e <c-r>=expand('%:p:h')<cr>/
