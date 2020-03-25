@@ -1074,7 +1074,9 @@ noremap K <C-b>zz
 nnoremap gb %zz
 " 去上次修改的地方
 nnoremap gi gi<esc>zzi
-nnoremap g; gi<esc>zz
+" goto previous/next change positon
+nnoremap g; g;zz
+nnoremap g, g,zz
 nnoremap gv gvzz
 " 定义这个是为了让which-key查询的时候不报错
 nnoremap gg gg
@@ -1307,7 +1309,7 @@ set foldenable  " 代码折叠 zM全部折叠 zR全部打开 zo开关一个折�
 
 function Change_fold_method_by_filetype()
     set foldlevel=99  " 第一次进入时不折叠
-    let s:marker_fold_list = ['vim', 'txt']  " 根据文件类型选择不同的折叠模式
+    let s:marker_fold_list = ['vim', 'txt', 'zsh', 'tmux']  " 根据文件类型选择不同的折叠模式
     let s:indent_fold_list = ['python']
     let s:expression_fold_list = ['markdown', 'rust']
     if index(s:marker_fold_list, &filetype) >= 0

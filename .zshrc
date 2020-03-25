@@ -274,7 +274,6 @@ alias -g G='| grep'
 alias -g L="| less"
 alias -g M="| most"
 
-
 # 采纳补全建议, 如果需要在命令行下输入半角逗号，可以先随便输入一个字符，然后在vi模式下用r改成半角逗号
 bindkey ',' autosuggest-accept
 bindkey 'kj' vi-cmd-mode
