@@ -1068,7 +1068,15 @@ endfunction
 xnoremap <silent> <leader>su :<c-u>%s/<c-r>=My_get_current_visual_text()<cr>//gc<left><left><left>
 " 退出系列
 noremap <silent> <leader>q <esc>:q<cr>
-noremap <silent> Q <esc>:SSave! auto_session<cr>:qa<cr>
+"{{{ 自动保存会话
+function s:auto_save_session() abort
+    let session_name = fnamemodify(v:this_session,':t')
+    let session_name = session_name == '' ? 'auto_session' : session_name
+    execute 'SSave! ' . session_name
+    execute 'qa'
+endfunction
+"}}}
+noremap <silent> Q <esc>:call <SID>auto_save_session()<cr>
 
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
@@ -1167,8 +1175,8 @@ nnoremap <leader><leader>h gT
 nnoremap <leader><leader>l gt
 nnoremap gxo :tabonly<cr>
 nnoremap <c-t> :tab split<cr>
-" Quit tab, even if it's just one
-function! s:my_quit_tab() "{{{
+" {{{Quit tab, even if it's just one
+function! s:my_quit_tab()
   for bufnr in tabpagebuflist()
     if bufexists(bufnr)
       let winnr = bufwinnr(bufnr)
@@ -1178,7 +1186,8 @@ function! s:my_quit_tab() "{{{
   endfor
 endfunction
 "}}}
-nnoremap <c-w> :call <SID>my_quit_tab()<cr>
+" nnoremap <c-w> :call <SID>my_quit_tab()<cr>
+nnoremap <c-w> :tabclose<cr>
 inoremap <c-t> <esc>:tab split<cr>
 
 " normal模式下切换到确切的tab
