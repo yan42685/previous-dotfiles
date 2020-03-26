@@ -985,6 +985,10 @@ augroup END
 " 似乎是vim唯一的test插件, 支持CI
 " Plug 'janko/vim-test'
 "
+" 数据库接口
+" Plug 'tpope/vim-dadbod'
+" 数据库接口的ui+"Plug
+" Plug 'kristijanhusak/vim-dadbod-ui'
 
 "
 "Plug 'junegunn/vim-emoji'
