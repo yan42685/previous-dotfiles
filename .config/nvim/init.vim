@@ -1492,10 +1492,12 @@ for single_char in s:alphabet
 endfor
 "}}}
 
-" 废弃<F1>调出系统帮助的功能
+" 废弃<F1>调出系统帮助的功能 和 ZZ退出
 noremap <F1> <nop>
 inoremap <F1> <nop>
 cnoremap <F1> <nop>
+nnoremap ZZ <nop>
+vnoremap ZZ <nop>
 
 " {{{ <F2> 行号开关，用于鼠标复制代码用, 为方便复制
 function! ToggleColumnNumber()
