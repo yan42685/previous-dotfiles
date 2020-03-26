@@ -1,8 +1,12 @@
 ## 依赖
- 包管理器记得换源
+ 包管理器最好换源
 - pyenv
-    -  `sudo apt install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python-openssl git`
-    - `git clone https://github.com/yyuu/pyenv.git ~/.pyenv`
+```
+sudo apt install -y make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python-openssl git
+```
+```
+git clone https://github.com/yyuu/pyenv.git ~/.pyenv
+```
 
 - python3
 - snap
@@ -19,12 +23,13 @@
 - eslint prettier pylint autopep8 cppcheck clang-format
 - rg
 - fzf
-- tmux (tmux-finger插件依赖gawk包, sudo apt install gawk)
+- tmux (tmux-finger插件依赖gawk包, `sudo apt install gawk`)
 
 可有可无的软件
 - nnn
 - bat
 - 无道词典
+- gdb-dashboard
 
 
 #### 如何在远程机器上使用本地zsh
@@ -34,7 +39,7 @@ git clone https://github.com/rutchkiwi/copyzshell.git ~ZSH_CUSTOM/plugins/copyzs
 ```
 
 ```
-copyzshell \<remote machine>
+copyzshell <remote machine>
 ```
 #### 如何在远程机器上使用本地vim
 https://unix.stackexchange.com/questions/202918/how-do-i-remotely-edit-files-via-ssh
