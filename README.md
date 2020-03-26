@@ -45,6 +45,3 @@ copyzshell <remote machine>
 #### 如何在远程机器上使用本地vim
 https://unix.stackexchange.com/questions/202918/how-do-i-remotely-edit-files-via-ssh
 使用sshfs把远程文件夹mount到本地
-
-testaabbbb
-abcde
