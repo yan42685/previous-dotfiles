@@ -46,4 +46,4 @@ copyzshell <remote machine>
 https://unix.stackexchange.com/questions/202918/how-do-i-remotely-edit-files-via-ssh
 使用sshfs把远程文件夹mount到本地
 
-testaaaaaaaaaaaaaaaa
+testaabbbbbbbbbbb
