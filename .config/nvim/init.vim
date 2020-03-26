@@ -801,11 +801,31 @@ let g:asynctasks_term_reuse = 1  " 如果用tab模式打开终端，则会复用
 let g:asynctasks_config_name = '.git/tasks.ini'
 "}}}
 noremap <silent> <leader><leader>e :AsyncTaskEdit<cr>
-" 触发UIEnter事件方便自动修改mapping
-noremap <silent> <leader>rf :AsyncTask file-run<cr>:doautocmd UIEnter<cr>
-noremap <silent> <leader>bf :AsyncTask file-build<cr>:doautocmd UIEnter<cr>
-noremap <silent> <leader>rp :AsyncTask project-run<cr>:doautocmd UIEnter<cr>
-noremap <silent> <leader>bp :AsyncTask project-build<cr>:doautocmd UIEnter<cr>
+" 触发UIEnter事件方便自动修改mapping{{{
+function Async_build_file() abort
+    execute 'AsyncTask file-build'
+    doautocmd UIEnter
+endfunc
+
+function Async_run_file() abort
+    execute 'AsyncTask file-run'
+    doautocmd UIEnter
+endfunc
+
+function Async_build_project() abort
+    execute 'AsyncTask project-build'
+    doautocmd UIEnter
+endfunc
+
+function Async_run_project() abort
+    execute 'AsyncTask project-run'
+    doautocmd UIEnter
+endfunc
+"}}}
+noremap <silent> <leader>bf :call Async_build_file()<cr>
+noremap <silent> <leader>rf :call Async_run_file()<cr>
+noremap <silent> <leader>bp :call Async_build_project<cr>
+noremap <silent> <leader>rp :call Async_run_project<cr>
 
 " 异步运行，测试
 Plug 'skywind3000/asyncrun.vim', { 'on': ['AsyncRun', 'AsyncStop', '<plug>(asyncrun-qftoggle)'] }
