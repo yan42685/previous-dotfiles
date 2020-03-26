@@ -757,7 +757,6 @@ let g:neoterm_use_relative_path = 1
 let g:neoterm_autoscroll = 1
 let g:neoterm_size = 10  " 调整terminal的大小
 "}}}
-" 一键运行
 nnoremap <silent> <m-m> :botright Ttoggle<cr>
 nnoremap <silent> <m-j> :botright Topen<cr>
 inoremap <silent> <m-j> <esc>:botright Topen<cr>
