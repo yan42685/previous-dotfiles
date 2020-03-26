@@ -25,3 +25,7 @@ xz-utils tk-dev libffi-dev liblzma-dev python-openssl git
 可有可无的软件
 - bat
 - 无道词典
+
+
+#### 如何在远程机器上使用本地zsh: https://github.com/rutchkiwi/copyzshell 提供的copyzshell插件,     git clone https://github.com/rutchkiwi/copyzshell.git ~ZSH_CUSTOM/plugins/copyzshell  copyzshell <remote machine>
+#### 如何在远程机器上使用本地vim: https://unix.stackexchange.com/questions/202918/how-do-i-remotely-edit-files-via-ssh  使用sshfs把远程文件夹mount到本地

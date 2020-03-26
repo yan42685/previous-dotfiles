@@ -235,6 +235,10 @@ fi
 
 
 
+alias hdfs=/usr/local/hadoop/bin/hdfs
+alias hadoop=/usr/local/hadoop/bin/hadoop
+alias start-dfs=/usr/local/hadoop/sbin/start-dfs.sh
+alias stop-dfs=/usr/local/hadoop/sbin/stop-dfs.sh
 alias t='tmux'
 alias ts="trash"
 # 安全的cp和mv，防止误操作覆盖同名文件
