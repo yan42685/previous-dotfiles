@@ -521,8 +521,8 @@ function! MergetoolLayoutCustom()
   endif
 endfunction
 "}}}
-nmap <leader>gmt <plug>(MergetoolToggle)
-nnoremap <silent> <leader>cml :<C-u>call MergetoolLayoutCustom()<CR>
+" nmap <leader>gmt <plug>(MergetoolToggle)
+nnoremap <silent> <leader>mt :<C-u>call MergetoolLayoutCustom()<CR>
 
 " 【可能影响性能】侧栏显示git diff情况(要求vim8+)
 Plug 'mhinz/vim-signify'
