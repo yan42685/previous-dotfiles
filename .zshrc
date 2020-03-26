@@ -247,7 +247,18 @@ alias cp='nocorrect cp -ip'
 alias mkdir='nocorrect mkdir'
 alias md='nocorrect mkdir'
 
-alias vi='nvim'
+#{{{ 使用neovim-remote 可以在内置终端打开非嵌套的nvim
+NVIM_LISTEN_ADDRESS=/tmp/nvimsocket nvim
+remote-nvim-edit() {
+    if [ -n "$NVIM_LISTEN_ADDRESS" ] ; then
+    nvr --remote-tab "$@"
+    else
+    exec nvim "$@"
+    fi
+}
+# }}}
+alias vi='remote-nvim-edit'
+# alias vi='nvim'
 # alias vim='nvim'
 # alias vimm='\vim'   # 用转义符防止递归映射
 alias dot='/usr/bin/git --git-dir=/home/yy/.dotfiles/ --work-tree=/home/yy'   # 用于存放dotfiles

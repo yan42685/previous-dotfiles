@@ -985,6 +985,10 @@ augroup END
 " 似乎是vim唯一的test插件, 支持CI
 " Plug 'janko/vim-test'
 "
+" 数据库接口
+"Plug 'tpope/vim-dadbod'
+" 数据库接口的ui
+"Plug 'kristijanhusak/vim-dadbod-ui'
 
 "
 "Plug 'junegunn/vim-emoji'
@@ -1707,3 +1711,9 @@ endfunction
 nnoremap <leader>nm :call Copy_to_registers(expand('%:t'))<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
 nnoremap <leader>ap :call Copy_to_registers(expand('%:p'))<cr>:echo printf('absolute path yanked: %s', expand('%:p'))<cr>
 nnoremap <leader>dr :call Copy_to_registers(expand('%:p:h'))<cr>:echo printf('absolute dir yanked: %s', expand('%:p:h'))<cr>
+
+let $GIT_EDITOR = 'nvr -cc split --remote-wait'  " 让git使用nvim作为editor时不要嵌套
+augroup git_wq_the_same_as_bd
+    autocmd!
+    autocmd FileType gitcommit,gitrebase,gitconfig setlocal bufhidden=delete
+augroup end
