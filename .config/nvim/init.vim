@@ -1386,7 +1386,7 @@ augroup auto_actions_for_better_experience
         if List_is_opened("quickfix")
             nnoremap <c-j> :cnext<cr>
             nnoremap <c-k> :cprevious<cr>
-            nnoremap q :cclose<cr>
+            nnoremap q :cclose<cr>:doautocmd UILeave<cr>
         else
             nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>
             nnoremap <c-k> :call ScrollAnotherWindow(1)<CR>
@@ -1394,7 +1394,7 @@ augroup auto_actions_for_better_experience
         endif
     endfunction
     "}}}
-    autocmd UIEnter,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
+    autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
 augroup end
 
 " 开启语法高亮
