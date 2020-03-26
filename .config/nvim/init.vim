@@ -537,7 +537,7 @@ augroup end
 Plug 'tpope/vim-fugitive'
 nnoremap ,ga :Git add %:p<CR><CR>
 nnoremap ,gc :Gcommit --all<cr>
-nnoremap ,gd :vert Gdiff<cr>
+nnoremap ,gd :vert Gdiff<cr><c-w>w
 nnoremap ,gs :vert Gstatus<cr>
 nnoremap ,gl :Glog<cr>
 nnoremap ,gps :Gpush<cr>
@@ -1231,12 +1231,13 @@ inoremap <c-a> <esc>ggVG
 " 交换 ' `, 使得可以快速使用'跳到marked相同的位置
 noremap ' `
 noremap ` '
+" 让y复制后光标仍在原位
+vnoremap y ygv<Esc>
 
 "==========================================
 " Theme Settings  主题设置
 "==========================================
 set termguicolors  " 使用真色彩
-" NOTE: quantum主题是必开的, 用来提供lightline主题
 exec 'colorscheme ' . s:colorschemes[s:colorscheme_mode]
 " colorscheme quantum
 " colorscheme onedark
