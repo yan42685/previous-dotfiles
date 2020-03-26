@@ -1017,6 +1017,7 @@ vnoremap v <esc>
 " 我喜欢使用分号作为插入模式的 leader 键，因为分号后面除了空格和换行之外几乎不会接任何其他字符
 " 快速在行末写分号并换行
 inoremap ;; <c-o>A;<cr>
+inoremap ;n <c-o>A;<esc>jo
 " NOTE: 这里用imap是因为要借用auto-pairs插件提供的{}自动配对
 imap [[ <esc>A<space>{<cr>
 " 重复上次执行的寄存器的命令
