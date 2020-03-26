@@ -510,7 +510,7 @@ Plug 'samoshkin/vim-mergetool'
 "{{{
 let g:mergetool_layout = 'mr'  " `l`, `b`, `r`, `m`
 let g:mergetool_prefer_revision = 'local'  " `local`, `base`, `remote`
-let g:mergetool_layout_custom = 0
+let g:mergetool_layout_custom = 1
 function! MergetoolLayoutCustom()
   if g:mergetool_layout_custom == 0
     let g:mergetool_layout_custom = 1
@@ -987,7 +987,7 @@ augroup END
 "
 " 数据库接口
 " Plug 'tpope/vim-dadbod'
-" 数据库接口的ui+"Plug
+" 数据库接口的ui
 " Plug 'kristijanhusak/vim-dadbod-ui'
 
 "

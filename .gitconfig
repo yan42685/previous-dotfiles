@@ -8,19 +8,21 @@
     quotepath = false  # 解决git ls不显示中文的问题
 
 [diff]
-	tool = vimdiff3
+    tool = vimdiff3
 [difftool]
     prompt = false
     trustExitCode = true
+
 [difftool "vimdiff3"]
     path = nvim
 
 [merge]
-	tool = vimdiff3
+    tool = vimdiff3
     conflictStyle = diff3
 [mergetool "vim_mergetool"]
     cmd = nvim -f -c "MergetoolStart" "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
     trustExitCode = true
+
 
 [alias]
     # 很多alias来自 https://github.com/GitAlias/gitalias/blob/master/gitalias.txt

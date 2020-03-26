@@ -12,6 +12,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - snap
 - zsh
 - zgen
+- neovim-remote(命令为nvr) `pip3 install neovim-remote`
 - nvim
 - lua
 - node, npm
