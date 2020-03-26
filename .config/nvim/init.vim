@@ -493,7 +493,7 @@ nmap <silent> <leader>re <Plug>(coc-rename)
 " 重构
 imap <silent> <c-m-v> <esc><Plug>(coc-codeaction)
 nmap <silent> <c-m-v> <Plug>(coc-codeaction)
-vmap <silent> <c-m-n> <Plug>(coc-codeaction-selected)
+vmap <silent> <c-m-v> <Plug>(coc-codeaction-selected)
 
 " coc-translator
 nmap tt <Plug>(coc-translator-p)
@@ -1646,6 +1646,7 @@ augroup auto_mark_C
     autocmd BufLeave *.{c,cpp} mark C
 augroup end
 nnoremap <leader>ec :execute "normal 'C"<cr>
+" 编辑该文件类型的snippets
 nnoremap <leader>es :CocCommand snippets.editSnippets<cr>
 " 编辑同目录下的文件
 nnoremap ,e :e <c-r>=expand('%:p:h')<cr>/
