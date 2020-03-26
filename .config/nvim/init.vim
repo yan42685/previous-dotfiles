@@ -189,15 +189,6 @@ let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.xml,*.jsx,*.tsx'
 Plug 'tpope/vim-markdown', {'for': ['md', 'vimwiki']}
 " TODO: 不知道还能不能用其他语言的高亮
 let g:markdown_fenced_languages = ['html', 'css', 'js=javascript', 'python', 'bash=sh']
-"
-" NOTE: 自动切换到project root
-Plug 'airblade/vim-rooter'
-"{{{
-" let g:rooter_manual_only = 1  " 停止自动目录
-" nnoremap <leader>rd :Rooter  " 手动切换目录
-let g:rooter_resolve_links = 1  " resolve软硬链接
-let g:rooter_silent_chdir = 1  " 静默change dir
-"}}}
 
 " 与tmux整合的插件
 "{{{
@@ -958,6 +949,20 @@ nnoremap <silent> <leader>bd :Sayonara!<cr>
 Plug 'AndrewRadev/sideways.vim', {'on': ['SidewaysLeft', 'SidewaysRight']}
 nnoremap tl :SidewaysRight<cr>
 nnoremap th :SidewaysLeft<cr>
+
+" 切换到项目根目录
+Plug 'airblade/vim-rooter'
+"{{{
+let g:rooter_manual_only = 1  " 停止自动目录
+let g:rooter_resolve_links = 1  " resolve软硬链接
+let g:rooter_silent_chdir = 1  " 静默change dir
+"}}}
+" 手动切换到项目根目录
+nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', expand('%:p:h'))<cr>
+
+
+
+
 
 
 
