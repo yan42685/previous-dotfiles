@@ -761,7 +761,6 @@ nnoremap <silent> <m-m> :botright Ttoggle<cr>
 nnoremap <silent> <m-j> :botright Topen<cr>
 inoremap <silent> <m-j> <esc>:botright Topen<cr>
 " 内置终端
-tnoremap <silent> <c-d> <c-\><c-n>:Tclose<cr>
 tnoremap <m-h> <c-\><c-n><c-w>h
 tnoremap <m-l> <c-\><c-n><c-w>l
 tnoremap <m-j> <c-\><c-n><c-w>j
@@ -1386,7 +1385,7 @@ augroup auto_actions_for_better_experience
         if List_is_opened("quickfix")
             nnoremap <c-j> :cnext<cr>
             nnoremap <c-k> :cprevious<cr>
-            nnoremap q :cclose<cr>:doautocmd UILeave<cr>
+            nnoremap <silent> q :cclose<cr>:doautocmd UILeave<cr>
         else
             nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>
             nnoremap <c-k> :call ScrollAnotherWindow(1)<CR>
