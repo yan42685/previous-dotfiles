@@ -1641,6 +1641,7 @@ augroup auto_mark_C
     autocmd BufLeave *.{c,cpp} mark C
 augroup end
 nnoremap <leader>ec :execute "normal 'C"<cr>
+nnoremap <leader>es :CocCommand snippets.editSnippets<cr>
 " 编辑同目录下的文件
 nnoremap ,e :e <c-r>=expand('%:p:h')<cr>/
 
