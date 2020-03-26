@@ -38,6 +38,7 @@ https://github.com/rutchkiwi/copyzshell
 ```
 git clone https://github.com/rutchkiwi/copyzshell.git ~ZSH_CUSTOM/plugins/copyzshell
 ```
+test
 
 ```
 copyzshell <remote machine>
