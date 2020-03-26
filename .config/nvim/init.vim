@@ -960,7 +960,16 @@ let g:rooter_silent_chdir = 1  " 静默change dir
 " 手动切换到项目根目录
 nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', expand('%:p:h'))<cr>
 
-
+" %匹配对象增强, 也许可以把%改成m
+Plug 'andymass/vim-matchup'
+"{{{
+let g:loaded_matchit           = 1  " 禁用vim默认自带插件
+let g:loaded_matchparen        = 1
+augroup matchup_matchparen_highlight
+  autocmd!
+  autocmd Colorscheme * hi! link MatchParen Visual
+augroup END
+"}}}
 
 
 
@@ -976,8 +985,7 @@ nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', expand('%:p:h'))<cr>
 " 似乎是vim唯一的test插件, 支持CI
 " Plug 'janko/vim-test'
 "
-" %匹配对象增强, 建议把%改成m
-"Plug 'andymass/vim-matchup'
+
 "
 "Plug 'junegunn/vim-emoji'
 "Plug 'junegunn/vim-github-dashboard'
