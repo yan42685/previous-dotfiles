@@ -24,7 +24,7 @@
     tool = vimdiff3
     conflictStyle = diff3
 [mergetool "vim_mergetool"]
-    cmd = nvim -c "MergetoolToggle" 
+    cmd = nvim -f -c "MergetoolStart" "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
     trustExitCode = true
 
 

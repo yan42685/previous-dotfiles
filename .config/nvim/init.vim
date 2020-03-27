@@ -284,6 +284,16 @@ function! Get_session_name() abort
     let l:session_name = fnamemodify(v:this_session,':t')
     return l:session_name != '' ? '<' . l:session_name . '>' : ''
 endfunction
+
+function If_in_merge_or_diff_mode() abort
+  if get(g:, 'mergetool_in_merge_mode', 0)  " merge模式
+    return 'merge mode'
+  endif
+  if &diff
+    return 'diff mode'  " diff模式
+  endif
+  return ''
+endfunc
 "}}}
 
 let g:lightline = {}
@@ -303,13 +313,13 @@ let g:lightline.active = {
         \           [  'filename', 'readonly', 'gitbranch', 'modified', 'session_name' ],
         \         ],
         \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
-        \            [ 'filetype', 'fileformat', 'lineinfo' ],
+        \            [ 'diff_or_merge_mode', 'filetype', 'fileformat', 'lineinfo' ],
         \            [ 'asyncrun_status']
         \          ]
         \ }
 let g:lightline.inactive = {
     \ 'left': [ [ 'filename' , 'modified', 'session_name' ] ],
-    \ 'right': [ [ 'filetype', 'fileformat', 'lineinfo' ] ]
+    \ 'right': [ [ 'diff_or_merge_mode', 'filetype', 'fileformat', 'lineinfo' ] ]
     \ }
 let g:lightline.tabline = {
     \ 'left': [ [ 'vim_logo', 'tabs' ] ],
@@ -352,7 +362,8 @@ let g:lightline.component_function = {
       \   'method': 'NearestMethodOrFunction',
       \   'session_name': 'Get_session_name',
       \   'fileformat': 'LightlineFileformat',
-      \   'filetype': 'LightLineFiletype'
+      \   'filetype': 'LightLineFiletype',
+      \   'diff_or_merge_mode': 'If_in_merge_or_diff_mode'
       \ }
 let g:lightline.component_expand = {
       \ 'linter_checking': 'lightline#ale#checking',
@@ -507,9 +518,16 @@ nnoremap <silent> g :WhichKey 'g'<cr>
 
 " 可视化merge NOTE: 恢复merge前的状态使用: git checkout --conflict=diff3 {file}
 Plug 'samoshkin/vim-mergetool'
+"{{{
 let g:mergetool_layout = 'mr'  " `l`, `b`, `r`, `m`
 let g:mergetool_prefer_revision = 'local'  " `local`, `base`, `remote`
-"{{{
+" mergetool 模式关闭语法检查和语法高亮
+" function s:on_mergetool_set_layout(split)
+"   set syntax=off
+"   set nospell
+" endfunction
+" let g:MergetoolSetLayoutCallback = function('s:on_mergetool_set_layout')
+
 let g:mergetool_layout_custom = 0
 function! MergetoolLayoutCustom()
   if g:mergetool_layout_custom == 0
@@ -522,6 +540,7 @@ function! MergetoolLayoutCustom()
 endfunction
 "}}}
 nmap <leader>mt <plug>(MergetoolToggle)
+" 切换视图
 nnoremap <silent> <leader>cmt :<C-u>call MergetoolLayoutCustom()<CR>
 
 " 【可能影响性能】侧栏显示git diff情况(要求vim8+)
@@ -1450,6 +1469,16 @@ augroup auto_actions_for_better_experience
     endfunction
     "}}}
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
+"{{{ diff和merge情况下自动关闭语法高亮
+    function Auto_syntax_off_on_diff_and_merge()
+        if get(g:, 'mergetool_in_merge_mode', 0) || &diff
+            set syntax=off
+        else
+            set syntax=on
+        endif
+    endfunc
+"}}}
+    autocmd WinEnter * call Auto_syntax_off_on_diff_and_merge()
 augroup end
 
 " 开启语法高亮
