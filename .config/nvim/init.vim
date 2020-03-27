@@ -19,8 +19,10 @@
 "  2. 提供python和系统剪切板支持 pip3 install pynvim && apt install xsel
 "  3. rm -rf ~/.viminfo 这样可以使自动回到上次编辑的地方功能生效, 然后重新打开vim(注意要以当前用户打开),vim会自动重建该文件.
 "  4. :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer coc-yank coc-markdownlint
-"     coc-word coc-emmet coc-todolist (可以同步到gist，具体看官网介绍)
-"     coc-marketplace (用于查看所有的coc扩展)
+"     coc-sh coc-dictionary coc-word coc-emmet coc-emoji(只在markdown生效，冒号开始补全)
+"     coc-syntax coc-marketplace (用于查看所有的coc扩展)
+"     coc-todolist (可以同步到gist,具体看github)
+"     coc-ci (中文分词,需要映射w和b)
 "     coc-gitignore (按类型添加gitignore, 用法是在已有git初始化的文件夹内CocList gitignore)
 
 "  5. ubuntu下用snap包管理器安装ccls, 作为C、C++的LSP (推荐用snap安装, 因为ccls作者提供的编译安装方式似乎有问题, 反正Ubuntu18.04不行)
@@ -420,13 +422,17 @@ let g:NERDCommentEmptyLines = 1  " Allow commenting and inverting empty lines (u
 map <c-_> <plug>NERDCommenterToggle
 imap <c-_> <esc><plug>NERDCommenterToggle
 
-" 文件树 (现在用的是coc-explorer)
+" coc-explorer 文件树
 "{{{
 function ToggleCocExplorer()
   execute 'CocCommand explorer --toggle --width=35 --sources=buffer+,file+ ' . getcwd()
 endfunction
 "}}}
 nnoremap <silent> <leader>er :call ToggleCocExplorer()<CR>
+
+" coc-ci 中文分词
+nmap <silent> w <Plug>(coc-ci-w)
+nmap <silent> b <Plug>(coc-ci-b)
 
 " coc-translator  可以先输入再查词, 作为一个简单的英汉词典,
 nmap tt <Plug>(coc-translator-p)
@@ -441,7 +447,7 @@ vmap tt <Plug>(coc-translator-pv)
 " Use delete to delete a todo item
 nnoremap <leader>tc :CocCommand todolist.create<cr>
 " clear all notifications
-nnoremap <leader>tx :CocCommand todolist.clearNotice<cr>
+nnoremap <silent> <leader>tx :CocCommand todolist.clearRemind<cr>
 nnoremap <leader>tu :CocCommand todolist.upload<cr>
 " download todolist from gist
 " nnoremap <leader>td :CocCommand todolist.download<cr>
@@ -1038,11 +1044,12 @@ nnoremap ,gl :Flog<cr>
 
 
 
-"============ 前端 ================
-" 快速生成JS注释
-"Plug 'heavenshell/vim-jsdoc'
+"============ 前端 和 coc系列 ================
 
-
+" coc-import-cost (仅用于JS和TS)
+" coc-github
+" coc-css-block-comments
+" coc-sql (lint和format, format似乎要手动, 看ale能不能自动调用这个插件自带的sql-formatter把)
 
 
 "
