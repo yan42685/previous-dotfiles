@@ -505,14 +505,24 @@ nnoremap <silent> <leader> :WhichKey '<space>'<cr>
 nnoremap <silent> , :WhichKey ','<cr>
 nnoremap <silent> g :WhichKey 'g'<cr>
 
-" 可视化merge
+" 可视化merge NOTE: 恢复merge前的状态使用: git checkout --conflict=diff3 {file}
 Plug 'samoshkin/vim-mergetool'
-"{{{
-" let g:mergetool_layout = 'mr'  " `l`, `b`, `r`, `m`
-let g:mergetool_layout = 'lrb,m'  " `l`, `b`, `r`, `m`
+let g:mergetool_layout = 'mr'  " `l`, `b`, `r`, `m`
 let g:mergetool_prefer_revision = 'local'  " `local`, `base`, `remote`
+"{{{
+let g:mergetool_layout_custom = 0
+function! MergetoolLayoutCustom()
+  if g:mergetool_layout_custom == 0
+    let g:mergetool_layout_custom = 1
+    execute 'MergetoolToggleLayout lbr,m'
+  else
+    let g:mergetool_layout_custom = 0
+    execute 'MergetoolToggleLayout mr'
+  endif
+endfunction
 "}}}
-nnoremap <silent> <leader>mt :MergetoolToggle<cr>
+nmap <leader>mt <plug>(MergetoolToggle)
+nnoremap <silent> <leader>cmt :<C-u>call MergetoolLayoutCustom()<CR>
 
 " 【可能影响性能】侧栏显示git diff情况(要求vim8+)
 Plug 'mhinz/vim-signify'
@@ -1667,13 +1677,11 @@ nnoremap <F12> :<C-u>call <SID>synstack()<CR>
 function! s:BlankUp(count) abort
     put!=repeat(nr2char(10), a:count)
     ']+1
-    silent! call repeat#set("\<Plug>unimpairedBlankUp", a:count)
 endfunction
 
 function! s:BlankDown(count) abort
     put =repeat(nr2char(10), a:count)
     '[-1
-    silent! call repeat#set("\<Plug>unimpairedBlankDown", a:count)
 endfunction
 "}}}
 nnoremap ]<space> :<c-u>call <sid>BlankDown(v:count1)<cr>
