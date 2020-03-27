@@ -539,7 +539,7 @@ nnoremap ,ga :Git add %:p<CR><CR>
 nnoremap ,gc :Gcommit --all<cr>
 nnoremap ,gd :vert Gdiff<cr><c-w>w
 nnoremap ,gs :vert Gstatus<cr>
-nnoremap ,gl :Glog<cr>
+" nnoremap ,gl :Glog<cr>
 nnoremap ,gps :Gpush<cr>
 nnoremap ,gpl :Gpull<cr>
 nnoremap ,gf :Gfetch<cr>
@@ -971,13 +971,17 @@ augroup matchup_matchparen_highlight
 augroup END
 "}}}
 
-
+" 更方便的查看commit g?查看键位 enter查看详细信息 <c-n> <c-p> 跳到上下commit
+Plug 'rbong/vim-flog', {'on': ['Flog']}
+nnoremap ,gl :Flog<cr>
 
 
 
 
 
 " 打算以后再体验的插件
+" 一键生成注释（15+种语言）
+" Plug 'kkoomen/vim-doge'
 
 " 多光标
 " Plug 'mg979/vim-visual-multi'
@@ -1435,8 +1439,8 @@ augroup auto_actions_for_better_experience
     "
     function Change_mapping_for_quickfix() abort
         if List_is_opened("quickfix")
-            nnoremap <c-j> :cnext<cr>
-            nnoremap <c-k> :cprevious<cr>
+            nnoremap <silent> <c-j> :cnext<cr>
+            nnoremap <silent> <c-k> :cprevious<cr>
             nnoremap <silent> q :cclose<cr>:doautocmd UILeave<cr>
         else
             nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>

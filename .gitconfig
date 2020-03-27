@@ -7,6 +7,9 @@
     editor = nvim
     quotepath = false  # 解决git ls不显示中文的问题
 
+[pager]
+	log = nvim -c 'Flog' -c 'tabprevious' -c 'bd!' -c 'tabclose'  # 查看log，NOTE: 依赖Flog.vim插件
+
 [diff]
     tool = vimdiff3
 [difftool]
@@ -85,6 +88,7 @@
     lg = log --graph
     # log like - we like this summarization our key performance indicators. Also aliased as `log-like`.
     ll = log --graph --topo-order --date=short --abbrev-commit --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset'
+    ; ll = log > nvim -c 'Flog'
     # log like long  - we like this summarization our key performance indicators. Also aliased as `log-like-long`.
     lll = log --graph --topo-order --date=iso8601-strict --no-abbrev-commit --abbrev=40 --decorate --all --boundary --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn <%ce>]%Creset %Cblue%G?%Creset'
 
