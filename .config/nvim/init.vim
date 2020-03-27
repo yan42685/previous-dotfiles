@@ -429,7 +429,7 @@ function ToggleCocExplorer()
   execute 'CocCommand explorer --toggle --width=35 --sources=buffer+,file+ ' . getcwd()
 endfunction
 "}}}
-nmap <silent> <leader>er :call ToggleCocExplorer()<CR>
+nnoremap <silent> <leader>er :call ToggleCocExplorer()<CR>
 
 " COC自动补全框架
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -494,7 +494,6 @@ nmap <silent> gd <Plug>(coc-definition)zz
 nmap <silent> gm <Plug>(coc-implementation)zz
 nmap <silent> gr <Plug>(coc-references)zz
 nmap <silent> gf <Plug>(coc-refactor)
-" nnoremap gq :CocList --normal quickfix<cr>
 nnoremap <leader>gm :CocList --normal marks<cr>
 " 查看文档
 nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
@@ -552,18 +551,18 @@ augroup end
 
 " git
 Plug 'tpope/vim-fugitive'
-nnoremap ,ga :Git add %:p<CR><CR>
-nnoremap ,gc :Gcommit --all<cr>
+nnoremap ,ga :G add %:p<CR><CR>
+nnoremap ,gc :G commit --all<cr>
 " 定义进入diff的事件，然后当前窗口关闭syntax
 autocmd User MyEnterDiffMode echo ''
-nnoremap ,gd :Gdiff<cr>:doautocmd User MyEnterDiffMode<cr>
-nnoremap ,gs :vert Gstatus<cr>
+nnoremap ,gd :Gdiffsplit<cr>:doautocmd User MyEnterDiffMode<cr>
+nnoremap <silent> ,gs :vert Git<cr>
 " nnoremap ,gl :Glog<cr>  " 由Flog插件替代
-nnoremap ,gps :Gpush<cr>
-nnoremap ,gpl :Gpull<cr>
-nnoremap ,gf :Gfetch<cr>
+nnoremap ,gps :G push<cr>
+nnoremap ,gpl :G pull<cr>
+nnoremap ,gf :G fetch<cr>
 nnoremap ,gp :Ggrep<Space>
-nnoremap ,gm :Gmove<Space>
+nnoremap ,gm :GMove<Space>
 nnoremap ,gb :Git branch<Space>
 nnoremap .go :Git checkout<Space>
 nnoremap ,ge :Gedit<CR>
@@ -1461,7 +1460,7 @@ augroup auto_actions_for_better_experience
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会有性能问题
     autocmd User MyEnterDiffMode if &diff | windo setlocal syntax=off | wincmd w
-    autocmd WinEnter * if !&diff | setlocal syntax=on | endif
+    " autocmd WinEnter * if !&diff | setlocal syntax=on | endif
 augroup end
 
 " 开启语法高亮
