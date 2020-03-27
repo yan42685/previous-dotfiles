@@ -788,7 +788,7 @@ let $GTAGSLABEL = 'native-pygments'  " FIXME: 当项目文件的路径包含非A
 " let $GTAGSCONF = '/path/to/share/gtags/gtags.conf'
 
 " 浏览tags, 函数，类
-Plug 'liuchengxu/vista.vim'
+Plug 'liuchengxu/vista.vim', {'on': 'Vista'}
 "{{{
 let g:vista_default_executive = 'ctags'  " Executive used when opening vista sidebar without specifying it.
 let g:vista#renderer#enable_icon = 1  " Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
@@ -866,7 +866,7 @@ command! -nargs=1 E  edit  suda://<args>
 command! W w suda://%
 
 " 用vim看man
-Plug 'lambdalisue/vim-manpager'
+Plug 'lambdalisue/vim-manpager', {'on': 'Man'}
 augroup temporar_change_manpager_mapping
     autocmd!
     autocmd FileType man nmap <silent> <buffer> <C-j> ]t
@@ -877,7 +877,7 @@ augroup end
 Plug 'tweekmonster/startuptime.vim', { 'on': 'StartupTime' }
 
 " MarkDown预览
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for':['markdown', 'vimwiki'] }
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for':['markdown', 'vimwiki'] , 'on': '<Plug>MarkdownPreviewToggle'}
 let g:mkdp_command_for_global = 0  " 所有文件中可以使用预览markdown命令
 nmap <leader>mp <Plug>MarkdownPreviewToggle
 
@@ -915,7 +915,7 @@ nnoremap <leader>wr :WinResizerStartResize<cr>
 nnoremap <leader>wm :WinResizerStartResize<cr>m
 
 " 多语言debug支持 FIXME: 这个插件还在开发阶段，可能会有很多bug
-Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python'}
+Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python', 'on': '<Plug>VimspectorContinue'}
 "{{{
 sign define vimspectorBP text=🔴 texthl=Normal
 sign define vimspectorBPDisabled text=🔵 texthl=Normal
@@ -937,7 +937,7 @@ nmap <F10> :VimspectorReset
 " nmap <Plug>VimspectorAddFunctionBreakpoint
 
 " 快速对齐文本
-Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/vim-easy-align', {'on': '<Plug>(EasyAlign)'}
 " Start interactive EasyAlign in visual mode (e.g. vipga=)
 xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip=)
@@ -951,7 +951,7 @@ nmap * <Plug>(anzu-star-with-echo)zz
 nmap # <Plug>(anzu-sharp-with-echo)zz
 
 " 显示当前行的commit信息, o下一个commit，O上一个，d打开该commit在当前文件的diff hunks， D打开该commit的所有diff hunks
-Plug 'rhysd/git-messenger.vim'
+Plug 'rhysd/git-messenger.vim', {'on': '<Plug>(git-messenger)'}
 "{{{
 let g:git_messenger_no_default_mappings = v:true
 "}}}
@@ -976,7 +976,7 @@ let g:rooter_resolve_links = 1  " resolve软硬链接
 let g:rooter_silent_chdir = 1  " 静默change dir
 "}}}
 " 手动切换到项目根目录
-nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', expand('%:p:h'))<cr>
+" nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', expand('%:p:h'))<cr>
 
 " %匹配对象增强, 也许可以把%改成m
 Plug 'andymass/vim-matchup'
@@ -1343,16 +1343,6 @@ set completeopt+=longest,menuone
 hi! link SignColumn   LineNr
 hi! link ShowMarksHLl DiffAdd
 hi! link ShowMarksHLu DiffChange
-"}}}
-" for error highlight，防止错误整行标红导致看不清{{{
-highlight clear SpellBad
-highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
-highlight clear SpellCap
-highlight SpellCap term=underline cterm=underline
-highlight clear SpellRare
-highlight SpellRare term=underline cterm=underline
-highlight clear SpellLocal
-highlight SpellLocal term=underline cterm=underline
 "}}}
 " FileType Settings  文件类型设置{{{
 
