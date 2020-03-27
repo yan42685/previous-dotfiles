@@ -517,16 +517,15 @@ nnoremap <silent> , :WhichKey ','<cr>
 nnoremap <silent> g :WhichKey 'g'<cr>
 
 " 可视化merge NOTE: 恢复merge前的状态使用: git checkout --conflict=diff3 {file}
-Plug 'samoshkin/vim-mergetool'
+Plug 'samoshkin/vim-mergetool', {'on': '<plug>(MergetoolToggle)'}
 "{{{
 let g:mergetool_layout = 'mr'  " `l`, `b`, `r`, `m`
 let g:mergetool_prefer_revision = 'local'  " `local`, `base`, `remote`
 " mergetool 模式关闭语法检查和语法高亮
-" function s:on_mergetool_set_layout(split)
-"   set syntax=off
-"   set nospell
-" endfunction
-" let g:MergetoolSetLayoutCallback = function('s:on_mergetool_set_layout')
+function s:on_mergetool_set_layout(split)
+  set syntax=off
+endfunction
+let g:MergetoolSetLayoutCallback = function('s:on_mergetool_set_layout')
 
 let g:mergetool_layout_custom = 0
 function! MergetoolLayoutCustom()
@@ -1469,16 +1468,6 @@ augroup auto_actions_for_better_experience
     endfunction
     "}}}
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
-"{{{ diff和merge情况下自动关闭语法高亮
-    function Auto_syntax_off_on_diff_and_merge()
-        if get(g:, 'mergetool_in_merge_mode', 0) || &diff
-            set syntax=off
-        else
-            set syntax=on
-        endif
-    endfunc
-"}}}
-    autocmd WinEnter * call Auto_syntax_off_on_diff_and_merge()
 augroup end
 
 " 开启语法高亮
@@ -1737,6 +1726,7 @@ nnoremap [<space> :<c-u>call <sid>BlankUp(v:count1)<cr>
 " 当把vim作为git的difftool时，设置 git config --global difftool.trustExitCode true && git config --global mergetool.trustExitCode true
 " 在git difftool或git mergetool之后  可以用:cq进行强制退出diff/merge模式，而不会不停地recall another diff/merge file
 if &diff
+    syn off  " 自动关闭语法高亮
     " 强制退出difftool, 不再自动唤起difftool
     noremap <leader><leader>q <esc>:cq<cr>
     noremap Q <esc>:qa<cr>
