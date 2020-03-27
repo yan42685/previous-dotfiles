@@ -495,7 +495,7 @@ imap <silent> <c-m-v> <esc><Plug>(coc-codeaction)
 nmap <silent> <c-m-v> <Plug>(coc-codeaction)
 vmap <silent> <c-m-v> <Plug>(coc-codeaction-selected)
 
-" coc-translator
+" coc-translator  可以先输入再查词, 作为一个简单的英汉词典,
 nmap tt <Plug>(coc-translator-p)
 vmap tt <Plug>(coc-translator-pv)
 
@@ -993,6 +993,20 @@ augroup END
 "
 "Plug 'junegunn/vim-emoji'
 "Plug 'junegunn/vim-github-dashboard'
+" 为不同的文件类型设置不同的tab expand 编码 EOF
+"Plug 'editorconfig/editorconfig-vim'
+"快速创建表格
+"Plug 'dhruvasagar/vim-table-mode'
+
+
+
+"============ 前端 ================
+" 快速生成JS注释
+"Plug 'heavenshell/vim-jsdoc'
+
+
+
+
 "
 " }}}
 call plug#end()
