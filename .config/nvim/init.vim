@@ -18,7 +18,7 @@
 "  1. :PlugInstall
 "  2. 提供python和系统剪切板支持 pip3 install pynvim && apt install xsel
 "  3. rm -rf ~/.viminfo 这样可以使自动回到上次编辑的地方功能生效, 然后重新打开vim(注意要以当前用户打开),vim会自动重建该文件.
-"  4. :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer coc-yank
+"  4. :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer coc-yank coc-markdownlint
 "  5. ubuntu下用snap包管理器安装ccls, 作为C、C++的LSP (推荐用snap安装, 因为ccls作者提供的编译安装方式似乎有问题, 反正Ubuntu18.04不行)
 "  6. 安装Sauce Code Pro Nerd Font Complete字体(coc-explorer要用到), 然后设置终端字体为这个, 注意不是原始的Source Code Pro), 最简单的安装方法就是下载ttf文件然后双击安装
 "  7. 需要在/etc/crontab设置以下定时任务，定期清理undofile
@@ -186,9 +186,8 @@ let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.xml,*.jsx,*.tsx'
 "}}}
 
 " markdown代码内高亮
-Plug 'tpope/vim-markdown', {'for': ['md', 'vimwiki']}
-" TODO: 不知道还能不能用其他语言的高亮
-let g:markdown_fenced_languages = ['html', 'css', 'js=javascript', 'python', 'bash=sh']
+Plug 'plasticboy/vim-markdown', {'for': ['markdown', 'vimwiki']}
+let g:vim_markdown_fenced_languages = ['c++=cpp', 'viml=vim', 'bash=sh', 'ini=dosini', 'csharp=cs']
 
 " 与tmux整合的插件
 "{{{
@@ -555,7 +554,7 @@ augroup end
 Plug 'tpope/vim-fugitive'
 nnoremap ,ga :Git add %:p<CR><CR>
 nnoremap ,gc :Gcommit --all<cr>
-nnoremap ,gd :vert Gdiff<cr><c-w>w
+nnoremap ,gd :vert Gdiff<cr><c-w>w:syntax off<cr>
 nnoremap ,gs :vert Gstatus<cr>
 " nnoremap ,gl :Glog<cr>
 nnoremap ,gps :Gpush<cr>
@@ -1458,6 +1457,7 @@ augroup auto_actions_for_better_experience
     endfunction
     "}}}
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
+    " autocmd BufLeave * nested if &diff | source $MYVIMRC
 augroup end
 
 " 开启语法高亮
