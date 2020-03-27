@@ -554,9 +554,11 @@ augroup end
 Plug 'tpope/vim-fugitive'
 nnoremap ,ga :Git add %:p<CR><CR>
 nnoremap ,gc :Gcommit --all<cr>
-nnoremap ,gd :vert Gdiff<cr><c-w>w:syntax off<cr>
+" 定义进入diff的事件，然后当前窗口关闭syntax
+autocmd User MyEnterDiffMode echo ''
+nnoremap ,gd :Gdiff<cr>:doautocmd User MyEnterDiffMode<cr>
 nnoremap ,gs :vert Gstatus<cr>
-" nnoremap ,gl :Glog<cr>
+" nnoremap ,gl :Glog<cr>  " 由Flog插件替代
 nnoremap ,gps :Gpush<cr>
 nnoremap ,gpl :Gpull<cr>
 nnoremap ,gf :Gfetch<cr>
@@ -1457,7 +1459,9 @@ augroup auto_actions_for_better_experience
     endfunction
     "}}}
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
-    " autocmd BufLeave * nested if &diff | source $MYVIMRC
+    " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会有性能问题
+    autocmd User MyEnterDiffMode if &diff | windo setlocal syntax=off | wincmd w
+    autocmd WinEnter * if !&diff | setlocal syntax=on | endif
 augroup end
 
 " 开启语法高亮
