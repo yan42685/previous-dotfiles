@@ -1460,7 +1460,7 @@ augroup auto_actions_for_better_experience
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会有性能问题
     autocmd User MyEnterDiffMode if &diff | windo setlocal syntax=off | wincmd w
-    " autocmd WinEnter * if !&diff | setlocal syntax=on | endif
+    autocmd WinLeave * windo set syntax=on
 augroup end
 
 " 开启语法高亮
