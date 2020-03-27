@@ -8,7 +8,8 @@
     quotepath = false  # 解决git ls不显示中文的问题
 
 [pager]
-	log = nvim -c 'Flog' -c 'tabprevious' -c 'bd!' -c 'tabclose'  # 查看log，NOTE: 依赖Flog.vim插件
+    # 查看log，NOTE: 依赖Flog.vim插件
+	log = nvim -c 'Flog' -c 'tabprevious' -c 'bd!' -c 'tabclose'
 
 [diff]
     tool = vimdiff3
