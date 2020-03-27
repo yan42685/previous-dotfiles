@@ -19,8 +19,13 @@
 "  2. 提供python和系统剪切板支持 pip3 install pynvim && apt install xsel
 "  3. rm -rf ~/.viminfo 这样可以使自动回到上次编辑的地方功能生效, 然后重新打开vim(注意要以当前用户打开),vim会自动重建该文件.
 "  4. :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer coc-yank coc-markdownlint
+"     coc-word coc-emmet coc-todolist (可以同步到gist，具体看官网介绍)
+"     coc-marketplace (用于查看所有的coc扩展)
+"     coc-gitignore (按类型添加gitignore, 用法是在已有git初始化的文件夹内CocList gitignore)
+
 "  5. ubuntu下用snap包管理器安装ccls, 作为C、C++的LSP (推荐用snap安装, 因为ccls作者提供的编译安装方式似乎有问题, 反正Ubuntu18.04不行)
-"  6. 安装Sauce Code Pro Nerd Font Complete字体(coc-explorer要用到), 然后设置终端字体为这个, 注意不是原始的Source Code Pro), 最简单的安装方法就是下载ttf文件然后双击安装
+"  6. 安装Sauce Code Pro Nerd Font Complete字体(coc-explorer要用到), 然后设置终端字体为这个, 注意不是原始的Source Code Pro),
+"     最简单的安装方法就是下载ttf文件然后双击安装
 "  7. 需要在/etc/crontab设置以下定时任务，定期清理undofile
 "{{{
 "     # m h  dom mon dow   command
@@ -170,14 +175,6 @@ Plug 'Shougo/neoinclude.vim' | Plug 'jsfaint/coc-neoinclude'
 
 " 自动解决绝大部分编码问题
 Plug 'mbbill/fencview', { 'on': [ 'FencAutoDetect', 'FencView' ] }
-
-" Emmet支持
-Plug 'mattn/emmet-vim'
-"{{{
-" 只在特定文件加载
-let g:user_emmet_install_global = 0
-autocmd FileType html,css EmmetInstall
-"}}}
 
 " 自动关闭标签
 Plug 'alvan/vim-closetag'
@@ -431,6 +428,26 @@ endfunction
 "}}}
 nnoremap <silent> <leader>er :call ToggleCocExplorer()<CR>
 
+" coc-translator  可以先输入再查词, 作为一个简单的英汉词典,
+nmap tt <Plug>(coc-translator-p)
+vmap tt <Plug>(coc-translator-pv)
+
+" coc-todolist
+" 使用方法: 用:CocList todolist打开
+" Filter your todo items and perform operations via <Tab>
+" Use toggle to toggle todo status between active and completed
+" Use edit to edit the description of a todo item
+" Use preview to preview a todo item
+" Use delete to delete a todo item
+nnoremap <leader>tc :CocCommand todolist.create<cr>
+" clear all notifications
+nnoremap <leader>tx :CocCommand todolist.clearNotice<cr>
+nnoremap <leader>tu :CocCommand todolist.upload<cr>
+" download todolist from gist
+" nnoremap <leader>td :CocCommand todolist.download<cr>
+" export todolist as a json/yaml file
+" nnoremap <leader>te :CocCommand todolist.export<cr>
+
 " COC自动补全框架
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "{{{
@@ -503,10 +520,6 @@ nmap <silent> <leader>re <Plug>(coc-rename)
 imap <silent> <c-m-v> <esc><Plug>(coc-codeaction)
 nmap <silent> <c-m-v> <Plug>(coc-codeaction)
 vmap <silent> <c-m-v> <Plug>(coc-codeaction-selected)
-
-" coc-translator  可以先输入再查词, 作为一个简单的英汉词典,
-nmap tt <Plug>(coc-translator-p)
-vmap tt <Plug>(coc-translator-pv)
 
 " keymap提示
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
@@ -976,7 +989,7 @@ let g:rooter_resolve_links = 1  " resolve软硬链接
 let g:rooter_silent_chdir = 1  " 静默change dir
 "}}}
 " 手动切换到项目根目录
-" nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', expand('%:p:h'))<cr>
+nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', expand('%:p:h'))<cr>
 
 " %匹配对象增强, 也许可以把%改成m
 Plug 'andymass/vim-matchup'
@@ -1011,6 +1024,9 @@ nnoremap ,gl :Flog<cr>
 " Plug 'tpope/vim-dadbod'
 " 数据库接口的ui
 " Plug 'kristijanhusak/vim-dadbod-ui'
+
+" 让代码在一行和多行之间转换
+" Plug 'AndrewRadev/splitjoin.vim'
 
 "
 "Plug 'junegunn/vim-emoji'
