@@ -426,6 +426,17 @@ let $GTAGSLABEL = 'native-pygments'  " FIXME: 当项目文件的路径包含非A
 let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
 "}}}
 
+" 写作使用的，自动单词折行
+Plug 'reedes/vim-pencil', {'for': ['markdown', 'text']}
+let g:pencil#textwidth = 80  " 默认单行最大长度
+augroup pencil
+    autocmd!
+    if exists('*pencil#init')
+        autocmd FileType markdown call pencil#init({'wrap': 'hard', 'autoformat': 1}) | setlocal wrap | setlocal textwidth=80
+        autocmd FileType text     call pencil#init({'wrap': 'hard', 'autoformat': 0}) | setlocal wrap | setlocal textwidth=120
+    endif
+augroup END
+
 "===========================================================================
 "===========================================================================
 "}}}
@@ -877,15 +888,34 @@ Plug 'vimwiki/vimwiki', {'on': ['VimwikiIndex']}
 
 " Sink沉浸写作模式
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
-Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
 "{{{
-augroup toggle_limelight_on_goyo
-    autocmd!
-    autocmd! User GoyoEnter Limelight
-    autocmd! User GoyoLeave Limelight!
-augroup end
+nnoremap <silent> ,sn :Goyo<cr>
+function! s:goyo_enter()
+  if executable('tmux') && strlen($TMUX)
+    silent !tmux set status off
+    silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+  endif
+  set noshowmode
+  set noshowcmd
+  Limelight
+endfunction
+
+function! s:goyo_leave()
+  if executable('tmux') && strlen($TMUX)
+    silent !tmux set status on
+    silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+  endif
+  set showmode
+  set showcmd
+  Limelight!
+  call s:Enable_normal_scheme()  " 恢复折叠和column的颜色
+endfunction
 "}}}
-nnoremap ,sn :Goyo<cr>
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
+" 模糊非视觉中心的字符
+Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
 
 " 多语言debug支持 FIXME: 这个插件还在开发阶段，可能会有很多bug
 Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python', 'on': '<Plug>VimspectorContinue'}
@@ -1256,7 +1286,7 @@ noremap zj zjzz
 noremap zk zkzz
 noremap J <C-f>zz
 noremap K <C-b>zz
-nnoremap gb %zz
+nmap gb %zz
 " 去上次修改的地方
 nnoremap gi gi<esc>zzi
 " goto previous/next change positon
@@ -1625,7 +1655,7 @@ function! s:Autosave(timed)
 
     if a:timed == 0 || s:time_delta >= 1
         let s:last_update = current_time
-        checktime  " checktime with autoread will sync files on a last-writer-wins basis.
+        checktime  " checktime with autoread will sync files on a last-writer-wins basis. FIXME: 但是在命令行按<c-f>进入normal-command编辑模式会报错的
         silent! doautocmd BufWritePre %  " needed for soft checks
         silent! update  " only updates if there are changes to the file.
         if a:timed == 0 || s:time_delta >= 4
