@@ -1080,8 +1080,12 @@ vnoremap ,gl :Flog<cr>
 " coc-sql (lint和format, format似乎要手动, 看ale能不能自动调用这个插件自带的sql-formatter把)
 " Node.js支持
 " Plug 'moll/vim-node', {'for': 'javascript'}
+
 " React
 " Plug 'mxw/vim-jsx', {'for': '*jsx'}
+
+" 浏览器实时预览html,css,js效果
+" Plug 'jaxbot/browserlink.vim'
 
 
 "
