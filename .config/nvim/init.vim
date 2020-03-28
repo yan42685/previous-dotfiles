@@ -1393,6 +1393,9 @@ noremap ' `
 noremap ` '
 " 让y复制后光标仍在原位
 vnoremap y ygv<Esc>
+" 让normal模式的s和x不要污染无名寄存器, 因为一个字母没有必要覆盖之前的寄存器内容
+nnoremap s "_s
+nnoremap x "_x
 
 "==========================================
 " Theme Settings  主题设置
