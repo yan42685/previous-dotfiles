@@ -68,7 +68,8 @@
 
 " ==========================================
 " 【可自行调整的重要参数】
-let s:enable_file_autosave = 1  " 是否自动保存
+let g:disable_laggy_plugins_for_large_file = 0  " 在启动参数里设置为1就可以加快打开速度
+let g:enable_file_autosave = 1  " 是否自动保存
 set updatetime=400  " 检测CursorHold事件的时间间隔,影响性能的主要因素
 let s:colorscheme_mode = 0
 let s:colorschemes = ['quantum', 'gruvbox-material', 'forest-night']
@@ -90,7 +91,41 @@ endif
 " }}}
 call plug#begin('~/.vim/plugged')
 " {{{没有设置快捷键的，在后台默默运行的插件
-"
+
+" 主题配色
+" Plug 'joshdick/onedark.vim'
+Plug 'tyrannicaltoucan/vim-quantum'
+" Plug 'KeitaNakamura/neodark.vim'
+" Plug 'trevordmiller/nova-vim'
+Plug 'sainnhe/gruvbox-material'
+Plug 'sainnhe/forest-night'
+
+" =================================
+" 在大文件下会影响性能
+" =================================
+if g:disable_laggy_plugins_for_large_file == 0
+    " 拼写检查
+    Plug 'kamykn/spelunker.vim'
+    "{{{
+    set nospell  " 禁用默认的难看的高亮红色
+    let g:spelunker_check_type = 2  " 只在window内动态check, 对大文件十分友好
+    let g:spelunker_highlight_type = 2  " Highlight only SpellBad.
+    augroup my_highlight_spellbad
+        autocmd!
+        autocmd VimEnter * highlight SpelunkerSpellBad cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
+        autocmd VimEnter * highlight SpelunkerComplexOrCompoundWord cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
+        " 下两行 取消在startify中的拼写检查 前提是设置了 g:spelunker_check_type = 2:
+        let g:spelunker_disable_auto_group = 1
+        " FIXME: 下面这句不能用，不然用--noplugin 开启nvim的时候会一直报错
+        if exists('*spelunker#check_displayed_words')  " --noplugin模式不判断函数存在的话会报错
+            autocmd CursorHold * if &filetype != 'startify' | call spelunker#check_displayed_words() | endif
+        endif
+    augroup end
+    "}}}
+endif
+" ==================================
+" ==================================
+
 " 缩进虚线
 Plug 'Yggdroot/indentLine', {'for': 'python'}
 
@@ -126,23 +161,6 @@ Plug 'tpope/vim-repeat'
 
 " Undo到上次保存前的历史操作(使用undofile时)就发警告来提醒
 Plug 'arp242/undofile_warn.vim'
-
-" 拼写检查
-Plug 'kamykn/spelunker.vim'
-"{{{
-set nospell
-let g:spelunker_check_type = 2  " 只在window内动态check, 对大文件十分友好
-let g:spelunker_highlight_type = 2  " Highlight only SpellBad.
-augroup my_highlight_spellbad
-    autocmd!
-    autocmd VimEnter * highlight SpelunkerSpellBad cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
-    autocmd VimEnter * highlight SpelunkerComplexOrCompoundWord cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
-    " 下两行 取消在startify中的拼写检查 前提是设置了 g:spelunker_check_type = 2:
-    let g:spelunker_disable_auto_group = 1
-    " FIXME: 下面这句不能用，不然用--noplugin 开启nvim的时候会一直报错
-    " autocmd CursorHold * if &filetype != 'startify' | call spelunker#check_displayed_words() | endif
-augroup end
-"}}}
 
 " 140+种语言的语法高亮包
 Plug 'sheerun/vim-polyglot'
@@ -414,29 +432,142 @@ let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
 "}}}
 " {{{需要知道快捷键的插件
 
-" 主题配色
-" Plug 'joshdick/onedark.vim'
-Plug 'tyrannicaltoucan/vim-quantum'
-" Plug 'KeitaNakamura/neodark.vim'
-" Plug 'trevordmiller/nova-vim'
-Plug 'sainnhe/gruvbox-material'
-Plug 'sainnhe/forest-night'
+" =======================================
+" 开关非常影响打开大文件性能的插件
+" =======================================
+if g:disable_laggy_plugins_for_large_file == 0
+    " 侧栏显示git diff情况
+    Plug 'mhinz/vim-signify'
+    augroup signify_remapping
+        autocmd!
+        " 在diff hunk之间跳转
+        autocmd VimEnter * nmap [c <plug>(signify-prev-hunk)zz
+        autocmd VimEnter * nmap ]c <plug>(signify-next-hunk)zz
+    augroup end
 
-" 快速移动
-Plug 'easymotion/vim-easymotion', {'on': '<Plug>(easymotion-bd-f)'}
-map <silent> <leader>f <Plug>(easymotion-bd-f)
+    " ALE静态代码检查和自动排版
+    Plug 'dense-analysis/ale'
+    "{{{
+    let g:ale_set_highlights = 0  " 不要显示红色下划线
+    let g:ale_sign_error = '✗'
+    let g:ale_sign_warning = '⚡'
 
-" 快速注释
-Plug 'preservim/nerdcommenter', {'on': '<plug>NERDCommenterToggle'}
+    " 不需要指定linters
+
+    " 自动排版, 保存时自动删除末尾空白行和行末空格
+    let g:ale_fixers = {
+    \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+    \   'c': ['clang-format'],
+    \   'cpp': ['clang-format'],
+    \   'javascript': ['prettier'],
+    \   'python': ['autopep8'],
+    \}
+    " 极大提升打开log 文件的性能
+    let g:ale_fix_on_save_ignore = {'log': ['remove_trailing_lines', 'trim_whitespace']}
+    let g:ale_lint_on_text_changed = 'normal'
+    " let g:ale_lint_delay = 3000  " 这个配置似乎不生效
+    " 保存时自动排版
+    let g:ale_fix_on_save = 1
+    " 配置状态栏信息
+    let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+
+    " Note that the C options are also used for C++.
+    " let g:ale_c_clangformat_options = '-style=google'
+    " 设置ccls的缓存目录
+    let g:ale_cpp_ccls_init_options = {
+    \   'cache': {
+    \       'directory': '/tmp/ccls/cache'
+    \   }
+    \ }
+    "}}}
+    nmap <silent> ge <Plug>(ale_next_wrap)
+    nmap <silent> gE <Plug>(ale_previous_wrap)
+endif
+" ===============================
+" Git相关
+" ===============================
+
+" 可视化merge NOTE: 恢复merge前的状态使用: git checkout --conflict=diff3 {file}
+Plug 'samoshkin/vim-mergetool', {'on': '<plug>(MergetoolToggle)'}
 "{{{
-let g:NERDSpaceDelims = 1  " Add spaces after commeqt delimiters by default
-let g:NERDDefaultAlign = 'left'  " Align line-wise comment delimiters flush left instead of following code indentation
-let g:NERDAltDelims_java = 1  " Set a language to use its alternate delimiters by default
-let g:NERDTrimTrailingWhitespace = 1  " Enable trimming of trailing whitespace when uncommenting
-let g:NERDCommentEmptyLines = 1  " Allow commenting and inverting empty lines (useful when commenting a region)
+let g:mergetool_layout = 'mr'  " `l`, `b`, `r`, `m`
+let g:mergetool_prefer_revision = 'local'  " `local`, `base`, `remote`
+" mergetool 模式关闭语法检查和语法高亮 FIXME: 可能是unknown filetype报错的原因
+function s:on_mergetool_set_layout(split)
+  set syntax=off
+endfunction
+let g:MergetoolSetLayoutCallback = function('s:on_mergetool_set_layout')
+
+let g:mergetool_layout_custom = 0
+function! MergetoolLayoutCustom()
+  if g:mergetool_layout_custom == 0
+    let g:mergetool_layout_custom = 1
+    execute 'MergetoolToggleLayout lbr,m'
+  else
+    let g:mergetool_layout_custom = 0
+    execute 'MergetoolToggleLayout mr'
+  endif
+endfunction
 "}}}
-map <c-_> <plug>NERDCommenterToggle
-imap <c-_> <esc><plug>NERDCommenterToggle
+nmap <leader>mt <plug>(MergetoolToggle)
+" 切换视图
+nnoremap <silent> <leader>cmt :<C-u>call MergetoolLayoutCustom()<CR>
+
+" 显示当前行的commit信息, o下一个commit，O上一个，d打开该commit在当前文件的diff hunks， D打开该commit的所有diff hunks
+Plug 'rhysd/git-messenger.vim', {'on': '<Plug>(git-messenger)'}
+"{{{
+let g:git_messenger_no_default_mappings = v:true
+"}}}
+" 开启预览后光标始终进入popup window, 否则要再次使用快捷键才能让光标进入popup window
+" let g:git_messenger_always_into_popup = v:true
+nmap go <Plug>(git-messenger)
+
+" git
+Plug 'tpope/vim-fugitive'
+nnoremap ,ga :G add %:p<CR><CR>
+nnoremap ,gc :G commit --all<cr>
+" 定义进入diff的事件，然后当前窗口关闭syntax
+autocmd User MyEnterDiffMode echo ''
+nnoremap ,gd :Gdiffsplit<cr>:doautocmd User MyEnterDiffMode<cr>
+nnoremap <silent> ,gs :vert Git<cr>
+" nnoremap ,gl :Glog<cr>  " 由Flog插件替代
+nnoremap ,gps :G push<cr>
+nnoremap ,gpl :G pull<cr>
+nnoremap ,gf :G fetch<cr>
+nnoremap ,gp :Ggrep<Space>
+nnoremap ,gm :GMove<Space>
+nnoremap ,gb :Git branch<Space>
+nnoremap .go :Git checkout<Space>
+nnoremap ,ge :Gedit<CR>
+" 重命名git项目下的文件
+" This will:
+    " Rename your file on disk.
+    " Rename the file in git repo.
+    " Reload the file into the current buffer.
+    " Preserve undo history.
+nnoremap ,gr :Gwrite<cr>:Gmove <c-r>=expand('%:p:h')<cr>/
+nnoremap ,gw :Gwrite<CR><CR>
+
+" 更方便的查看commit g?查看键位 enter查看详细信息 <c-n> <c-p> 跳到上下commit
+Plug 'rbong/vim-flog', {'on': ['Flog']}
+function! Flogdiff()  " {{{
+  let first_commit = flog#get_commit_data(line("'<")).short_commit_hash
+  let last_commit = flog#get_commit_data(line("'>")).short_commit_hash
+  call flog#git('vertical belowright', '!', 'diff ' . first_commit . ' ' . last_commit)
+endfunction
+"}}}
+augroup flog
+    " 在FlogGraph中visual模式选中两个commit 再按gd可以diff这两个commit
+    autocmd FileType floggraph vnoremap gd :<C-U>call Flogdiff()<CR>
+augroup end
+let g:flog_default_arguments = { 'max_count': 1000 }  " 约束最大显示的commit数量，防止打开太慢
+nnoremap ,gl :Flog<cr>
+" 选中多行查看历史
+vnoremap ,gl :Flog<cr>
+
+" ===============================
+" coc系列
+" ===============================
 
 " coc-explorer 文件树
 "{{{
@@ -449,6 +580,9 @@ nnoremap <silent> <leader>er :call ToggleCocExplorer()<CR>
 " coc-ci 中文分词
 nmap <silent> w <Plug>(coc-ci-w)
 nmap <silent> b <Plug>(coc-ci-b)
+
+" 使用coc-yank (自带复制高亮)
+nnoremap <silent> gy :<C-u>CocList --normal yank<cr>
 
 " coc-translator  可以先输入再查词, 作为一个简单的英汉词典,
 nmap tt <Plug>(coc-translator-p)
@@ -544,72 +678,252 @@ imap <silent> <c-m-v> <esc><Plug>(coc-codeaction)
 nmap <silent> <c-m-v> <Plug>(coc-codeaction)
 vmap <silent> <c-m-v> <Plug>(coc-codeaction-selected)
 
+" ==============================
+" 编辑, 跳转功能增强
+" ==============================
+
+" 快速移动
+Plug 'easymotion/vim-easymotion', {'on': '<Plug>(easymotion-bd-f)'}
+map <silent> <leader>f <Plug>(easymotion-bd-f)
+
+" 快速注释
+Plug 'preservim/nerdcommenter', {'on': '<plug>NERDCommenterToggle'}
+"{{{
+let g:NERDSpaceDelims = 1  " Add spaces after commeqt delimiters by default
+let g:NERDDefaultAlign = 'left'  " Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDAltDelims_java = 1  " Set a language to use its alternate delimiters by default
+let g:NERDTrimTrailingWhitespace = 1  " Enable trimming of trailing whitespace when uncommenting
+let g:NERDCommentEmptyLines = 1  " Allow commenting and inverting empty lines (useful when commenting a region)
+"}}}
+map <c-_> <plug>NERDCommenterToggle
+imap <c-_> <esc><plug>NERDCommenterToggle
+
+" Vim-Surround快捷操作
+Plug 'tpope/vim-surround'
+nmap ysw ysiw
+nmap ysW ysiW
+nnoremap <leader>" :normal ysiW"<CR>
+nnoremap <leader>' :normal ysiW'<CR>
+nnoremap <leader>(         :normal ysiW(<CR>
+
+" %匹配对象增强, 也许可以把%改成m
+Plug 'andymass/vim-matchup'
+"{{{
+let g:loaded_matchit           = 1  " 禁用vim默认自带插件
+let g:loaded_matchparen        = 1
+augroup matchup_matchparen_highlight
+  autocmd!
+  autocmd Colorscheme * hi! link MatchParen Visual
+augroup END
+"}}}
+
+" 快速交换 cx{object} cxx行 可视模式用X  取消用cxc  可以用 . 重复上次命令
+Plug 'tommcdo/vim-exchange'
+
+" 快速对齐文本
+Plug 'junegunn/vim-easy-align', {'on': '<Plug>(EasyAlign)'}
+" Start interactive EasyAlign in visual mode (e.g. vipga=)
+xmap ga <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip=)
+nmap ga <Plug>(EasyAlign)
+
+" 快速移动参数，数组里的元素 html, css, js中object属性
+Plug 'AndrewRadev/sideways.vim', {'on': ['SidewaysLeft', 'SidewaysRight']}
+nnoremap tl :SidewaysRight<cr>
+nnoremap th :SidewaysLeft<cr>
+
+" ============================
+" UI相关
+" ============================
+
+" 启动页面
+Plug 'mhinz/vim-startify'
+"{{{
+let g:startify_lists = [
+            \ { 'type': 'sessions',  'header': ['   Sessions']       },
+            \ { 'type': 'files',     'header': ['   MRU']            },
+            \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+            \ ]
+
+let g:startify_files_number = 15  " 首页显示的MRU文件数量
+let g:startify_update_oldfiles = 1  " 自动更新文件
+let g:startify_session_persistence = 1  " 持久化session
+let g:startify_fortune_use_unicode = 1  " 首页banner使用utf-8字符编码
+let g:startify_enable_special = 0  " 不显示<empty buffer> 和 <quit>
+let g:startify_session_sort = 1  " Sort sessions by modification time (when the session files were written) rather than alphabetically.
+let g:startify_custom_indices = map(range(1,100), 'string(v:val)')  " index从1开始数起
+let g:utf8_image = [
+            \ '(っ＾▿＾)۶🍸🌟🍺٩(˘◡˘  )',
+            \ '',
+            \]
+
+let g:utf8_middle_finger = [
+            \ '░░░░░░░░░░░░░░░▄▄░░░░░░░░░░░',
+            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
+            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
+            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
+            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
+            \ '██████▄███▄████░░███▄░░░░░░░',
+            \ '▓▓▓▓▓▓█░░░█░░░█░░█░░░███░░░░',
+            \ '▓▓▓▓▓▓█░░░█░░░█░░█░░░█░░█░░░',
+            \ '▓▓▓▓▓▓█░░░░░░░░░░░░░░█░░█░░░',
+            \ '▓▓▓▓▓▓█░░░░░░░░░░░░░░░░█░░░░',
+            \ '▓▓▓▓▓▓█░░░░░░░░░░░░░░██░░░░░',
+            \ '▓▓▓▓▓▓█████░░░░░░░░░██░░░░░░',
+            \ ]
+
+" I get it from https://fsymbols.com/text-art/
+let g:utf8_double_moon = [
+            \ '┊┊┊┊      ' . '███████╗██╗     ██╗ ██████╗ ██████╗ ███████╗██████╗ ',
+            \ '┊┊┊☆      ' . '██╔════╝██║     ██║ ██╔══██╗██╔══██╗██╔════╝██╔══██╗',
+            \ '┊┊🌙  *   ' . '█████╗  ██║     ██║ ██████╔╝██████╔╝█████╗  ██║  ██║',
+            \ '┊┊        ' . '██╔══╝  ██║     ██║ ██╔═══╝ ██╔═══╝ ██╔══╝  ██║  ██║',
+            \ '┊☆ °      ' . '██║     ███████╗██║ ██║     ██║     ███████╗██████╔╝',
+            \ '🌙        ' . '╚═╝     ╚══════╝╚═╝ ╚═╝     ╚═╝     ╚══════╝╚═════╝ ',
+            \ ]
+
+
+let g:startify_custom_header =
+            \ 'startify#pad(g:utf8_double_moon)'
+"}}}
+" Project(Session) index
+nnoremap <leader>pi :Startify<cr>
+nnoremap <leader>ps :SSave<cr>
+nnoremap <leader>pl :SLoad<cr>
+nnoremap <leader>pc :SClose<cr>
+nnoremap <leader>pd :SDelete!<cr>
+
+" Vista浏览tags, 函数，类 大纲
+Plug 'liuchengxu/vista.vim', {'on': 'Vista'}
+"{{{
+let g:vista_default_executive = 'ctags'  " Executive used when opening vista sidebar without specifying it.
+let g:vista#renderer#enable_icon = 1  " Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
+let g:vista#renderer#icons = {
+\   "function": "\uf794",
+\   "variable": "\uf71b",
+\  }
+"}}}
+nnoremap <leader>ot :Vista<cr>
+
+" 查看uodo历史及持久化
+Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
+" reference: https://vi.stackexchange.com/questions/6/how-can-i-use-the-undofile
+" {{{
+if !isdirectory($HOME."/.vim")
+    call mkdir($HOME."/.vim", "", 0770)
+endif
+if !isdirectory($HOME."/.vim/undo-dir")
+    call mkdir($HOME."/.vim/undo-dir", "", 0700)
+endif
+set undodir=~/.vim/undo-dir
+set undofile
+"}}}
+nnoremap <leader>ut :MundoToggle<cr>
+
+" 更方便地调整window
+Plug 'simeji/winresizer', {'on': 'WinResizerStartResize'}
+"{{{
+let g:winresizer_gui_enable = 1  " gui的vim也能调整窗口大小
+let g:winresizer_start_key = ''
+let g:winresizer_gui_start_key = ''
+let g:winresizer_vert_resize = 3  " 每次移动的步幅
+"}}}
+" usage: 进入resize模式后，hjkl可以调整窗口大小，enter确认，q取消, m移动模式，
+" r调整窗口模式，f选择窗口模式
+nnoremap <leader>wr :WinResizerStartResize<cr>
+nnoremap <leader>wm :WinResizerStartResize<cr>m
+
+" 为内置终端提供方便接口
+Plug 'kassio/neoterm'
+"{{{
+let g:neoterm_autojump = 1  " 自动进入终端
+let g:neoterm_autoinsert = 1  " 进入终端默认插入模式
+let g:neoterm_use_relative_path = 1
+let g:neoterm_autoscroll = 1
+let g:neoterm_size = 10  " 调整terminal的大小
+"}}}
+nnoremap <silent> <m-m> :botright Ttoggle<cr>
+nnoremap <silent> <m-j> :botright Topen<cr>
+inoremap <silent> <m-j> <esc>:botright Topen<cr>
+" 内置终端
+tnoremap <m-h> <c-\><c-n><c-w>h
+tnoremap <m-l> <c-\><c-n><c-w>l
+tnoremap <m-j> <c-\><c-n><c-w>j
+tnoremap <m-k> <c-\><c-n><c-w>k<esc>
+tnoremap <m-n> <c-\><c-n>
+" 粘贴寄存器0的内容到终端
+tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
+tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
+
+" Todo List 和 笔记，文档管理
+Plug 'vimwiki/vimwiki', {'on': ['VimwikiIndex']}
+"{{{
+" 使用markdown而不是vimwiki的语法
+"let g:vimwiki_list = [{'path': '~/vimwiki/',
+            \ 'syntax': 'markdown', 'ext': '.md'}]
+"}}}
+
+" Sink沉浸写作模式
+Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
+Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
+"{{{
+augroup toggle_limelight_on_goyo
+    autocmd!
+    autocmd! User GoyoEnter Limelight
+    autocmd! User GoyoLeave Limelight!
+augroup end
+"}}}
+nnoremap ,sn :Goyo<cr>
+
+" 多语言debug支持 FIXME: 这个插件还在开发阶段，可能会有很多bug
+Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python', 'on': '<Plug>VimspectorContinue'}
+"{{{
+sign define vimspectorBP text=🔴 texthl=Normal
+sign define vimspectorBPDisabled text=🔵 texthl=Normal
+sign define vimspectorPC text=🔶 texthl=SpellBad
+"}}}
+" nmap <F5> :call vimspector#launch()<cr>
+nmap <F5> <Plug>VimspectorContinue
+nmap <F6> <Plug>VimspectorStepOver
+nmap <F7> <Plug>VimspectorStepInto
+nmap <F8> <Plug>VimspectorStepOut
+nmap <F9> :call vimspector#ToggleBreakpoint()<cr>
+nmap <F10> :VimspectorReset
+
+" nmap <Plug>VimspectorContinue
+" nmap <Plug>VimspectorStop
+" nmap <Plug>VimspectorRestart
+" nmap <Plug>VimspectorPause
+" nmap <Plug>VimspectorToggleBreakpoint
+" nmap <Plug>VimspectorAddFunctionBreakpoint
+
+" 查看各个插件启动时间
+Plug 'tweekmonster/startuptime.vim', { 'on': 'StartupTime' }
+
+" MarkDown预览
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for':['markdown', 'vimwiki'] , 'on': '<Plug>MarkdownPreviewToggle'}
+let g:mkdp_command_for_global = 0  " 所有文件中可以使用预览markdown命令
+nmap <leader>mp <Plug>MarkdownPreviewToggle
+
 " keymap提示
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 nnoremap <silent> <leader> :WhichKey '<space>'<cr>
 nnoremap <silent> , :WhichKey ','<cr>
 nnoremap <silent> g :WhichKey 'g'<cr>
 
-" 可视化merge NOTE: 恢复merge前的状态使用: git checkout --conflict=diff3 {file}
-Plug 'samoshkin/vim-mergetool', {'on': '<plug>(MergetoolToggle)'}
+" ================================
+" Project增强
+" ================================
+
+" 切换到项目根目录
+Plug 'airblade/vim-rooter', {'on': 'Rooter'}
 "{{{
-let g:mergetool_layout = 'mr'  " `l`, `b`, `r`, `m`
-let g:mergetool_prefer_revision = 'local'  " `local`, `base`, `remote`
-" mergetool 模式关闭语法检查和语法高亮 FIXME: 可能是unknown filetype报错的原因
-function s:on_mergetool_set_layout(split)
-  set syntax=off
-endfunction
-let g:MergetoolSetLayoutCallback = function('s:on_mergetool_set_layout')
-
-let g:mergetool_layout_custom = 0
-function! MergetoolLayoutCustom()
-  if g:mergetool_layout_custom == 0
-    let g:mergetool_layout_custom = 1
-    execute 'MergetoolToggleLayout lbr,m'
-  else
-    let g:mergetool_layout_custom = 0
-    execute 'MergetoolToggleLayout mr'
-  endif
-endfunction
+let g:rooter_manual_only = 1  " 停止自动目录
+let g:rooter_resolve_links = 1  " resolve软硬链接
+let g:rooter_silent_chdir = 1  " 静默change dir
 "}}}
-nmap <leader>mt <plug>(MergetoolToggle)
-" 切换视图
-nnoremap <silent> <leader>cmt :<C-u>call MergetoolLayoutCustom()<CR>
-
-" 【可能影响性能】侧栏显示git diff情况(要求vim8+)
-Plug 'mhinz/vim-signify'
-augroup signify_remapping
-    autocmd!
-    " 在diff hunk之间跳转
-    autocmd VimEnter * nmap [c <plug>(signify-prev-hunk)zz
-    autocmd VimEnter * nmap ]c <plug>(signify-next-hunk)zz
-augroup end
-
-" git
-Plug 'tpope/vim-fugitive'
-nnoremap ,ga :G add %:p<CR><CR>
-nnoremap ,gc :G commit --all<cr>
-" 定义进入diff的事件，然后当前窗口关闭syntax
-autocmd User MyEnterDiffMode echo ''
-nnoremap ,gd :Gdiffsplit<cr>:doautocmd User MyEnterDiffMode<cr>
-nnoremap <silent> ,gs :vert Git<cr>
-" nnoremap ,gl :Glog<cr>  " 由Flog插件替代
-nnoremap ,gps :G push<cr>
-nnoremap ,gpl :G pull<cr>
-nnoremap ,gf :G fetch<cr>
-nnoremap ,gp :Ggrep<Space>
-nnoremap ,gm :GMove<Space>
-nnoremap ,gb :Git branch<Space>
-nnoremap .go :Git checkout<Space>
-nnoremap ,ge :Gedit<CR>
-" 重命名git项目下的文件
-" This will:
-    " Rename your file on disk.
-    " Rename the file in git repo.
-    " Reload the file into the current buffer.
-    " Preserve undo history.
-nnoremap ,gr :Gwrite<cr>:Gmove <c-r>=expand('%:p:h')<cr>/
-nnoremap ,gw :Gwrite<CR><CR>
+" 手动切换到项目根目录
+nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', expand('%:p:h'))<cr>
 
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式
 Plug 'Yggdroot/LeaderF', {'do': './install.sh' }
@@ -676,165 +990,6 @@ nnoremap <silent> / :Leaderf rg --current-buffer<cr>
 " buffer内搜索词
 xnoremap <silent> * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s ", leaderf#Rg#visual())<CR><cr>
 
-" Vim-Surround快捷操作
-Plug 'tpope/vim-surround'
-nmap ysw ysiw
-nmap ysW ysiW
-nnoremap <leader>" :normal ysiW"<CR>
-nnoremap <leader>' :normal ysiW'<CR>
-nnoremap <leader>(         :normal ysiW(<CR>
-
-" 快速交换 cx{object} cxx行 可视模式用X  取消用cxc  可以用 . 重复上次命令
-Plug 'tommcdo/vim-exchange'
-
-" uodo历史及持久化
-Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
-" reference: https://vi.stackexchange.com/questions/6/how-can-i-use-the-undofile
-" {{{
-if !isdirectory($HOME."/.vim")
-    call mkdir($HOME."/.vim", "", 0770)
-endif
-if !isdirectory($HOME."/.vim/undo-dir")
-    call mkdir($HOME."/.vim/undo-dir", "", 0700)
-endif
-set undodir=~/.vim/undo-dir
-set undofile
-"}}}
-nnoremap <leader>ut :MundoToggle<cr>
-
-" 使用coc-yank (自带复制高亮)
-nnoremap <silent> gy :<C-u>CocList --normal yank<cr>
-
-" ALE静态代码检查和自动排版
-Plug 'dense-analysis/ale'
-"{{{
-let g:ale_set_highlights = 0  " 不要显示红色下划线
-let g:ale_sign_error = '✗'
-let g:ale_sign_warning = '⚡'
-
-" 不需要指定linters
-
-" 自动排版, 保存时自动删除末尾空白行和行末空格
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'c': ['clang-format'],
-\   'cpp': ['clang-format'],
-\   'javascript': ['prettier'],
-\   'python': ['autopep8'],
-\}
-" 极大提升打开log 文件的性能
-let g:ale_fix_on_save_ignore = {'log': ['remove_trailing_lines', 'trim_whitespace']}
-let g:ale_lint_on_text_changed = 'normal'
-" let g:ale_lint_delay = 3000  " 这个配置似乎不生效
-" 保存时自动排版
-let g:ale_fix_on_save = 1
-" 配置状态栏信息
-let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-
-" Note that the C options are also used for C++.
-" let g:ale_c_clangformat_options = '-style=google'
-" 设置ccls的缓存目录
-let g:ale_cpp_ccls_init_options = {
-\   'cache': {
-\       'directory': '/tmp/ccls/cache'
-\   }
-\ }
-"}}}
-nmap <silent> ge <Plug>(ale_next_wrap)
-nmap <silent> gE <Plug>(ale_previous_wrap)
-
-" 启动页面
-Plug 'mhinz/vim-startify'
-"{{{
-let g:startify_lists = [
-            \ { 'type': 'sessions',  'header': ['   Sessions']       },
-            \ { 'type': 'files',     'header': ['   MRU']            },
-            \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
-            \ ]
-
-let g:startify_files_number = 15  " 首页显示的MRU文件数量
-let g:startify_update_oldfiles = 1  " 自动更新文件
-let g:startify_session_persistence = 1  " 持久化session
-let g:startify_fortune_use_unicode = 1  " 首页banner使用utf-8字符编码
-let g:startify_enable_special = 0  " 不显示<empty buffer> 和 <quit>
-let g:startify_session_sort = 1  " Sort sessions by modification time (when the session files were written) rather than alphabetically.
-let g:startify_custom_indices = map(range(1,100), 'string(v:val)')  " index从1开始数起
-let g:utf8_image = [
-            \ '(っ＾▿＾)۶🍸🌟🍺٩(˘◡˘  )',
-            \ '',
-            \]
-
-let g:utf8_middle_finger = [
-            \ '░░░░░░░░░░░░░░░▄▄░░░░░░░░░░░',
-            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
-            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
-            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
-            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
-            \ '██████▄███▄████░░███▄░░░░░░░',
-            \ '▓▓▓▓▓▓█░░░█░░░█░░█░░░███░░░░',
-            \ '▓▓▓▓▓▓█░░░█░░░█░░█░░░█░░█░░░',
-            \ '▓▓▓▓▓▓█░░░░░░░░░░░░░░█░░█░░░',
-            \ '▓▓▓▓▓▓█░░░░░░░░░░░░░░░░█░░░░',
-            \ '▓▓▓▓▓▓█░░░░░░░░░░░░░░██░░░░░',
-            \ '▓▓▓▓▓▓█████░░░░░░░░░██░░░░░░',
-            \ ]
-
-" I get it from https://fsymbols.com/text-art/
-let g:utf8_double_moon = [
-            \ '┊┊┊┊      ' . '███████╗██╗     ██╗ ██████╗ ██████╗ ███████╗██████╗ ',
-            \ '┊┊┊☆      ' . '██╔════╝██║     ██║ ██╔══██╗██╔══██╗██╔════╝██╔══██╗',
-            \ '┊┊🌙  *   ' . '█████╗  ██║     ██║ ██████╔╝██████╔╝█████╗  ██║  ██║',
-            \ '┊┊        ' . '██╔══╝  ██║     ██║ ██╔═══╝ ██╔═══╝ ██╔══╝  ██║  ██║',
-            \ '┊☆ °      ' . '██║     ███████╗██║ ██║     ██║     ███████╗██████╔╝',
-            \ '🌙        ' . '╚═╝     ╚══════╝╚═╝ ╚═╝     ╚═╝     ╚══════╝╚═════╝ ',
-            \ ]
-
-
-let g:startify_custom_header =
-            \ 'startify#pad(g:utf8_double_moon)'
-"}}}
-" Project(Session) index
-nnoremap <leader>pi :Startify<cr>
-nnoremap <leader>ps :SSave<cr>
-nnoremap <leader>pl :SLoad<cr>
-nnoremap <leader>pc :SClose<cr>
-nnoremap <leader>pd :SDelete!<cr>
-
-" 为内置终端提供方便接口
-Plug 'kassio/neoterm'
-"{{{
-let g:neoterm_autojump = 1  " 自动进入终端
-let g:neoterm_autoinsert = 1  " 进入终端默认插入模式
-let g:neoterm_use_relative_path = 1
-let g:neoterm_autoscroll = 1
-let g:neoterm_size = 10  " 调整terminal的大小
-"}}}
-nnoremap <silent> <m-m> :botright Ttoggle<cr>
-nnoremap <silent> <m-j> :botright Topen<cr>
-inoremap <silent> <m-j> <esc>:botright Topen<cr>
-" 内置终端
-tnoremap <m-h> <c-\><c-n><c-w>h
-tnoremap <m-l> <c-\><c-n><c-w>l
-tnoremap <m-j> <c-\><c-n><c-w>j
-tnoremap <m-k> <c-\><c-n><c-w>k<esc>
-tnoremap <m-n> <c-\><c-n>
-" 粘贴寄存器0的内容到终端
-tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
-tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
-
-
-" 浏览tags, 函数，类
-Plug 'liuchengxu/vista.vim', {'on': 'Vista'}
-"{{{
-let g:vista_default_executive = 'ctags'  " Executive used when opening vista sidebar without specifying it.
-let g:vista#renderer#enable_icon = 1  " Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
-let g:vista#renderer#icons = {
-\   "function": "\uf794",
-\   "variable": "\uf71b",
-\  }
-"}}}
-nnoremap <leader>ot :Vista<cr>
-
 " 类似VSCode的编译/测试/部署 任务工具
 Plug 'skywind3000/asynctasks.vim'
 "{{{
@@ -892,6 +1047,10 @@ augroup end
 nmap gq <plug>(asyncrun-qftoggle)
 nnoremap <leader>ma :AsyncRun -mode=term -pos=bottom -rows=10 python "$(VIM_FILEPATH)"
 
+" ===============================
+" 杂项, 优化使用体验
+" ===============================
+
 " sudo for neovim  (原来的tee trick只对vim有用，对neovim无效)
 Plug 'lambdalisue/suda.vim', {'on': ['W', 'E']}
 "{{{suda.vim-usage
@@ -908,76 +1067,6 @@ augroup temporar_change_manpager_mapping
     autocmd FileType man nmap <silent> <buffer> <C-j> ]t
     autocmd FileType man nmap <silent> <buffer> <C-k> [t
 augroup end
-"
-" 查看各个插件启动时间
-Plug 'tweekmonster/startuptime.vim', { 'on': 'StartupTime' }
-
-" MarkDown预览
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for':['markdown', 'vimwiki'] , 'on': '<Plug>MarkdownPreviewToggle'}
-let g:mkdp_command_for_global = 0  " 所有文件中可以使用预览markdown命令
-nmap <leader>mp <Plug>MarkdownPreviewToggle
-
-" Todo List 和 笔记，文档管理
-Plug 'vimwiki/vimwiki', {'on': ['VimwikiIndex']}
-"{{{
-" 使用markdown而不是vimwiki的语法
-"let g:vimwiki_list = [{'path': '~/vimwiki/',
-            \ 'syntax': 'markdown', 'ext': '.md'}]
-"}}}
-
-" Sink沉浸写作模式
-Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
-Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
-"{{{
-augroup toggle_limelight_on_goyo
-    autocmd!
-    autocmd! User GoyoEnter Limelight
-    autocmd! User GoyoLeave Limelight!
-augroup end
-"}}}
-nnoremap ,sn :Goyo<cr>
-
-" 更方便地调整window
-Plug 'simeji/winresizer', {'on': 'WinResizerStartResize'}
-"{{{
-let g:winresizer_gui_enable = 1  " gui的vim也能调整窗口大小
-let g:winresizer_start_key = ''
-let g:winresizer_gui_start_key = ''
-let g:winresizer_vert_resize = 3  " 每次移动的步幅
-"}}}
-" usage: 进入resize模式后，hjkl可以调整窗口大小，enter确认，q取消, m移动模式，
-" r调整窗口模式，f选择窗口模式
-nnoremap <leader>wr :WinResizerStartResize<cr>
-nnoremap <leader>wm :WinResizerStartResize<cr>m
-
-" 多语言debug支持 FIXME: 这个插件还在开发阶段，可能会有很多bug
-Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python', 'on': '<Plug>VimspectorContinue'}
-"{{{
-sign define vimspectorBP text=🔴 texthl=Normal
-sign define vimspectorBPDisabled text=🔵 texthl=Normal
-sign define vimspectorPC text=🔶 texthl=SpellBad
-"}}}
-" nmap <F5> :call vimspector#launch()<cr>
-nmap <F5> <Plug>VimspectorContinue
-nmap <F6> <Plug>VimspectorStepOver
-nmap <F7> <Plug>VimspectorStepInto
-nmap <F8> <Plug>VimspectorStepOut
-nmap <F9> :call vimspector#ToggleBreakpoint()<cr>
-nmap <F10> :VimspectorReset
-"
-" nmap <Plug>VimspectorContinue
-" nmap <Plug>VimspectorStop
-" nmap <Plug>VimspectorRestart
-" nmap <Plug>VimspectorPause
-" nmap <Plug>VimspectorToggleBreakpoint
-" nmap <Plug>VimspectorAddFunctionBreakpoint
-
-" 快速对齐文本
-Plug 'junegunn/vim-easy-align', {'on': '<Plug>(EasyAlign)'}
-" Start interactive EasyAlign in visual mode (e.g. vipga=)
-xmap ga <Plug>(EasyAlign)
-" Start interactive EasyAlign for a motion/text object (e.g. gaip=)
-nmap ga <Plug>(EasyAlign)
 
 " 显示搜索的的数量以及当前位置
 Plug 'osyo-manga/vim-anzu'
@@ -986,63 +1075,9 @@ nmap N <Plug>(anzu-N-with-echo)zz
 nmap * <Plug>(anzu-star-with-echo)zz
 nmap # <Plug>(anzu-sharp-with-echo)zz
 
-" 显示当前行的commit信息, o下一个commit，O上一个，d打开该commit在当前文件的diff hunks， D打开该commit的所有diff hunks
-Plug 'rhysd/git-messenger.vim', {'on': '<Plug>(git-messenger)'}
-"{{{
-let g:git_messenger_no_default_mappings = v:true
-"}}}
-" 开启预览后光标始终进入popup window, 否则要再次使用快捷键才能让光标进入popup window
-" let g:git_messenger_always_into_popup = v:true
-nmap go <Plug>(git-messenger)
-
 " 优化bd体验，关闭buffer但是不关闭窗口
 Plug 'mhinz/vim-sayonara', {'on': [ 'Sayonara','Sayonara!' ]}
 nnoremap <silent> <leader>bd :Sayonara!<cr>
-
-" 移动参数，数组里的元素 html, css, js中object属性
-Plug 'AndrewRadev/sideways.vim', {'on': ['SidewaysLeft', 'SidewaysRight']}
-nnoremap tl :SidewaysRight<cr>
-nnoremap th :SidewaysLeft<cr>
-
-" 切换到项目根目录
-Plug 'airblade/vim-rooter', {'on': 'Rooter'}
-"{{{
-let g:rooter_manual_only = 1  " 停止自动目录
-let g:rooter_resolve_links = 1  " resolve软硬链接
-let g:rooter_silent_chdir = 1  " 静默change dir
-"}}}
-" 手动切换到项目根目录
-nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', expand('%:p:h'))<cr>
-
-" %匹配对象增强, 也许可以把%改成m
-Plug 'andymass/vim-matchup'
-"{{{
-let g:loaded_matchit           = 1  " 禁用vim默认自带插件
-let g:loaded_matchparen        = 1
-augroup matchup_matchparen_highlight
-  autocmd!
-  autocmd Colorscheme * hi! link MatchParen Visual
-augroup END
-"}}}
-
-" 更方便的查看commit g?查看键位 enter查看详细信息 <c-n> <c-p> 跳到上下commit
-Plug 'rbong/vim-flog', {'on': ['Flog']}
-function! Flogdiff()  " {{{
-  let first_commit = flog#get_commit_data(line("'<")).short_commit_hash
-  let last_commit = flog#get_commit_data(line("'>")).short_commit_hash
-  call flog#git('vertical belowright', '!', 'diff ' . first_commit . ' ' . last_commit)
-endfunction
-"}}}
-augroup flog
-    " 在FlogGraph中visual模式选中两个commit 再按gd可以diff这两个commit
-    autocmd FileType floggraph vnoremap gd :<C-U>call Flogdiff()<CR>
-augroup end
-let g:flog_default_arguments = { 'max_count': 1000 }  " 约束最大显示的commit数量，防止打开太慢
-nnoremap ,gl :Flog<cr>
-" 选中多行查看历史
-vnoremap ,gl :Flog<cr>
-
-
 
 
 
@@ -1585,7 +1620,7 @@ function! s:Autosave(timed)
     endif
 endfunction
 
-if s:enable_file_autosave
+if g:enable_file_autosave
     augroup WorkspaceToggle
         au! BufLeave,FocusLost,FocusGained * call s:Autosave(0)
         au! CursorHold * call s:Autosave(1)
