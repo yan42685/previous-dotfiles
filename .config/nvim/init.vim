@@ -300,7 +300,7 @@ function! RemoveLabelOnTopRight() abort
 endfunction
 
 function! Get_session_name() abort
-    let l:session_name = fnamemodify(v:this_session,':t')
+    let l:session_name = fnamemodify(v:this_session,':t:r')
     return l:session_name != '' ? '<' . l:session_name . '>' : ''
 endfunction
 
@@ -1244,7 +1244,7 @@ noremap <silent> <leader>q <esc>:q<cr>
 "{{{ 自动保存会话
 function s:auto_save_session() abort
     let session_name = fnamemodify(v:this_session,':t')
-    let session_name = session_name == '' ? 'auto_session' : session_name
+    let session_name = session_name == '' ? 'default.vim' : session_name
     execute 'SSave! ' . session_name
     execute 'qa'
 endfunction

@@ -6,7 +6,7 @@
     "todolist.reminder.background": "#737373",  // 背景色
     "todolist.reminder.notify": "floating",
     "todolist.reminder.winblend": 0,  // 透明度
-    "todolist.autoUpload": true,  // 每天自动上传
+    // "todolist.autoUpload": true,  // 每天自动上传
     "emmet.excludeLanguages": [  // 不支持的文件类型
         "markdown"
     ],
