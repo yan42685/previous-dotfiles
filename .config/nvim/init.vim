@@ -1017,7 +1017,22 @@ augroup END
 
 " 更方便的查看commit g?查看键位 enter查看详细信息 <c-n> <c-p> 跳到上下commit
 Plug 'rbong/vim-flog', {'on': ['Flog']}
+function! Flogdiff()  " {{{
+  let first_commit = flog#get_commit_data(line("'<")).short_commit_hash
+  let last_commit = flog#get_commit_data(line("'>")).short_commit_hash
+  call flog#git('vertical belowright', '!', 'diff ' . first_commit . ' ' . last_commit)
+endfunction
+"}}}
+augroup flog
+    " 在FlogGraph中visual模式选中两个commit 再按gd可以diff这两个commit
+    autocmd FileType floggraph vnoremap gd :<C-U>call Flogdiff()<CR>
+augroup end
+" 约束最大显示的commit数量，防止打开太慢
+let g:flog_default_arguments = { 'max_count': 1000 }
 nnoremap ,gl :Flog<cr>
+" 选中多行查看历史
+vnoremap ,gl :Flog<cr>
+
 
 
 
