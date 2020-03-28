@@ -722,6 +722,8 @@ let g:ale_fixers = {
 \   'javascript': ['prettier'],
 \   'python': ['autopep8'],
 \}
+" 极大提升打开log 文件的性能
+let g:ale_fix_on_save_ignore = {'log': ['remove_trailing_lines', 'trim_whitespace']}
 let g:ale_lint_on_text_changed = 'normal'
 " let g:ale_lint_delay = 3000  " 这个配置似乎不生效
 " 保存时自动排版
@@ -1810,3 +1812,19 @@ endfunction
 nnoremap <leader>nm :call Copy_to_registers(expand('%:t'))<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
 nnoremap <leader>ap :call Copy_to_registers(expand('%:p'))<cr>:echo printf('absolute path yanked: %s', expand('%:p'))<cr>
 nnoremap <leader>dr :call Copy_to_registers(expand('%:p:h'))<cr>:echo printf('absolute dir yanked: %s', expand('%:p:h'))<cr>
+
+"{{{ 检查Vim运行性能, 结果放在profile.log中
+let s:check_performance_enabled = 0
+fun Check_performance()
+    if s:check_performance_enabled == 0
+        execute 'profile start profile.log'
+        execute 'profile file *'
+        execute 'profile func *'
+        let s:check_performance_enabled = 1
+    else
+        execute 'profile stop'
+        execute 'normal Q'
+    endif
+endf
+"}}}
+nnoremap <leader>cp :call Check_performance()<cr>

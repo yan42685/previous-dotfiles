@@ -248,6 +248,9 @@ alias mkdir='nocorrect mkdir'
 alias md='nocorrect mkdir'
 
 alias vi='nvim'
+alias vinp='nvim --noplugin'
+# 检查性能，进入nvim后，输入:profile stop命令再退出，然后查看profile.log文件 翻到最底部查看函数耗时统计
+alias vicheck="nvim -c 'profile start profile.log' -c 'profile file *' -c 'profile func *'"
 # alias vim='nvim'
 # alias vimm='\vim'   # 用转义符防止递归映射
 alias dot='/usr/bin/git --git-dir=/home/yy/.dotfiles/ --work-tree=/home/yy'   # 用于存放dotfiles
