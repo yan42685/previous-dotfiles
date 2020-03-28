@@ -1814,13 +1814,13 @@ nnoremap <leader>ap :call Copy_to_registers(expand('%:p'))<cr>:echo printf('abso
 nnoremap <leader>dr :call Copy_to_registers(expand('%:p:h'))<cr>:echo printf('absolute dir yanked: %s', expand('%:p:h'))<cr>
 
 "{{{ 检查Vim运行性能, 结果放在profile.log中
-let s:check_performance_enabled = 0
+let g:check_performance_enabled = 0
 fun Check_performance()
-    if s:check_performance_enabled == 0
+    if g:check_performance_enabled == 0
         execute 'profile start profile.log'
         execute 'profile file *'
         execute 'profile func *'
-        let s:check_performance_enabled = 1
+        let g:check_performance_enabled = 1
     else
         execute 'profile stop'
         execute 'normal Q'
