@@ -1,9 +1,8 @@
 {
 
     "session.directory": "~/.local/share/nvim/session",  // coclist查找session文件的地址
-    "todolist.maxsize": 99999,  // 最多可存放的
+    "todolist.maxsize": 99999,  // 最多可存放的todo数量
     "todolist.monitor": true,  // 监控todolist时间并提醒
-    // "todolist.reminder.background": "#a89984",  // 背景色
     "todolist.reminder.background": "#737373",  // 背景色
     "todolist.reminder.notify": "floating",
     "todolist.reminder.winblend": 0,  // 透明度

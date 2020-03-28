@@ -139,7 +139,8 @@ augroup my_highlight_spellbad
     autocmd VimEnter * highlight SpelunkerComplexOrCompoundWord cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
     " 下两行 取消在startify中的拼写检查 前提是设置了 g:spelunker_check_type = 2:
     let g:spelunker_disable_auto_group = 1
-    autocmd CursorHold * if &filetype != 'startify' | call spelunker#check_displayed_words() | endif
+    " FIXME: 下面这句不能用，不然用--noplugin 开启nvim的时候会一直报错
+    " autocmd CursorHold * if &filetype != 'startify' | call spelunker#check_displayed_words() | endif
 augroup end
 "}}}
 
@@ -395,6 +396,18 @@ Plug 'tmhedberg/SimpylFold', {'for': [ 'python' ]}
 "{{{
 let g:SimpylFold_docstring_preview = 1
 "}}}
+"
+" 异步自动生成tags
+Plug 'jsfaint/gen_tags.vim'
+"{{{
+let g:gen_tags#verbose = 0  " 不提示信息
+let g:gen_tags#gtags_auto_gen = 1
+let g:gen_tags#gtags_auto_gen = 1
+let g:gen_tags#ctags_opts = ['--c++-kinds=+px', '--c-kinds=+px']
+let g:gen_tags#ctags_opts = ['-c', '--verbose']
+let $GTAGSLABEL = 'native-pygments'  " FIXME: 当项目文件的路径包含非ASCII字符时，使用pygments会报UnicodeEncodeError
+let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
+"}}}
 
 "===========================================================================
 "===========================================================================
@@ -633,7 +646,7 @@ let g:Lf_CursorBlink = 0  " 取消光标闪烁
 let g:Lf_ShowHidden = 1  " 搜索结果包含隐藏文件
 let g:Lf_PopupHeight = 0.7
 let g:Lf_HistoryNumber = 200  " default 100
-let g:Lf_GtagsAutoGenerate = 1  " 有['.git', '.hg', '.svn']之中的文件时自动生成gtags
+" let g:Lf_GtagsAutoGenerate = 1  " 有['.git', '.hg', '.svn']之中的文件时自动生成gtags
 let g:Lf_RecurseSubmodules = 1  " show the files in submodules of git repository
 let g:Lf_Gtagslabel =  "native-pygments"  " 如果不是gtags支持的文件类型，就用pygments
 let g:Lf_WorkingDirectoryMode = 'a'  " the nearest ancestor of current directory that contains one of directories
@@ -805,13 +818,6 @@ tnoremap <m-n> <c-\><c-n>
 tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
 tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
 
-" 异步自动生成tags
-Plug 'jsfaint/gen_tags.vim'
-" FIXME: 如果没有安装gtags和和global ctags就需要设置下两项为0 否则会报错
-let g:loaded_gentags#gtags = 1
-let g:loaded_gentags#ctags = 1
-let $GTAGSLABEL = 'native-pygments'  " FIXME: 当项目文件的路径包含非ASCII字符时，使用pygments会报UnicodeEncodeError
-" let $GTAGSCONF = '/path/to/share/gtags/gtags.conf'
 
 " 浏览tags, 函数，类
 Plug 'liuchengxu/vista.vim', {'on': 'Vista'}
