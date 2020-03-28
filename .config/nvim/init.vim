@@ -19,10 +19,11 @@
 "  2. 提供python和系统剪切板支持 pip3 install pynvim && apt install xsel
 "  3. rm -rf ~/.viminfo 这样可以使自动回到上次编辑的地方功能生效, 然后重新打开vim(注意要以当前用户打开),vim会自动重建该文件.
 "  4. :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer coc-yank coc-markdownlint
-"     coc-sh coc-dictionary coc-word coc-emmet coc-emoji(只在markdown生效，冒号开始补全)
+"     coc-sh coc-dictionary coc-word coc-emmet
 "     coc-syntax coc-marketplace (用于查看所有的coc扩展)
 "     coc-todolist (可以同步到gist,具体看github)
 "     coc-ci (中文分词,需要映射w和b)
+"     coc-emoji (仅在markdown里用:触发补全， 查表https://www.webfx.com/tools/emoji-cheat-sheet/)
 "     coc-gitignore (按类型添加gitignore, 用法是在已有git初始化的文件夹内CocList gitignore)
 
 "  5. ubuntu下用snap包管理器安装ccls, 作为C、C++的LSP (推荐用snap安装, 因为ccls作者提供的编译安装方式似乎有问题, 反正Ubuntu18.04不行)
@@ -166,7 +167,7 @@ Plug 'luochen1990/rainbow'
 let g:rainbow_active = 1
 "}}}
 
-" coc-snippets是框架,这个是内容
+" coc-snippets是框架,这个是资源
 Plug 'honza/vim-snippets'
 "
 " 自动进入粘贴模式
@@ -206,6 +207,8 @@ hi link illuminatedWord Visual
 let g:Illuminate_ftblacklist = ['vim', 'txt', 'md', 'css']
 "}}}
 
+" 块选择模式下可以用I A批量多行写入
+Plug 'kana/vim-niceblock'
 
 " 自定义text-object 是vim-textobj-variable-segment插件的依赖
 Plug 'kana/vim-textobj-user'
@@ -283,6 +286,7 @@ function! Get_session_name() abort
     return l:session_name != '' ? '<' . l:session_name . '>' : ''
 endfunction
 
+" FIXME: 查看&diff可能是unkown filetype报错的原因
 function If_in_merge_or_diff_mode() abort
   if get(g:, 'mergetool_in_merge_mode', 0)  " merge模式
     return 'merge mode'
@@ -446,6 +450,7 @@ vmap tt <Plug>(coc-translator-pv)
 " Use preview to preview a todo item
 " Use delete to delete a todo item
 nnoremap <leader>tc :CocCommand todolist.create<cr>
+nnoremap <leader>tl :CocList todolist<cr>
 " clear all notifications
 nnoremap <silent> <leader>tx :CocCommand todolist.clearRemind<cr>
 nnoremap <leader>tu :CocCommand todolist.upload<cr>
@@ -538,7 +543,7 @@ Plug 'samoshkin/vim-mergetool', {'on': '<plug>(MergetoolToggle)'}
 "{{{
 let g:mergetool_layout = 'mr'  " `l`, `b`, `r`, `m`
 let g:mergetool_prefer_revision = 'local'  " `local`, `base`, `remote`
-" mergetool 模式关闭语法检查和语法高亮
+" mergetool 模式关闭语法检查和语法高亮 FIXME: 可能是unknown filetype报错的原因
 function s:on_mergetool_set_layout(split)
   set syntax=off
 endfunction
@@ -661,6 +666,9 @@ xnoremap <silent> * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s ", le
 Plug 'tpope/vim-surround'
 nmap ysw ysiw
 nmap ysW ysiW
+nnoremap <leader>" :normal ysiW"<CR>
+nnoremap <leader>' :normal ysiW'<CR>
+nnoremap <leader>(         :normal ysiW(<CR>
 
 " 快速交换 cx{object} cxx行 可视模式用X  取消用cxc  可以用 . 重复上次命令
 Plug 'tommcdo/vim-exchange'
@@ -1035,7 +1043,6 @@ nnoremap ,gl :Flog<cr>
 " Plug 'AndrewRadev/splitjoin.vim'
 
 "
-"Plug 'junegunn/vim-emoji'
 "Plug 'junegunn/vim-github-dashboard'
 " 为不同的文件类型设置不同的tab expand 编码 EOF
 "Plug 'editorconfig/editorconfig-vim'
@@ -1050,6 +1057,10 @@ nnoremap ,gl :Flog<cr>
 " coc-github
 " coc-css-block-comments
 " coc-sql (lint和format, format似乎要手动, 看ale能不能自动调用这个插件自带的sql-formatter把)
+" Node.js支持
+" Plug 'moll/vim-node', {'for': 'javascript'}
+" React
+" Plug 'mxw/vim-jsx', {'for': '*jsx'}
 
 
 "
@@ -1255,6 +1266,7 @@ noremap <silent> <leader>k :wincmd k<cr>
 noremap <silent> <leader>h :wincmd h<cr>
 noremap <silent> <leader>l :wincmd l<cr>
 
+
 " Tab操作
 nnoremap <leader><leader>h gT
 nnoremap <leader><leader>l gt
@@ -1330,6 +1342,8 @@ set shortmess=atI  " 启动的时候不显示那个援助乌干达儿童的提�
 set nobackup nowritebackup  " 取消备份文件
 set updatecount =100  " FIXME:如果编辑大文件很慢那么考虑调大这个值 After typing this many characters the swap file will be written to disk
 set cursorline  " 突出显示当前行
+set diffopt+=vertical,algorithm:patience
+set sessionoptions+=tabpages,globals,localoptions
 set synmaxcol=200  " 每次只渲染200行而不是整个文件
 " set t_ti= t_te=  " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉, 好处：误删什么的，如果以前屏幕打开，可以找回
 set mouse=r  " 启用鼠标, 可以用右键使用系统剪切板来复制粘贴
