@@ -207,7 +207,7 @@ hi link illuminatedWord Visual
 let g:Illuminate_ftblacklist = ['vim', 'txt', 'md', 'css']
 "}}}
 
-" 块选择模式下可以用I A批量多行写入
+" 选择模式和行选择模式下可以用I A批量多行写入(修改了可视模式下I和A的映射)
 Plug 'kana/vim-niceblock'
 
 " 自定义text-object 是vim-textobj-variable-segment插件的依赖
@@ -286,7 +286,6 @@ function! Get_session_name() abort
     return l:session_name != '' ? '<' . l:session_name . '>' : ''
 endfunction
 
-" FIXME: 查看&diff可能是unkown filetype报错的原因
 function If_in_merge_or_diff_mode() abort
   if get(g:, 'mergetool_in_merge_mode', 0)  " merge模式
     return 'merge mode'
@@ -1022,8 +1021,6 @@ nnoremap ,gl :Flog<cr>
 
 
 
-
-
 " 打算以后再体验的插件
 " 一键生成注释（15+种语言）
 " Plug 'kkoomen/vim-doge'
@@ -1497,7 +1494,7 @@ augroup auto_actions_for_better_experience
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会有性能问题
     autocmd User MyEnterDiffMode if &diff | windo setlocal syntax=off | wincmd w
-    autocmd WinLeave * windo set syntax=on
+    autocmd WinLeave * if &filetype != '' | windo set syntax=on
 augroup end
 
 " 开启语法高亮
