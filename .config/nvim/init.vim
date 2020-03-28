@@ -445,7 +445,7 @@ if g:disable_laggy_plugins_for_large_file == 0
         autocmd VimEnter * nmap ]c <plug>(signify-next-hunk)zz
     augroup end
 
-    " ALE静态代码检查和自动排版
+    " ALE静态代码检查和自动排版 NOTE: 默认禁用对log文件的fixer
     Plug 'dense-analysis/ale'
     "{{{
     let g:ale_set_highlights = 0  " 不要显示红色下划线
@@ -685,6 +685,8 @@ vmap <silent> <c-m-v> <Plug>(coc-codeaction-selected)
 " 快速移动
 Plug 'easymotion/vim-easymotion', {'on': '<Plug>(easymotion-bd-f)'}
 map <silent> <leader>f <Plug>(easymotion-bd-f)
+" easymotion可以根据中文拼音首字母跳转
+Plug 'ZSaberLv0/vim-easymotion-chs'
 
 " 快速注释
 Plug 'preservim/nerdcommenter', {'on': '<plug>NERDCommenterToggle'}
@@ -704,7 +706,7 @@ nmap ysw ysiw
 nmap ysW ysiW
 nnoremap <leader>" :normal ysiW"<CR>
 nnoremap <leader>' :normal ysiW'<CR>
-nnoremap <leader>(         :normal ysiW(<CR>
+nnoremap <leader>( :normal ysiW(<CR>
 
 " %匹配对象增强, 也许可以把%改成m
 Plug 'andymass/vim-matchup'
