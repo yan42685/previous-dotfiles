@@ -664,6 +664,7 @@ nmap <silent> gm <Plug>(coc-implementation)zz
 nmap <silent> gr <Plug>(coc-references)zz
 nmap <silent> gf <Plug>(coc-refactor)
 nnoremap <leader>gm :CocList --normal marks<cr>
+nnoremap <leader>gp :CocList sessions<cr>
 " 查看文档
 nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
 " 打开鼠标位置下的链接
@@ -729,19 +730,15 @@ Plug 'AndrewRadev/sideways.vim', {'on': ['SidewaysLeft', 'SidewaysRight']}
 nnoremap tl :SidewaysRight<cr>
 nnoremap th :SidewaysLeft<cr>
 
-" 驼峰跳转 FIXME: 修改了默认的b w e ib iw ie映射
+" 驼峰跳转 FIXME: 修改了默认的b w e映射
 Plug 'bkad/CamelCaseMotion'
-let g:camelcasemotion_key = ''  " 禁用默认快捷键
+let g:camelcasemotion_key = '<C-S-M-F12>'  " 禁用默认快捷键
 "{{{
 map <silent> w <Plug>CamelCaseMotion_w
 map <silent> b <Plug>CamelCaseMotion_b
 map <silent> e <Plug>CamelCaseMotion_e
 omap <silent> iw <Plug>CamelCaseMotion_iw
 xmap <silent> iw <Plug>CamelCaseMotion_iw
-omap <silent> ib <Plug>CamelCaseMotion_ib
-xmap <silent> ib <Plug>CamelCaseMotion_ib
-omap <silent> ie <Plug>CamelCaseMotion_ie
-xmap <silent> ie <Plug>CamelCaseMotion_ie
 sunmap w
 sunmap b
 sunmap e
@@ -803,7 +800,7 @@ let g:startify_custom_header =
 "}}}
 " Project(Session) index
 nnoremap <leader>pi :Startify<cr>
-nnoremap <leader>ps :SSave<cr>
+nnoremap <leader>ps :SSave .vim<left><left><left><left>
 nnoremap <leader>pl :SLoad<cr>
 nnoremap <leader>pc :SClose<cr>
 nnoremap <leader>pd :SDelete!<cr>
@@ -1586,7 +1583,7 @@ augroup auto_actions_for_better_experience
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会有性能问题
     autocmd User MyEnterDiffMode if &diff | windo setlocal syntax=off | wincmd w
     " 这里加个wincmd w是为了抵消windo自动跳转窗口的影响，比如git-messager打开之后就会自动跳到浮动弹窗了
-    autocmd WinLeave * if &filetype != '' | windo set syntax=on | wincmd w
+    autocmd WinEnter,WinLeave * if (&filetype != '' && !&diff) | windo set syntax=on | wincmd w
 augroup end
 
 " 开启语法高亮
