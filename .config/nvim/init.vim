@@ -22,7 +22,6 @@
 "     coc-sh coc-dictionary coc-word coc-emmet
 "     coc-syntax coc-marketplace (用于查看所有的coc扩展)
 "     coc-todolist (可以同步到gist,具体看github)
-"     coc-ci (中文分词,需要映射w和b)
 "     coc-emoji (仅在markdown里用:触发补全， 查表https://www.webfx.com/tools/emoji-cheat-sheet/)
 "     coc-gitignore (按类型添加gitignore, 用法是在已有git初始化的文件夹内CocList gitignore)
 
@@ -577,10 +576,6 @@ endfunction
 "}}}
 nnoremap <silent> <leader>er :call ToggleCocExplorer()<CR>
 
-" coc-ci 中文分词
-nmap <silent> w <Plug>(coc-ci-w)
-nmap <silent> b <Plug>(coc-ci-b)
-
 " 使用coc-yank (自带复制高亮)
 nnoremap <silent> gy :<C-u>CocList --normal yank<cr>
 
@@ -733,6 +728,24 @@ nmap ga <Plug>(EasyAlign)
 Plug 'AndrewRadev/sideways.vim', {'on': ['SidewaysLeft', 'SidewaysRight']}
 nnoremap tl :SidewaysRight<cr>
 nnoremap th :SidewaysLeft<cr>
+
+" 驼峰跳转 FIXME: 修改了默认的b w e ib iw ie映射
+Plug 'bkad/CamelCaseMotion'
+let g:camelcasemotion_key = ''  " 禁用默认快捷键
+"{{{
+map <silent> w <Plug>CamelCaseMotion_w
+map <silent> b <Plug>CamelCaseMotion_b
+map <silent> e <Plug>CamelCaseMotion_e
+omap <silent> iw <Plug>CamelCaseMotion_iw
+xmap <silent> iw <Plug>CamelCaseMotion_iw
+omap <silent> ib <Plug>CamelCaseMotion_ib
+xmap <silent> ib <Plug>CamelCaseMotion_ib
+omap <silent> ie <Plug>CamelCaseMotion_ie
+xmap <silent> ie <Plug>CamelCaseMotion_ie
+sunmap w
+sunmap b
+sunmap e
+"}}}
 
 " ============================
 " UI相关
