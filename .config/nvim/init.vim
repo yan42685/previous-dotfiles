@@ -427,7 +427,7 @@ let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
 "}}}
 
 " 写作使用的，自动单词折行
-Plug 'reedes/vim-pencil', {'for': ['markdown', 'text']}
+Plug 'reedes/vim-pencil', {'for': ['markdown', 'text', 'vimwiki']}
 let g:pencil#textwidth = 80  " 默认单行最大长度
 augroup pencil
     autocmd!
@@ -911,8 +911,11 @@ function! s:goyo_leave()
   call s:Enable_normal_scheme()  " 恢复折叠和column的颜色
 endfunction
 "}}}
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
+augroup goyo_toggle_callback
+    autocmd!
+    autocmd! User GoyoEnter nested call <SID>goyo_enter()
+    autocmd! User GoyoLeave nested call <SID>goyo_leave()
+augroup end
 
 " 模糊非视觉中心的字符
 Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
