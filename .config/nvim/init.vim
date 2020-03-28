@@ -1509,7 +1509,8 @@ augroup auto_actions_for_better_experience
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会有性能问题
     autocmd User MyEnterDiffMode if &diff | windo setlocal syntax=off | wincmd w
-    autocmd WinLeave * if &filetype != '' | windo set syntax=on
+    " 这里加个wincmd w是为了抵消windo自动跳转窗口的影响，比如git-messager打开之后就会自动跳到浮动弹窗了
+    autocmd WinLeave * if &filetype != '' | windo set syntax=on | wincmd w
 augroup end
 
 " 开启语法高亮
