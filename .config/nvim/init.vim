@@ -995,7 +995,7 @@ nnoremap tl :SidewaysRight<cr>
 nnoremap th :SidewaysLeft<cr>
 
 " 切换到项目根目录
-Plug 'airblade/vim-rooter'
+Plug 'airblade/vim-rooter', {'on': 'Rooter'}
 "{{{
 let g:rooter_manual_only = 1  " 停止自动目录
 let g:rooter_resolve_links = 1  " resolve软硬链接
@@ -1027,11 +1027,13 @@ augroup flog
     " 在FlogGraph中visual模式选中两个commit 再按gd可以diff这两个commit
     autocmd FileType floggraph vnoremap gd :<C-U>call Flogdiff()<CR>
 augroup end
-" 约束最大显示的commit数量，防止打开太慢
-let g:flog_default_arguments = { 'max_count': 1000 }
+let g:flog_default_arguments = { 'max_count': 1000 }  " 约束最大显示的commit数量，防止打开太慢
 nnoremap ,gl :Flog<cr>
 " 选中多行查看历史
 vnoremap ,gl :Flog<cr>
+
+
+
 
 
 
@@ -1040,13 +1042,19 @@ vnoremap ,gl :Flog<cr>
 " 一键生成注释（15+种语言）
 " Plug 'kkoomen/vim-doge'
 
+" 在quickfix里直接修改文件
+" Plug 'stefandtw/quickfix-reflector.vim'
+
 " 多光标
 " Plug 'mg979/vim-visual-multi'
 
 " 似乎是vim唯一的test插件, 支持CI
 " Plug 'janko/vim-test'
 "
-" 数据库接口
+" SQL Wrapper (不建议使用另一个插件vim-sql-workbench 因为太麻烦了)
+" Plug 'joereynolds/SQHell.vim'
+
+" 数据库接口(似乎只能查询)
 " Plug 'tpope/vim-dadbod'
 " 数据库接口的ui
 " Plug 'kristijanhusak/vim-dadbod-ui'
@@ -1060,6 +1068,7 @@ vnoremap ,gl :Flog<cr>
 "Plug 'editorconfig/editorconfig-vim'
 "快速创建表格
 "Plug 'dhruvasagar/vim-table-mode'
+
 
 
 
