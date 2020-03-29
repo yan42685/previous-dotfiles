@@ -1035,29 +1035,42 @@ nnoremap <silent> / :Leaderf rg --current-buffer<cr>
 " buffer内搜索词
 xnoremap <silent> * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s ", leaderf#Rg#visual())<CR><cr>
 
-" 搜索和替换，支持多文件
-Plug 'brooth/far.vim'
-let g:far#mode_open = {'regex': 0, 'case_sensitive': 0, 'word': 0, 'substitute': 1}  " 默认模式
-let g:far#source = 'rgnvim'  " 使用rg作为搜索源 FIXME: 如果以后换了grep工具需要换这个选项
-let g:far#enable_undo = 1  " 允许undo替换
+" Project/buffer内替换 (默认搜索隐藏文件)
+Plug 'brooth/far.vim', {'on': 'Far'}
+"{{{
+let g:far#mode_open = {'regex': 0, 'case_sensitive': 0, 'word': 0, 'substitute': 1}  " 默认模式,是没有正则的
+let g:far#source = 'rgnvim'  " 使用rg + nvim的异步API 作为搜索源 FIXME: 如果以后换了grep工具需要换这个选项
+let g:far#enable_undo = 1  " 允许按u进行undo替换
 let g:far#auto_write_replaced_buffers = 1  " 自动写入
 let g:far#auto_delete_replaced_buffers = 1  " 自动关闭替换完成的buffer
-" 定义far buffer的映射
+"}}}
+" 定义far buffer的映射, NOTE: 如果自己的vimrc里有对应非递归映射(比如nnoremap zo)，则这个插件的映射会失效
 let g:far#mapping = {
             \ 'toggle_expand': [ 'zo' ],
             \ 'replace_do': ['r']
             \ }
-let g:far#default_file_mask = '*'  " 命令行默认遮罩 如果没有指定的话
+let g:far#default_file_mask = '*'  " 命令行默认遮罩(搜索的范围)
 " let g:far#ignore_files = [
-"       \ '.git/*',
 "       \ '.git/',
 "       \ '.vscode/*',
 "       \ '.svn/*',
 "       \ '.hg/*',
 "       \ ]
+"
+" let g:far#ignore_files = 'git/'
 
-" let g:enable
-" nnoremap <leader>R :Far
+nnoremap <leader>su :Far <c-r>=expand('<cword>')<cr>  %<left><left>
+nnoremap <leader>sU :Far <c-r>=expand('<cWORD>')<cr>  %<left><left>
+xnoremap <silent> <leader>su :<c-u>Far <c-r>=My_get_current_visual_text()<cr>  %<left><left>
+
+
+" nnoremap <leader>su :s/<c-r>=expand('<cword>')<cr>//gc<left><left><left>
+" nnoremap <leader>sU :%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
+" xnoremap <silent> <leader>su :<c-u>%s/<c-r>=My_get_current_visual_text()<cr>//gc<left><left><left>
+
+
+
+
 
 " 在quickfix窗口里编辑
 " Plug 'stefandtw/quickfix-reflector.vim'  " FIXME: 和quickr-preview有冲突
@@ -1266,7 +1279,7 @@ inoremap kj <esc>
 cnoremap kj <c-c>
 nnoremap ? /
 noremap ; :
-nnoremap zo zazz
+nmap zo zazz
 noremap ,; ;
 nnoremap ,w :w<cr>
 " 解决通过命令let @" = {text}设置的@" 不能被p正确粘贴的问题
@@ -1297,16 +1310,17 @@ nnoremap R @r
 " xnoremap <expr> <leader>@ ":norm! @".nr2char(getchar())."<CR>"
 xnoremap <expr> R ":norm! @r<CR>"
 
-" 替换模式串
-nnoremap <leader>su :%s/<c-r>=expand('<cword>')<cr>//gc<left><left><left>
-nnoremap <leader>sU :%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
+" 替换模式串 NOTE: 目前被Far.vim插件替代
+" nnoremap <leader>su :%s/<c-r>=expand('<cword>')<cr>//gc<left><left><left>
+" nnoremap <leader>sU :%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
 " {{{ My_get_current_visual_text() 获取当前visual选择的文本
 function My_get_current_visual_text() abort
     execute "normal! `<v`>y"
     return @"
 endfunction
 "}}}
-xnoremap <silent> <leader>su :<c-u>%s/<c-r>=My_get_current_visual_text()<cr>//gc<left><left><left>
+" xnoremap <silent> <leader>su :<c-u>%s/<c-r>=My_get_current_visual_text()<cr>//gc<left><left><left>
+
 " 退出系列
 noremap <silent> <leader>q <esc>:q<cr>
 "{{{ 自动保存会话
@@ -1646,7 +1660,7 @@ augroup auto_actions_for_better_experience
         else
             nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>
             nnoremap <c-k> :call ScrollAnotherWindow(1)<CR>
-            nnoremap q q
+            nmap q q
         endif
     endfunction
     "}}}
@@ -1728,10 +1742,7 @@ for single_char in s:alphabet
 endfor
 "}}}
 
-" 废弃<F1>调出系统帮助的功能 和 ZZ退出
-noremap <F1> <nop>
-inoremap <F1> <nop>
-cnoremap <F1> <nop>
+" 废弃ZZ退出
 nnoremap ZZ <nop>
 vnoremap ZZ <nop>
 
