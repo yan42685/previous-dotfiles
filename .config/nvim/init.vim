@@ -67,7 +67,7 @@ let g:enable_front_end_layer = 1  " 前端Layer, 启动所有前端相关插件
 let g:enable_file_autosave = 1  " 是否自动保存
 let g:disable_laggy_plugins_for_large_file = 0  " 在启动参数里设置为1就可以加快打开速度
 set updatetime=400  " 检测CursorHold事件的时间间隔,影响性能的主要因素
-let s:colorscheme_mode = 0
+let s:default_colorscheme_mode = 0
 let s:colorschemes = ['quantum', 'gruvbox-material', 'forest-night']
 let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night']
 
@@ -320,7 +320,7 @@ endfunc
 "}}}
 
 let g:lightline = {}
-let g:lightline.colorscheme = s:lightline_schemes[s:colorscheme_mode]
+let g:lightline.colorscheme = s:lightline_schemes[s:default_colorscheme_mode]
 let g:lightline.separator = { 'left': "\ue0b8", 'right': "\ue0be" }
 let g:lightline.subseparator = { 'left': "\ue0b9", 'right': "\ue0b9" }
 let g:lightline.tabline_separator = { 'left': "\ue0bc", 'right': "\ue0ba" }
@@ -799,7 +799,7 @@ sunmap b
 sunmap e
 "}}}
 
-" 块选择模式整列的递增/减数字 <c-a> <c-x> 支持数字，字母，十六进制, 二进制
+" 支持v:count 块选择模式整列的递增/减数字 <c-a> <c-x> 支持数字，字母，十六进制, 二进制
 Plug 'triglav/vim-visual-increment', {'on': ['<Plug>(VisualIncrement)', '<Plug>(VisualDecrement)']}
 set nrformats=alpha,hex,bin
 vmap <c-a> <Plug>(VisualIncrement)
@@ -1128,9 +1128,9 @@ let g:far#mapping = {
 let g:far#default_file_mask = '%'  " 命令行默认遮罩(搜索的范围)
 " buffer内替换
 " 其他用法: Farr交互式查找，并且可以转换成正则模式
-nnoremap <leader>su :Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  %<left><left>
-nnoremap <leader>sU :Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  %<left><left>
-xnoremap <leader>su :Rooter<cr><c-u>:Far <c-r>=My_get_current_visual_text()<cr>  %<left><left>
+nnoremap <leader>su :Far <c-r>=expand('<cword>')<cr>  %<left><left>
+nnoremap <leader>sU :Far <c-r>=expand('<cWORD>')<cr>  %<left><left>
+xnoremap <leader>su :<c-u>Far <c-r>=My_get_current_visual_text()<cr>  %<left><left>
 " Project内替换
 nnoremap <leader>Su :Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  *<left><left>
 nnoremap <leader>SU :Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  *<left><left>
@@ -1578,7 +1578,7 @@ nnoremap x "_x
 " Theme Settings  主题设置
 "==========================================
 set termguicolors  " 使用真色彩
-exec 'colorscheme ' . s:colorschemes[s:colorscheme_mode]
+exec 'colorscheme ' . s:colorschemes[s:default_colorscheme_mode]
 " colorscheme quantum
 " colorscheme onedark
 " colorscheme gruvbox-material
@@ -2065,3 +2065,17 @@ fun Check_performance()
 endf
 "}}}
 nnoremap <leader>cp :call Check_performance()<cr>
+"
+" let g:
+fun My_change_colorscheme(direction) abort
+    " let s:default_colorscheme_mode = 0
+    " let s:colorschemes = ['quantum', 'gruvbox-material', 'forest-night']
+    let l:length = len(s:colorschemes)
+    call lightline#init()
+    call lightline#colorscheme()
+    call lightline#update()
+    call s:Enable_normal_scheme()  " 恢复折叠和column的颜色
+
+    " code
+endf
+" nnoremap <leader>c
