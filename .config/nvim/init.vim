@@ -69,7 +69,7 @@
 
 " ==========================================
 " 【可自行调整的重要参数】
-let g:enable_front_end_layer = 1  " 启动所有前端相关插件
+let g:enable_front_end_layer = 1  " 前端Layer, 启动所有前端相关插件
 let g:disable_laggy_plugins_for_large_file = 0  " 在启动参数里设置为1就可以加快打开速度
 let g:enable_file_autosave = 1  " 是否自动保存
 set updatetime=400  " 检测CursorHold事件的时间间隔,影响性能的主要因素
@@ -1719,7 +1719,9 @@ function! s:Autosave(timed)
 
     if a:timed == 0 || s:time_delta >= 1
         let s:last_update = current_time
-        checktime  " checktime with autoread will sync files on a last-writer-wins basis. FIXME: 但是在命令行按<c-f>进入normal-command编辑模式会报错的
+        if &buftype != 'nofile'  " 不对非文件的buffer进行检测
+            checktime  " checktime with autoread will sync files on a last-writer-wins basis. FIXME: 但是在命令行按<c-f>进入normal-command编辑模式会报错的
+        endif
         silent! doautocmd BufWritePre %  " needed for soft checks
         silent! update  " only updates if there are changes to the file.
         if a:timed == 0 || s:time_delta >= 4
