@@ -1054,6 +1054,12 @@ let g:far#prompt_mapping = {
     \ 'substitute'     : { 'key' : '<c-f>', 'prompt' : '<c-f>'  },
     \ }
 "}}}
+" {{{Function: My_get_current_visual_text() 获取当前visual选择的文本
+function My_get_current_visual_text() abort
+    execute "normal! `<v`>y"
+    return @"
+endfunction
+"}}}
 " 定义far buffer的映射, NOTE: 如果自己的vimrc里有对应非递归映射(比如nnoremap zo)，则这个插件的映射会失效, 此外由于 插件bug导致不能映射zo  到za
 " 快捷键r表示执行替换 q快速退出 x取消当前行 i激活当前行 t是toggle  他们的大写形式(X I T)表示全部行
 let g:far#mapping = {
@@ -1174,12 +1180,13 @@ nnoremap <silent> <leader>bd :Sayonara!<cr>
 
 
 
+
+
+
+
 " 打算以后再体验的插件
 " 一键生成注释（15+种语言）
 " Plug 'kkoomen/vim-doge'
-
-" 在quickfix里直接修改文件
-" Plug 'stefandtw/quickfix-reflector.vim'
 
 " 多光标
 " Plug 'mg979/vim-visual-multi'
@@ -1308,12 +1315,6 @@ xnoremap <expr> R ":norm! @r<CR>"
 " 替换模式串 NOTE: 目前被Far.vim插件替代
 " nnoremap <leader>su :%s/<c-r>=expand('<cword>')<cr>//gc<left><left><left>
 " nnoremap <leader>sU :%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
-" {{{ My_get_current_visual_text() 获取当前visual选择的文本
-function My_get_current_visual_text() abort
-    execute "normal! `<v`>y"
-    return @"
-endfunction
-"}}}
 " xnoremap <silent> <leader>su :<c-u>%s/<c-r>=My_get_current_visual_text()<cr>//gc<left><left><left>
 
 " 退出系列
