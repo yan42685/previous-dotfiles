@@ -1,4 +1,4 @@
-﻿" TODO: coc-tsserver要求react的jsx和tsx文件类型为react.jsx, react.tsx
+﻿" TODO: 去https://github.com/neoclide/coc-tsserver 查看相关的js，ts设置
 " 只考虑NeoVim，不一定兼容Vim
 "
 " 经验之谈:
@@ -693,9 +693,12 @@ nmap <silent> gd <Plug>(coc-definition)zz
 nmap <silent> gm <Plug>(coc-implementation)zz
 nmap <silent> gr <Plug>(coc-references)zz
 nmap <silent> gf <Plug>(coc-refactor)
-nnoremap <leader>gm :CocList --normal marks<cr>
-nnoremap <leader>gp :CocList sessions<cr>
-" 查看文档
+nmap <silent> gt <Plug>(coc-type-definition)
+" 可以用来import
+nmap <leader>do <Plug>(coc-codeaction)
+nnoremap <silent> <leader>gm :CocList --normal marks<cr>
+nnoremap <silent> <leader>gp :CocList sessions<cr>
+" 查看文档,并跳转
 nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
 " 打开鼠标位置下的链接
 nmap <silent> <leader>re <Plug>(coc-rename)
@@ -1208,6 +1211,50 @@ let g:doge_filetype_aliases = {
 \}
 nnoremap <leader>cc :DogeGenerate<cr>
 
+" ================== Layer ====================
+" =============================================
+" 前端 和 coc系列
+" =============================================
+if g:enable_front_end_layer == 1
+
+    " coc-import-cost (仅用于JS和TS)
+    " coc-github
+    " coc-css-block-comments
+    " coc-sql (lint和format, format似乎要手动, 看ale能不能自动调用这个插件自带的sql-formatter把)
+
+    " Node.js支持
+    " Plug 'moll/vim-node', {'for': [ 'javascript', 'typescript', '*jsx', '*tsx' ]}
+
+    " 实时预览html,css,js
+    Plug 'turbio/bracey.vim', {'do': 'npm install --prefix server', 'on': 'Bracey'}
+    nnoremap <leader>pv :Bracey<cr>
+
+    " 具体的snippets见 https://github.com/mlaursen/vim-react-snippets
+    Plug 'mlaursen/vim-react-snippets'
+
+    " plug 模板引擎
+    Plug 'digitaltoad/vim-pug'
+
+    " 选择，插入，修改css颜色,配合取色器, NOTE: 可能不支持nvim
+    Plug 'kabbamine/vCoolor.vim', {'on': ['VCoolor', 'VCoolIns']}
+    let g:vcoolor_disable_mappings = 1  " 取消默认快捷键
+
+    " ix ax XML/HTML属性文本对象
+    Plug 'whatyouhide/vim-textobj-xmlattr'
+
+endif
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1230,39 +1277,29 @@ nnoremap <leader>cc :DogeGenerate<cr>
 " 让代码在一行和多行之间转换
 " Plug 'AndrewRadev/splitjoin.vim'
 
+" Github支持
 "Plug 'junegunn/vim-github-dashboard'
 
 " 为不同的文件类型设置不同的tab expand 编码 EOF
 "Plug 'editorconfig/editorconfig-vim'
 
-"快速创建表格
-
+" 快速创建表格
 "Plug 'dhruvasagar/vim-table-mode'
 
-" React NOTE: 因为有coc-tsserver了 这个好像不太需要
 
+
+" 以下插件可能用不到，作为备用吧
+
+" Vue支持
+" neoclide/coc-vetur
+"
+
+" React NOTE: 因为有coc-tsserver了 这个好像不太需要
 " Plug 'mxw/vim-jsx', {'for': [ '*jsx','*tsx' ]}
 
+" 最新的 Stylus 语法高亮，可能被polyglot替代了
+" Plug 'iloginow/vim-stylus'
 
-
-"============ 前端 和 coc系列 ================
-if g:enable_front_end_layer == 1
-
-    " coc-import-cost (仅用于JS和TS)
-    " coc-github
-    " coc-css-block-comments
-    " coc-sql (lint和format, format似乎要手动, 看ale能不能自动调用这个插件自带的sql-formatter把)
-
-    " Node.js支持
-    " Plug 'moll/vim-node', {'for': [ 'javascript', 'typescript', '*jsx', '*tsx' ]}
-
-    " 实时预览html,css,js
-    Plug 'turbio/bracey.vim', {'do': 'npm install --prefix server', 'on': 'Bracey'}
-    nnoremap <leader>pv :Bracey<cr>
-
-    " 具体的snippets见 https://github.com/mlaursen/vim-react-snippets
-    Plug 'mlaursen/vim-react-snippets'
-endif
 
 "
 " }}}
@@ -1591,7 +1628,7 @@ augroup tab_indent_settings_by_filetype
     autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
     autocmd BufWinEnter *.php set mps-=<:>  " disable showmatch when use > in php
     autocmd FileType make setlocal noexpandtab shiftwidth=4 softtabstop=0
-    " FIXME: 下两行不确定， coc-tsserver是这么要求的
+    " 下两行是coc-tsserver这么要求的
     autocmd BufRead,BufNewFile *.jsx set filetype=javascript.jsx
     autocmd BufRead,BufNewFile *.tsx set filetype=typescript.tsx
     " NOTE: 如果js之类的大文件高亮渲染不同步 可以开启这两个可能影响性能的选项
