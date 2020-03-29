@@ -718,6 +718,7 @@ nnoremap <leader>( :normal ysiW(<CR>
 " %匹配对象增强, 也许可以把%改成m
 Plug 'andymass/vim-matchup'
 "{{{
+let loaded_matchit = 1
 let g:loaded_matchit           = 1  " 禁用vim默认自带插件
 let g:loaded_matchparen        = 1
 augroup matchup_matchparen_highlight
@@ -968,7 +969,7 @@ let g:rooter_resolve_links = 1  " resolve软硬链接
 let g:rooter_silent_chdir = 1  " 静默change dir
 "}}}
 " 手动切换到项目根目录
-nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', expand('%:p:h'))<cr>
+nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', FindRootDirectory())<cr>
 
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式
 Plug 'Yggdroot/LeaderF', {'do': './install.sh' }
@@ -1016,7 +1017,6 @@ let g:Lf_WorkingDirectoryMode = 'a'  " the nearest ancestor of current directory
 let g:Lf_ShortcutF = ''  " 这两项是为了覆盖默认设置的键位
 let g:Lf_ShortcutB = ''
 "}}}
-" let g:Lf_ShortcutF = '<leader>gf'  " 这两项是为了覆盖默认设置的键位
 let g:Lf_CommandMap = {'<C-]>':['<C-l>']}  " 搜索后<c-l>在右侧窗口打开文件
 nnoremap <silent> <c-p> :Leaderf command<cr>
 nnoremap <silent> <leader>gf :Leaderf file<cr>
@@ -1029,14 +1029,51 @@ nnoremap <silent> <leader>rg :<C-U>Leaderf rg<cr>
 " 项目下搜索词 -F是fix 即不是正则模式
 nnoremap <silent> <Leader>sw :<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cword>"))<CR><cr>
 nnoremap <silent> <Leader>sW :<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cWORD>"))<CR><cr>
-xnoremap <silent> <leader>sw :<C-U><C-R>=printf("Leaderf! rg -F %s ", leaderf#Rg#visual())<CR><cr>
+xnoremap <silent> <leader>sw :<C-U><C-R>=printf("Leaderf! rg -F %s", leaderf#Rg#visual())<CR><cr>
 " buffer内即时搜索
 nnoremap <silent> / :Leaderf rg --current-buffer<cr>
 " buffer内搜索词
 xnoremap <silent> * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s ", leaderf#Rg#visual())<CR><cr>
 
+" 搜索和替换，支持多文件
+Plug 'brooth/far.vim'
+let g:far#mode_open = {'regex': 0, 'case_sensitive': 0, 'word': 0, 'substitute': 1}  " 默认模式
+let g:far#source = 'rgnvim'  " 使用rg作为搜索源 FIXME: 如果以后换了grep工具需要换这个选项
+let g:far#enable_undo = 1  " 允许undo替换
+let g:far#auto_write_replaced_buffers = 1  " 自动写入
+let g:far#auto_delete_replaced_buffers = 1  " 自动关闭替换完成的buffer
+let g:far#mapping = {
+            \ 'toggle_expand': [ 'zo' ],
+            \ 'replace_do': ['r']
+            \ }
+let g:far#default_file_mask = '*'  " 命令行默认遮罩 如果没有指定的话
+" let g:far#ignore_files = [
+"       \ '.git/*',
+"       \ '.git/',
+"       \ '.vscode/*',
+"       \ '.svn/*',
+"       \ '.hg/*',
+"       \ ]
+
+" let g:enable
+" nnoremap <leader>R :Far
+
+" 在quickfix窗口里编辑
+" Plug 'stefandtw/quickfix-reflector.vim'  " FIXME: 和quickr-preview有冲突
+let g:qf_join_changes = 1  " 允许在同一个quickfix里undo多个文件
+
+" Plug 'thinca/vim-qfreplace'
+
+" 自动预览quickfix
+Plug 'ronakg/quickr-preview.vim'
+let g:quickr_preview_keymaps = 0  " 禁用默认映射
+let g:quickr_preview_on_cursor = 1  " 自动预览
+
+
+
+
 " 类似VSCode的编译/测试/部署 任务工具
-Plug 'skywind3000/asynctasks.vim'
+Plug 'skywind3000/asynctasks.vim', {'on': 'AsyncTask'}
 "{{{
 let g:asyncrun_open = 6
 let g:asyncrun_rootmarks = ['.git', '.svn', '.root', '.project', '.hg']
@@ -1604,7 +1641,7 @@ augroup auto_actions_for_better_experience
         if List_is_opened("quickfix")
             nnoremap <silent> <c-j> :cnext<cr>
             nnoremap <silent> <c-k> :cprevious<cr>
-            nnoremap <silent> q :cclose<cr>:doautocmd UILeave<cr>
+            nnoremap <silent> q :cclose<cr>:normal! zz<cr>:doautocmd UILeave<cr>
         else
             nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>
             nnoremap <c-k> :call ScrollAnotherWindow(1)<CR>
