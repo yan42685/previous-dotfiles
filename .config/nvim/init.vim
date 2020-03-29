@@ -88,6 +88,7 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 " }}}
+" NOTE: 对于使用了on或for来延迟加载的插件只有在加载了之后才能用 help 查看文档
 call plug#begin('~/.vim/plugged')
 " {{{没有设置快捷键的，在后台默默运行的插件
 
@@ -1019,72 +1020,66 @@ let g:Lf_ShortcutB = ''
 "}}}
 let g:Lf_CommandMap = {'<C-]>':['<C-l>']}  " 搜索后<c-l>在右侧窗口打开文件
 nnoremap <silent> <c-p> :Leaderf command<cr>
-nnoremap <silent> <leader>gf :Leaderf file<cr>
+nnoremap <silent> <leader>gf :Rooter<cr>:Leaderf file<cr>
 nnoremap <silent> <leader>gb :Leaderf buffer<cr>
 nnoremap <silent> <leader>gr :Leaderf mru<cr>
 nnoremap <silent> <leader>gc :Leaderf cmdHistory<cr>
 nnoremap <silent> <leader>gs :Leaderf searchHistory<cr>
 " 项目下即时搜索
-nnoremap <silent> <leader>rg :<C-U>Leaderf rg<cr>
+nnoremap <silent> <leader>rg :Rooter<cr>:<C-U>Leaderf rg<cr>
 " 项目下搜索词 -F是fix 即不是正则模式
-nnoremap <silent> <Leader>sw :<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cword>"))<CR><cr>
-nnoremap <silent> <Leader>sW :<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cWORD>"))<CR><cr>
-xnoremap <silent> <leader>sw :<C-U><C-R>=printf("Leaderf! rg -F %s", leaderf#Rg#visual())<CR><cr>
+nnoremap <silent> <Leader>sw :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cword>"))<CR><cr>
+nnoremap <silent> <Leader>sW :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cWORD>"))<CR><cr>
+xnoremap <silent> <leader>sw :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", leaderf#Rg#visual())<CR><cr>
 " buffer内即时搜索
 nnoremap <silent> / :Leaderf rg --current-buffer<cr>
 " buffer内搜索词
 xnoremap <silent> * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s ", leaderf#Rg#visual())<CR><cr>
 
 " Project/buffer内替换 (默认搜索隐藏文件)
-Plug 'brooth/far.vim', {'on': 'Far'}
+Plug 'brooth/far.vim'  " 因为奇怪的遮罩原因，不建议使用on来延迟加载
 "{{{
 let g:far#mode_open = {'regex': 0, 'case_sensitive': 0, 'word': 0, 'substitute': 1}  " 默认模式,是没有正则的
 let g:far#source = 'rgnvim'  " 使用rg + nvim的异步API 作为搜索源 FIXME: 如果以后换了grep工具需要换这个选项
 let g:far#enable_undo = 1  " 允许按u进行undo替换
 let g:far#auto_write_replaced_buffers = 1  " 自动写入
 let g:far#auto_delete_replaced_buffers = 1  " 自动关闭替换完成的buffer
+
+" 自定义快捷键提示样式
+let g:far#prompt_mapping = {
+    \ 'quit'           : { 'key' : '<esc>', 'prompt' : '<esc>' },
+    \ 'regex'          : { 'key' : '<c-x>', 'prompt' : '<c-x>'  },
+    \ 'case_sensitive' : { 'key' : '<c-a>', 'prompt' : '<c-a>'  },
+    \ 'word'           : { 'key' : '<c-w>', 'prompt' : '<c-w>'  },
+    \ 'substitute'     : { 'key' : '<c-f>', 'prompt' : '<c-f>'  },
+    \ }
 "}}}
-" 定义far buffer的映射, NOTE: 如果自己的vimrc里有对应非递归映射(比如nnoremap zo)，则这个插件的映射会失效
+" 定义far buffer的映射, NOTE: 如果自己的vimrc里有对应非递归映射(比如nnoremap zo)，则这个插件的映射会失效, 此外由于 插件bug导致不能映射zo  到za
+" 快捷键r表示执行替换 q快速退出 x取消当前行 i激活当前行 t是toggle  他们的大写形式(X I T)表示全部行
 let g:far#mapping = {
-            \ 'toggle_expand': [ 'zo' ],
-            \ 'replace_do': ['r']
+            \ 'replace_do': 'r',
+            \ 'expand_all': ['zm', 'zM'],
+            \ 'collapse_all': ['zr', 'zR'],
             \ }
-let g:far#default_file_mask = '*'  " 命令行默认遮罩(搜索的范围)
-" let g:far#ignore_files = [
-"       \ '.git/',
-"       \ '.vscode/*',
-"       \ '.svn/*',
-"       \ '.hg/*',
-"       \ ]
-"
-" let g:far#ignore_files = 'git/'
+let g:far#default_file_mask = '%'  " 命令行默认遮罩(搜索的范围)
+" buffer内替换
+" 其他用法: Farr交互式查找，并且可以转换成正则模式
+nnoremap <leader>su :Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  %<left><left>
+nnoremap <leader>sU :Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  %<left><left>
+xnoremap <leader>su :Rooter<cr><c-u>:Far <c-r>=My_get_current_visual_text()<cr>  %<left><left>
+" Project内替换
+nnoremap <leader>Su :Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  *<left><left>
+nnoremap <leader>SU :Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  *<left><left>
+xnoremap <leader>Su :Rooter<cr><c-u>:Far <c-r>=My_get_current_visual_text()<cr>  *<left><left>
 
-nnoremap <leader>su :Far <c-r>=expand('<cword>')<cr>  %<left><left>
-nnoremap <leader>sU :Far <c-r>=expand('<cWORD>')<cr>  %<left><left>
-xnoremap <silent> <leader>su :<c-u>Far <c-r>=My_get_current_visual_text()<cr>  %<left><left>
-
-
-" nnoremap <leader>su :s/<c-r>=expand('<cword>')<cr>//gc<left><left><left>
-" nnoremap <leader>sU :%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
-" xnoremap <silent> <leader>su :<c-u>%s/<c-r>=My_get_current_visual_text()<cr>//gc<left><left><left>
-
-
-
-
-
-" 在quickfix窗口里编辑
-" Plug 'stefandtw/quickfix-reflector.vim'  " FIXME: 和quickr-preview有冲突
+" 在quickfix窗口里编辑  " FIXME: 和quickr-preview有冲突
+" Plug 'stefandtw/quickfix-reflector.vim'
 let g:qf_join_changes = 1  " 允许在同一个quickfix里undo多个文件
 
-" Plug 'thinca/vim-qfreplace'
-
-" 自动预览quickfix
+" 自动预览quickfix  FIXME: 和quickfix-reflector.vim有冲突
 Plug 'ronakg/quickr-preview.vim'
 let g:quickr_preview_keymaps = 0  " 禁用默认映射
 let g:quickr_preview_on_cursor = 1  " 自动预览
-
-
-
 
 " 类似VSCode的编译/测试/部署 任务工具
 Plug 'skywind3000/asynctasks.vim', {'on': 'AsyncTask'}
