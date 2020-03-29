@@ -535,6 +535,8 @@ nmap go <Plug>(git-messenger)
 
 " git
 Plug 'tpope/vim-fugitive'
+" Gread就是清空暂存区 即checkkout %
+" 还有diffget和diffput可以使用
 nnoremap ,ga :G add %:p<CR><CR>
 nnoremap ,gc :G commit --all<cr>
 " 定义进入diff的事件，然后当前窗口关闭syntax
@@ -545,11 +547,12 @@ nnoremap <silent> ,gs :vert Git<cr>
 nnoremap ,gps :G push<cr>
 nnoremap ,gpl :G pull<cr>
 nnoremap ,gf :G fetch<cr>
-nnoremap ,gp :Ggrep<Space>
+nnoremap ,gg :Ggrep<space>
 nnoremap ,gm :GMove<Space>
 nnoremap ,gb :Git branch<Space>
 nnoremap .go :Git checkout<Space>
-nnoremap ,ge :Gedit<CR>
+" 编辑其他分支的文件 Gedit branchname:path/to/file,  branchname:%表示当前buffer的文件
+nnoremap ,ge :Gedit<space>
 " 重命名git项目下的文件
 " This will:
     " Rename your file on disk.
