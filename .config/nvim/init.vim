@@ -958,6 +958,11 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for':
 let g:mkdp_command_for_global = 0  " 所有文件中可以使用预览markdown命令
 nmap <leader>mp <Plug>MarkdownPreviewToggle
 
+" 编辑嵌套的代码，可以有独立的缩进和补全，使用场景: JS, Css在Html里面，
+" Markdown内嵌代码，Vue组件，代码内嵌SQL
+Plug 'AndrewRadev/inline_edit.vim', {'on': 'InlineEdit'}
+
+
 " keymap提示
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 nnoremap <silent> <leader> :WhichKey '<space>'<cr>
@@ -1511,12 +1516,12 @@ set guicursor+=a:blinkon0  " 仅在gvim生效, 取消cursor的闪烁, 终端下�
 set history=2000  " history存储容量
 filetype on  " 检测文件类型
 filetype indent on  " 针对不同的文件类型采用不同的缩进格式
-set noswapfile
 set autoread  " 文件在外界被修改之后自动载入
 set autowriteall  " edit, next等动作时自动写入
 set timeout ttimeoutlen=50  " 连续识别按键的延迟
 set clipboard+=unnamedplus
 set shortmess=atI  " 启动的时候不显示那个援助乌干达儿童的提示
+set noswapfile
 set nobackup nowritebackup  " 取消备份文件
 set updatecount =100  " FIXME:如果编辑大文件很慢那么考虑调大这个值 After typing this many characters the swap file will be written to disk
 set cursorline  " 突出显示当前行
