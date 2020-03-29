@@ -1030,8 +1030,8 @@ let g:rooter_silent_chdir = 1  " 静默change dir
 " 手动切换到项目根目录
 nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', FindRootDirectory())<cr>
 
-" 模糊搜索 弹窗后按<c-r>进行正则搜索模式
-Plug 'Yggdroot/LeaderF', {'do': './install.sh', 'on': [ 'Leaderf', 'Leaderf!' ]}
+" 模糊搜索 弹窗后按<c-r>进行正则搜索模式, visual模式 '*' 查找函数依赖这个插件，所以不要延迟加载
+Plug 'Yggdroot/LeaderF', {'do': './install.sh'}
 "{{{
 let g:Lf_PreviewResult = {
       \ 'File': 0,
@@ -1092,7 +1092,7 @@ xnoremap <silent> <leader>sw :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", 
 " buffer内即时搜索
 nnoremap <silent> / :Leaderf rg --current-buffer<cr>
 " buffer内搜索词
-xnoremap <silent> * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s ", leaderf#Rg#visual())<CR><cr>
+xnoremap <silent> * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s", leaderf#Rg#visual())<CR><cr>
 
 " Project/buffer内替换 (默认搜索隐藏文件)
 Plug 'brooth/far.vim'  " 因为奇怪的遮罩原因，不建议使用on来延迟加载
@@ -1128,12 +1128,13 @@ let g:far#mapping = {
 let g:far#default_file_mask = '%'  " 命令行默认遮罩(搜索的范围)
 " buffer内替换
 " 其他用法: Farr交互式查找，并且可以转换成正则模式
-nnoremap <leader>su :Far <c-r>=expand('<cword>')<cr>  %<left><left>
-nnoremap <leader>sU :Far <c-r>=expand('<cWORD>')<cr>  %<left><left>
+" Tip: 已经预先复制好了要替换的内容，可以在命令行用<m-p>粘贴
+nnoremap <leader>su :let @0=expand('<cword>')<cr>:Far <c-r>=expand('<cword>')<cr>  %<left><left>
+nnoremap <leader>sU :let @0=expand('<cWORD>')<cr>:Far <c-r>=expand('<cWORD>')<cr>  %<left><left>
 xnoremap <leader>su :<c-u>Far <c-r>=My_get_current_visual_text()<cr>  %<left><left>
 " Project内替换
-nnoremap <leader>Su :Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  *<left><left>
-nnoremap <leader>SU :Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  *<left><left>
+nnoremap <leader>Su :let @0=expand('<cword>')<cr>:Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  *<left><left>
+nnoremap <leader>SU :let @0=expand('<cWORD>')<cr>:Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  *<left><left>
 xnoremap <leader>Su :Rooter<cr><c-u>:Far <c-r>=My_get_current_visual_text()<cr>  *<left><left>
 
 " 在quickfix窗口里编辑  " FIXME: 和quickr-preview有冲突
@@ -1783,6 +1784,7 @@ highlight MyNote cterm=bold ctermbg=75 ctermfg=black gui=bold guifg=#19dd9d
 highlight MyFixme cterm=bold ctermbg=189 ctermfg=black gui=bold guifg=#e697e6
 highlight MyBug cterm=bold ctermbg=168 ctermfg=black gui=bold guifg=#dd698c
 highlight MyHack cterm=bold ctermbg=240 ctermfg=black gui=bold guifg=#f4da9a
+highlight link MyTip MyHack
 augroup highlight_my_keywords
     autocmd!
     autocmd Syntax * call matchadd('MyTodo',  '\W\zs\(TODO\|CHANGED\|XXX\|DONE\):')
@@ -1790,6 +1792,7 @@ augroup highlight_my_keywords
     autocmd Syntax * call matchadd('MyFixme',  '\W\zsFIXME:')
     autocmd Syntax * call matchadd('MyBug',  '\W\zsBUG:')
     autocmd Syntax * call matchadd('MyHack',  '\W\zsHACK:')
+    autocmd Syntax * call matchadd('MyTip',  '\W\zsTip:')
 augroup end
 "}}}
 
@@ -2067,10 +2070,13 @@ endf
 nnoremap <leader>cp :call Check_performance()<cr>
 "
 " let g:
-fun My_change_colorscheme(direction) abort
+fun My_change_colorscheme(mode) abort
+    let l:length = len(s:colorschemes)
+    if a:mode < 0 || a:mode >= l:length
+        echo 'failed to change colorscheme: invalid parameter'
+    endif
     " let s:default_colorscheme_mode = 0
     " let s:colorschemes = ['quantum', 'gruvbox-material', 'forest-night']
-    let l:length = len(s:colorschemes)
     call lightline#init()
     call lightline#colorscheme()
     call lightline#update()
