@@ -1,4 +1,5 @@
-﻿ " 只考虑NeoVim，不一定兼容Vim
+﻿" TODO: coc-tsserver要求react的jsx和tsx文件类型为react.jsx, react.tsx
+" 只考虑NeoVim，不一定兼容Vim
 "
 " 经验之谈:
 "   1. 抓住主要问题, 用相对简单和有意义的按键映射出现频率高的操作, 而非常冷门的操作不设置快捷键，可以考虑用别的方式替代
@@ -19,27 +20,20 @@
 "  1. :PlugInstall
 "  2. 提供python和系统剪切板支持 pip3 install pynvim && apt install xsel
 "  3. rm -rf ~/.viminfo 这样可以使自动回到上次编辑的地方功能生效, 然后重新打开vim(注意要以当前用户打开),vim会自动重建该文件.
-"  4. :CocInstall coc-snippets coc-json coc-html coc-css coc-tsserver coc-python coc-tabnine coc-lists coc-explorer coc-yank coc-markdownlint
-"     coc-sh coc-dictionary coc-word coc-emmet
-"     coc-syntax coc-marketplace (用于查看所有的coc扩展)
-"     coc-todolist (可以同步到gist,具体看github)
-"     coc-emoji (仅在markdown里用:触发补全， 查表https://www.webfx.com/tools/emoji-cheat-sheet/)
-"     coc-gitignore (按类型添加gitignore, 用法是在已有git初始化的文件夹内CocList gitignore)
-
-"  5. ubuntu下用snap包管理器安装ccls, 作为C、C++的LSP (推荐用snap安装, 因为ccls作者提供的编译安装方式似乎有问题, 反正Ubuntu18.04不行)
-"  6. 安装Sauce Code Pro Nerd Font Complete字体(coc-explorer要用到), 然后设置终端字体为这个, 注意不是原始的Source Code Pro),
+"  4. ubuntu下用snap包管理器安装ccls, 作为C、C++的LSP (推荐用snap安装, 因为ccls作者提供的编译安装方式似乎有问题, 反正Ubuntu18.04不行)
+"  5. 安装Sauce Code Pro Nerd Font Complete字体(coc-explorer要用到), 然后设置终端字体为这个, 注意不是原始的Source Code Pro),
 "     最简单的安装方法就是下载ttf文件然后双击安装
-"  7. 需要在/etc/crontab设置以下定时任务，定期清理undofile
+"  6. 需要在/etc/crontab设置以下定时任务，定期清理undofile
 "{{{
 "     # m h  dom mon dow   command
 "     43 00 *   *   3     find /home/{username}/.vim/undo-dir -type f -mtime +90 -delete
 "}}}
-"  8. 安装gtags(需要>6.63(需要>6.63)) 并用 pygments扩展语言类型
+"  7. 安装gtags(需要>6.63(需要>6.63)) 并用 pygments扩展语言类型
 "           在官网下载最新的tar.gz 解压后进入 执行 sudo apt install ncurses-dev && ./configure && make && sudo make install && sudo pip3 install pygments
-"  9. ctags(插件vista依赖):
+"  8. ctags(插件vista依赖):
         " sudo apt install software-properties-common && sudo add-apt-repository ppa:hnakamur/universal-ctags && sudo apt update && sudo apt install universal-ctags
 "
-"  10. 在:CocConfig 写入下面的JSON设置
+"  9. 在:CocConfig 写入下面的JSON设置
 "}}}
 " 【可选项】{{{
 "  1. 使用Alacritty终端模拟器 设置cursor不闪烁, <c-c>复制，<m-i>粘贴系统剪切板， 而Vim里面的<m-i>会被终端拦截，所以有相同的效果，
@@ -621,6 +615,24 @@ nnoremap <leader>tu :CocCommand todolist.upload<cr>
 " COC自动补全框架
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "{{{
+
+" 部分插件简介
+"     coc-syntax coc-marketplace (用于查看所有的coc扩展)
+"     coc-todolist (可以同步到gist,具体看github)
+"     coc-emoji (仅在markdown里用:触发补全， 查表https://www.webfx.com/tools/emoji-cheat-sheet/)
+"     coc-gitignore (按类型添加gitignore, 用法是在已有git初始化的文件夹内CocList gitignore)
+
+" vim启动后自动异步安装的插件
+let g:coc_global_extensions = [
+  \ 'coc-snippets', 'coc-json', 'coc-html', 'coc-css', 'coc-tsserver',
+  \ 'coc-python', 'coc-tabline', 'coc-lists', 'coc-explorer', 'coc-yank',
+  \ 'coc-markdownlint', 'coc-sh', 'coc-dictionary', 'coc-word', 'coc-emmet',
+  \ 'coc-syntax', 'coc-marketplace', 'coc-todolist', 'coc-emoji',
+  \ 'coc-gitignore'
+  \ ]
+
+
+
 set hidden  " 隐藏buff非关闭它, TextEdit might fail if hidden is not set.
 set cmdheight=2  " NOTE: 如果不设置为2，每次进入新buffer都需要回车确认...
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
@@ -1227,6 +1239,9 @@ nnoremap <leader>cc :DogeGenerate<cr>
 
 "Plug 'dhruvasagar/vim-table-mode'
 
+" React NOTE: 因为有coc-tsserver了 这个好像不太需要
+
+" Plug 'mxw/vim-jsx', {'for': [ '*jsx','*tsx' ]}
 
 
 
@@ -1237,15 +1252,16 @@ if g:enable_front_end_layer == 1
     " coc-github
     " coc-css-block-comments
     " coc-sql (lint和format, format似乎要手动, 看ale能不能自动调用这个插件自带的sql-formatter把)
-    " Node.js支持
-    " Plug 'moll/vim-node', {'for': 'javascript'}
 
-    " React
-    " Plug 'mxw/vim-jsx', {'for': '*jsx'}
+    " Node.js支持
+    " Plug 'moll/vim-node', {'for': [ 'javascript', 'typescript', '*jsx', '*tsx' ]}
 
     " 实时预览html,css,js
-    " Plug 'turbio/bracey.vim', {'do': 'npm install --prefix server', 'on': 'Bracey'}
+    Plug 'turbio/bracey.vim', {'do': 'npm install --prefix server', 'on': 'Bracey'}
     nnoremap <leader>pv :Bracey<cr>
+
+    " 具体的snippets见 https://github.com/mlaursen/vim-react-snippets
+    Plug 'mlaursen/vim-react-snippets'
 endif
 
 "
@@ -1575,6 +1591,13 @@ augroup tab_indent_settings_by_filetype
     autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
     autocmd BufWinEnter *.php set mps-=<:>  " disable showmatch when use > in php
     autocmd FileType make setlocal noexpandtab shiftwidth=4 softtabstop=0
+    " FIXME: 下两行不确定， coc-tsserver是这么要求的
+    autocmd BufRead,BufNewFile *.jsx set filetype=javascript.jsx
+    autocmd BufRead,BufNewFile *.tsx set filetype=typescript.tsx
+    " NOTE: 如果js之类的大文件高亮渲染不同步 可以开启这两个可能影响性能的选项
+    " autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
+    " autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear"
+
 augroup end
 "}}}
 " Display Settings 展示/排版等界面格式设置{{{
