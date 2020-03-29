@@ -497,6 +497,10 @@ if g:disable_laggy_plugins_for_large_file == 0
     nmap <silent> ge <Plug>(ale_next_wrap)
     nmap <silent> gE <Plug>(ale_previous_wrap)
 endif
+
+
+
+
 " ===============================
 " Git相关
 " ===============================
@@ -582,6 +586,9 @@ nnoremap ,gl :Flog<cr>
 " 选中多行查看历史
 vnoremap ,gl :Flog<cr>
 
+
+
+
 " ===============================
 " coc系列
 " ===============================
@@ -628,7 +635,8 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "     coc-emoji (仅在markdown里用:触发补全， 查表https://www.webfx.com/tools/emoji-cheat-sheet/)
 "     coc-gitignore (按类型添加gitignore, 用法是在已有git初始化的文件夹内CocList gitignore)
 
-" vim启动后自动异步安装的插件
+" vim启动后自动异步安装的插件  NOTE: coc-tabnine的淘宝npm源似乎有问题，可以考虑临时换源
+
 let g:coc_global_extensions = [
   \ 'coc-snippets', 'coc-json', 'coc-html', 'coc-css', 'coc-tsserver',
   \ 'coc-python', 'coc-tabline', 'coc-lists', 'coc-explorer', 'coc-yank',
@@ -713,6 +721,9 @@ imap <silent> <c-m-v> <esc><Plug>(coc-codeaction)
 nmap <silent> <c-m-v> <Plug>(coc-codeaction)
 vmap <silent> <c-m-v> <Plug>(coc-codeaction-selected)
 
+
+
+
 " ==============================
 " 编辑, 跳转功能增强
 " ==============================
@@ -783,6 +794,13 @@ sunmap w
 sunmap b
 sunmap e
 "}}}
+
+" 块选择模式整列的递增/减数字 <c-a> <c-x> 支持数字，字母，十六进制, 二进制
+Plug 'triglav/vim-visual-increment'
+set nrformats=alpha,hex,bin
+
+
+
 
 " ============================
 " UI相关
@@ -990,6 +1008,9 @@ nnoremap <silent> <leader> :WhichKey '<space>'<cr>
 nnoremap <silent> , :WhichKey ','<cr>
 nnoremap <silent> g :WhichKey 'g'<cr>
 
+
+
+
 " ================================
 " Project增强
 " ================================
@@ -1176,6 +1197,9 @@ augroup end
 nmap gq <plug>(asyncrun-qftoggle)
 nnoremap <leader>ma :AsyncRun -mode=term -pos=bottom -rows=10 python "$(VIM_FILEPATH)"
 
+
+
+
 " ===============================
 " 杂项, 优化使用体验
 " ===============================
@@ -1216,6 +1240,9 @@ let g:doge_filetype_aliases = {
 \  'javascript': ['vue']
 \}
 nnoremap <leader>cc :DogeGenerate<cr>
+
+
+
 
 " ================== Layer ====================
 " =============================================
@@ -1262,9 +1289,6 @@ endif
 
 
 
-
-
-"
 " 打算以后再体验的插件
 
 " 多光标插件有bug 用不了
@@ -1293,7 +1317,6 @@ endif
 "Plug 'dhruvasagar/vim-table-mode'
 
 
-
 " 以下插件可能用不到，作为备用吧
 
 " Vue支持
@@ -1306,8 +1329,6 @@ endif
 " 最新的 Stylus 语法高亮，可能被polyglot替代了
 " Plug 'iloginow/vim-stylus'
 
-
-"
 " }}}
 call plug#end()
 
@@ -1538,10 +1559,7 @@ vnoremap > >gv
 nnoremap < <<
 nnoremap > >>
 
-noremap <c-a> ggVG
-inoremap <c-a> <esc>ggVG
-" 保存后全部折叠
-" cnoremap w<cr> w<cr>zMzz
+nnoremap <leader>so ggVG
 " 交换 ' `, 使得可以快速使用'跳到marked相同的位置
 noremap ' `
 noremap ` '
