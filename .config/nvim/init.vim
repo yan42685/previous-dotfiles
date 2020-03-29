@@ -13,6 +13,7 @@
 "==========================================
 " 【依赖说明】{{{
 "  coc.nvim补全插件需要安装node.js和npm LeaderF依赖Python3, vista依赖global-ctags
+"  leaderF和far依赖rg
 "}}}
 " 【必做事项】{{{
 "  1. :PlugInstall
