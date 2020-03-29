@@ -222,7 +222,7 @@ Plug 'RRethy/vim-illuminate'
 " 让高亮与visual显色一致
 hi link illuminatedWord Visual
 " 选择不高亮的文件类型
-let g:Illuminate_ftblacklist = ['vim', 'txt', 'md', 'css']
+let g:Illuminate_ftblacklist = ['vim', 'text', 'markdown', 'css', 'help']
 "}}}
 
 " 选择模式和行选择模式下可以用I A批量多行写入(修改了可视模式下I和A的映射)
@@ -1042,6 +1042,7 @@ let g:far#source = 'rgnvim'  " 使用rg作为搜索源 FIXME: 如果以后换了
 let g:far#enable_undo = 1  " 允许undo替换
 let g:far#auto_write_replaced_buffers = 1  " 自动写入
 let g:far#auto_delete_replaced_buffers = 1  " 自动关闭替换完成的buffer
+" 定义far buffer的映射
 let g:far#mapping = {
             \ 'toggle_expand': [ 'zo' ],
             \ 'replace_do': ['r']
@@ -1652,7 +1653,8 @@ augroup auto_actions_for_better_experience
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会不会有性能问题
     autocmd User MyEnterDiffMode if &diff | windo setlocal syntax=off | wincmd w
-    autocmd WinEnter,WinLeave * if (&filetype != '' && !&diff) | set syntax=on | endif
+    " FIXME: 这里的set syntax=on可能会影响某些特殊的文件类型的高亮渲染
+    autocmd WinEnter,WinLeave * if (&filetype != '' && &filetype != 'far' && !&diff) | set syntax=on | endif
 augroup end
 
 " 开启语法高亮
