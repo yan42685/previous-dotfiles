@@ -1,5 +1,6 @@
 {
 
+    "snippets.priority": 130,    // 从默认的90提高到130的优先级
     "session.directory": "~/.local/share/nvim/session",  // coclist查找session文件的地址
     "todolist.maxsize": 99999,  // 最多可存放的todo数量
     "todolist.monitor": true,  // 监控todolist时间并提醒

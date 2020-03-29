@@ -50,9 +50,10 @@
 "        for javascript
 "            npm install -g eslint && npm install -g prettier
 "        for python
-"            pip install pylint && pip install autopep8
+"            pip3 install pylint && pip3 install autopep8
 "        for C,CPP
 "            sudo apt install cppcheck -y && npm install -g clang-format
+"
 "  5. 安装riggrep 配合Leaderf rg使用, 快速搜索文本行:
 "            curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb && sudo dpkg -i ripgrep_11.0.2_amd64.deb
 "            FIXME: 如果在Leaderf里调用rg出现~/.config文件夹permission deny的情况 就需要 sudo chown -R $USER:$GROUP ~/.config
@@ -68,6 +69,7 @@
 
 " ==========================================
 " 【可自行调整的重要参数】
+let g:enable_front_end_layer = 1  " 启动所有前端相关插件
 let g:disable_laggy_plugins_for_large_file = 0  " 在启动参数里设置为1就可以加快打开速度
 let g:enable_file_autosave = 1  " 是否自动保存
 set updatetime=400  " 检测CursorHold事件的时间间隔,影响性能的主要因素
@@ -254,6 +256,9 @@ Plug 'itchyny/lightline.vim'
 " functions
 "{{{
 function! Sy_stats_wrapper()
+  if !exists('*sy#repo#get_stats')  " 大文件模式下signify插件被关闭了，所以这个函数不存在
+      return ''
+  endif
   let l:symbols = ['+', '-', '~']
   let [added, modified, removed] = sy#repo#get_stats()
   let l:stats = [added, removed, modified]  " reorder
@@ -974,7 +979,7 @@ let g:rooter_silent_chdir = 1  " 静默change dir
 nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', FindRootDirectory())<cr>
 
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式
-Plug 'Yggdroot/LeaderF', {'do': './install.sh' }
+Plug 'Yggdroot/LeaderF', {'do': './install.sh', 'on': [ 'Leaderf', 'Leaderf!' ]}
 "{{{
 let g:Lf_PreviewResult = {
       \ 'File': 0,
@@ -1084,7 +1089,7 @@ xnoremap <leader>Su :Rooter<cr><c-u>:Far <c-r>=My_get_current_visual_text()<cr> 
 let g:qf_join_changes = 1  " 允许在同一个quickfix里undo多个文件
 
 " 自动预览quickfix  FIXME: 和quickfix-reflector.vim有冲突
-Plug 'ronakg/quickr-preview.vim'
+Plug 'ronakg/quickr-preview.vim', {'for': 'qf'}
 let g:quickr_preview_keymaps = 0  " 禁用默认映射
 let g:quickr_preview_on_cursor = 1  " 自动预览
 
@@ -1177,20 +1182,22 @@ nmap # <Plug>(anzu-sharp-with-echo)zz
 Plug 'mhinz/vim-sayonara', {'on': [ 'Sayonara','Sayonara!' ]}
 nnoremap <silent> <leader>bd :Sayonara!<cr>
 
+" 一键生成注释（15+种语言）NOTE: C、C++的注释依赖clang 但是似乎有bug 暂时不建议踩这个坑，c++随便注释下就好了
+Plug 'kkoomen/vim-doge', {'on': 'DogeGenerate'}
+let g:doge_enable_mappings = 0  " 取消默认映射
+let g:doge_mapping = ''
+let g:doge_filetype_aliases = {
+\  'javascript': ['vue']
+\}
+nnoremap <leader>cc :DogeGenerate<cr>
 
 
 
 
-
-
-
-
+"
 " 打算以后再体验的插件
-" 一键生成注释（15+种语言）
-" Plug 'kkoomen/vim-doge'
 
-" 多光标
-" Plug 'mg979/vim-visual-multi'
+" 多光标插件有bug 用不了
 
 " 似乎是vim唯一的test插件, 支持CI
 " Plug 'janko/vim-test'
@@ -1206,31 +1213,35 @@ nnoremap <silent> <leader>bd :Sayonara!<cr>
 " 让代码在一行和多行之间转换
 " Plug 'AndrewRadev/splitjoin.vim'
 
-"
 "Plug 'junegunn/vim-github-dashboard'
+
 " 为不同的文件类型设置不同的tab expand 编码 EOF
 "Plug 'editorconfig/editorconfig-vim'
+
 "快速创建表格
+
 "Plug 'dhruvasagar/vim-table-mode'
 
 
 
 
 "============ 前端 和 coc系列 ================
+if g:enable_front_end_layer
 
-" coc-import-cost (仅用于JS和TS)
-" coc-github
-" coc-css-block-comments
-" coc-sql (lint和format, format似乎要手动, 看ale能不能自动调用这个插件自带的sql-formatter把)
-" Node.js支持
-" Plug 'moll/vim-node', {'for': 'javascript'}
+    " coc-import-cost (仅用于JS和TS)
+    " coc-github
+    " coc-css-block-comments
+    " coc-sql (lint和format, format似乎要手动, 看ale能不能自动调用这个插件自带的sql-formatter把)
+    " Node.js支持
+    " Plug 'moll/vim-node', {'for': 'javascript'}
 
-" React
-" Plug 'mxw/vim-jsx', {'for': '*jsx'}
+    " React
+    " Plug 'mxw/vim-jsx', {'for': '*jsx'}
 
-" 浏览器实时预览html,css,js效果
-" Plug 'jaxbot/browserlink.vim'
-
+    " 实时预览html,css,js
+    Plug 'turbio/bracey.vim', {'do': 'npm install --prefix server', 'on': 'Bracey'}
+    nnoremap <leader>pv
+endif
 
 "
 " }}}
@@ -1740,8 +1751,7 @@ endfor
 "}}}
 
 " 废弃ZZ退出
-nnoremap ZZ <nop>
-vnoremap ZZ <nop>
+noremap ZZ <nop>
 
 " {{{ <F2> 行号开关，用于鼠标复制代码用, 为方便复制
 function! ToggleColumnNumber()
