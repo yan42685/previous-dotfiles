@@ -220,7 +220,10 @@ Plug 'RRethy/vim-illuminate'
 " 让高亮与visual显色一致
 hi link illuminatedWord Visual
 " 选择不高亮的文件类型
-let g:Illuminate_ftblacklist = ['vim', 'text', 'markdown', 'css', 'help']
+let g:Illuminate_ftblacklist = [
+            \ 'vim', 'text', 'markdown', 'css', 'help',
+            \ 'coc-explorer', 'vista', 'qf', 'vimwiki'
+            \ ]
 "}}}
 
 " 选择模式和行选择模式下可以用I A批量多行写入(修改了可视模式下I和A的映射)
@@ -1975,7 +1978,9 @@ nnoremap <leader>ec :execute "normal 'C"<cr>
 " 编辑该文件类型的snippets
 nnoremap <leader>es :CocCommand snippets.editSnippets<cr>
 " 编辑同目录下的文件
-nnoremap ,e :e <c-r>=expand('%:p:h')<cr>/
+nnoremap ,e :Rooter<cr>:e <c-r>=expand('%:p:h')<cr>/
+nnoremap ,n :Rooter<cr>:!mkdir <c-r>=expand('%:p:h')<cr>/
+nnoremap ,N :Rooter<cr>:!mkdir <c-r>=expand(getcwd())<cr>/
 
 " {{{查看highlighting group
 function! s:synstack()
