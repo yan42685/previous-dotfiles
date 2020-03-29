@@ -767,7 +767,11 @@ augroup END
 "}}}
 
 " 快速交换 cx{object} cxx行 可视模式用X  取消用cxc  可以用 . 重复上次命令
-Plug 'tommcdo/vim-exchange'
+Plug 'tommcdo/vim-exchange', {'on': [ '<Plug>(Exchange)', '<Plug>(ExchangeLine)' ]}
+nmap cx <Plug>(Exchange)
+xmap X <Plug>(Exchange)
+nmap cxc <Plug>(ExchangeClear)
+nmap cxx <Plug>(ExchangeLine)
 
 " 快速对齐文本
 Plug 'junegunn/vim-easy-align', {'on': '<Plug>(EasyAlign)'}
@@ -796,8 +800,10 @@ sunmap e
 "}}}
 
 " 块选择模式整列的递增/减数字 <c-a> <c-x> 支持数字，字母，十六进制, 二进制
-Plug 'triglav/vim-visual-increment'
+Plug 'triglav/vim-visual-increment', {'on': ['<Plug>(VisualIncrement)', '<Plug>(VisualDecrement)']}
 set nrformats=alpha,hex,bin
+vmap <c-a> <Plug>(VisualIncrement)
+vmap <c-x> <Plug>(VisualDecrement)
 
 
 
@@ -1000,7 +1006,6 @@ nmap <leader>mp <Plug>MarkdownPreviewToggle
 " 编辑嵌套的代码，可以有独立的缩进和补全，使用场景: JS, Css在Html里面，
 " Markdown内嵌代码，Vue组件，代码内嵌SQL
 Plug 'AndrewRadev/inline_edit.vim', {'on': 'InlineEdit'}
-
 
 " keymap提示
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
