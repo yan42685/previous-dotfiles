@@ -116,14 +116,8 @@ if g:disable_laggy_plugins_for_large_file == 0
         autocmd VimEnter * highlight SpelunkerComplexOrCompoundWord cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
         " 下两行 取消在startify中的拼写检查 前提是设置了 g:spelunker_check_type = 2:
         let g:spelunker_disable_auto_group = 1
-        " --noplugin模式不判断函数存在的话会报错
-        " if exists('*spelunker#check_displayed_words')
-        "     " autocmd CursorHold * if &filetype != 'startify' | call spelunker#check_displayed_words() | endif
-        "     autocmd CursorHold * call spelunker#check_displayed_words()
-        " endif
-
-        autocmd CursorHold * if exists('*spelunker#check_displayed_words') | call spelunker#check_displayed_words() | endif
-
+        " 用silent!的话即时不存在这个函数也不会报错，适用于--noplugin的情况
+        autocmd CursorHold * silent! call spelunker#check_displayed_words()
     augroup end
     "}}}
 endif
@@ -438,7 +432,7 @@ let g:lightline#asyncrun#indicator_none = ''
 let g:lightline#asyncrun#indicator_run = 'Running...'
 let g:lightline.active = {
         \ 'left': [ [ 'mode', 'paste' ],
-        \           [  'filename', 'readonly', 'gitbranch', 'modified', 'session_name' ],
+        \           [  'gitbranch', 'filename', 'readonly', 'modified', 'session_name' ],
         \         ],
         \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ],
         \            [ 'diff_or_merge_mode', 'filetype', 'fileformat', 'lineinfo' ],
@@ -540,10 +534,8 @@ Plug 'reedes/vim-pencil', {'for': ['markdown', 'text', 'vimwiki']}
 let g:pencil#textwidth = 80  " 默认单行最大长度
 augroup pencil
     autocmd!
-    if exists('*pencil#init')
-        autocmd FileType markdown call pencil#init({'wrap': 'hard', 'autoformat': 1}) | setlocal wrap | setlocal textwidth=80
-        autocmd FileType text     call pencil#init({'wrap': 'soft', 'autoformat': 0}) | setlocal wrap | setlocal textwidth=120
-    endif
+    autocmd FileType markdown silent! call pencil#init({'wrap': 'hard', 'autoformat': 1}) | setlocal wrap | setlocal textwidth=80
+    autocmd FileType text silent! call pencil#init({'wrap': 'soft', 'autoformat': 0}) | setlocal wrap | setlocal textwidth=120
 augroup END
 
 "===========================================================================
