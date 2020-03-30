@@ -106,12 +106,13 @@ Plug 'sainnhe/forest-night'
 " 在大文件下会影响性能
 " =================================
 if g:disable_laggy_plugins_for_large_file == 0
-    " 拼写检查
+    " 拼写检查 zl出现list选择修复，zf自动使用list第一个，zg添加到词典里，zw设置为错误单词
     Plug 'kamykn/spelunker.vim'
     "{{{
     set nospell  " 禁用默认的难看的高亮红色
     let g:spelunker_check_type = 2  " 只在window内动态check, 对大文件十分友好
     let g:spelunker_highlight_type = 2  " Highlight only SpellBad.
+    let s:spelunker_blacklist = ['startify']
     augroup my_highlight_spellbad
         autocmd!
         autocmd VimEnter * highlight SpelunkerSpellBad cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
@@ -119,7 +120,7 @@ if g:disable_laggy_plugins_for_large_file == 0
         " 下两行 取消在startify中的拼写检查 前提是设置了 g:spelunker_check_type = 2:
         let g:spelunker_disable_auto_group = 1
         " 用silent!的话即时不存在这个函数也不会报错，适用于--noplugin的情况
-        autocmd CursorHold * silent! call spelunker#check_displayed_words()
+        autocmd CursorHold * if index(s:spelunker_blacklist, &filetype) < 0 | silent! call spelunker#check_displayed_words()
     augroup end
     "}}}
 endif
@@ -557,8 +558,8 @@ if g:disable_laggy_plugins_for_large_file == 0
     augroup signify_remapping
         autocmd!
         " 在diff hunk之间跳转
-        autocmd VimEnter * nmap gk <plug>(signify-prev-hunk)zz
-        autocmd VimEnter * nmap gj <plug>(signify-next-hunk)zz
+        autocmd VimEnter * nmap gk <plug>(signify-prev-hunk)
+        autocmd VimEnter * nmap gj <plug>(signify-next-hunk)
     augroup end
 
     " ALE静态代码检查和自动排版 NOTE: 默认禁用对log文件的fixer
@@ -1946,7 +1947,7 @@ augroup auto_actions_for_better_experience
     "}}}
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会不会有性能问题
-    autocmd User MyEnterDiffMode if &diff | windo setlocal syntax=off
+    autocmd User MyEnterDiffMode if &diff | windo setlocal syntax=off | setlocal scrolloff=100
     " FIXME: 这里的set syntax=on可能会影响某些特殊的文件类型的高亮渲染, 所以必要时应该排除在外
     autocmd WinEnter,WinLeave * if (&filetype != '' && &syntax != 'on' && !&diff && &filetype != 'far')
                 \ | set syntax=on | endif
@@ -2218,13 +2219,15 @@ nnoremap [<space> :<c-u>call <sid>BlankUp(v:count1)<cr>
 " 当把vim作为git的difftool时，设置 git config --global difftool.trustExitCode true && git config --global mergetool.trustExitCode true
 " 在git difftool或git mergetool之后  可以用:cq进行强制退出diff/merge模式，而不会不停地recall another diff/merge file
 if &diff
+    " 让viewport视角在最中心
+    set scrolloff=100
     syn off  " 自动关闭语法高亮
     " 强制退出difftool, 不再自动唤起difftool
     noremap <leader><leader>q <esc>:cq<cr>
     noremap Q <esc>:qa<cr>
     " 在diff hunk之间跳转
-    noremap gj ]czz
-    noremap gk [czz
+    noremap gj ]c
+    noremap gk [c
 endif
 
 " 复制当前文件的名字，绝对路径，目录绝对路径
