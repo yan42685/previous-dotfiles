@@ -245,7 +245,7 @@ Plug 'wellle/targets.vim'
 Plug 'kana/vim-textobj-user'
 
 " ii ai 在python里很好用 NOTE: 这个插件是用函数做的映射，所以不能延迟加载
-Plug 'michaeljsmith/vim-indent-object'
+Plug 'michaeljsmith/vim-indent-object', {'for': ['python']}
 
 " vic viC vac vaC Column单词自动快选择模式
 Plug 'coderifous/textobj-word-column.vim'  " NOTE:由于插件实现原因，不能延迟加载
@@ -329,7 +329,7 @@ xmap aj <Plug>(textobj-brace-a)
 "}}}
 
 " iu au 支持markdown的url  go打开连接(仅支持Linux)
-Plug 'jceb/vim-textobj-uri', {'on': ['<Plug>(textobj-uri-uri-i)', '<Plug>(textobj-uri-uri-a)']}
+Plug 'jceb/vim-textobj-uri', {'on': ['<Plug>(textobj-uri-uri-i)', '<Plug>(textobj-uri-uri-a)', '<Plug>TextobjURIOpen']}
 " NOTE: 如果不设置到<Plug>TextobjURIOpen的映射，则插件会映射 go
 "{{{
 omap iu <Plug>(textobj-uri-uri-i)
@@ -881,7 +881,6 @@ vmap <leader>> S<gv<esc>
 vmap <leader>\| S\|gv<esc>
 vmap <leader>` S`gv<esc>
 "}}}
-
 nnoremap ," :normal ds"<cr>
 "{{{ 删除同上
 nnoremap ,' :normal ds'<cr>
@@ -895,8 +894,6 @@ nnoremap ,> :normal dst<cr>
 nnoremap ,\| :normal ds\|<cr>
 nnoremap ,` :normal ds`<cr>
 "}}}
-
-
 
 " %匹配对象增强, 也许可以把%改成m
 Plug 'andymass/vim-matchup'
@@ -1976,15 +1973,14 @@ augroup highlight_my_keywords
 augroup end
 "}}}
 
+" =============================================
+" 新增功能
+" =============================================
 "{{{startify启动页面的颜色
 highlight! StartifyHeader cterm=bold ctermbg=black ctermfg=75 gui=bold guifg=#87bb7c
 highlight! StartifyFile cterm=None ctermfg=75 gui=None guifg=#d8b98a
 highlight! StartifyNumber cterm=None ctermfg=75 gui=None guifg=#7daea3
 "}}}
-
-" =============================================
-" 新增功能
-" =============================================
 " {{{自动保存
 function! s:Autosave(timed)
     if &readonly || mode() == 'c' || pumvisible()
