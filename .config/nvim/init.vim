@@ -1,4 +1,5 @@
-﻿" TODO: 去https://github.com/neoclide/coc-tsserver 查看相关的js，ts设置
+﻿" TODO: leaderf调低高度并设置一直preview
+" TODO: 去https://github.com/neoclide/coc-tsserver 查看相关的js，ts设置
 " 只考虑NeoVim，不一定兼容Vim
 "
 " 经验之谈:
@@ -67,8 +68,8 @@ let g:enable_front_end_layer = 1  " 前端Layer, 启动所有前端相关插件
 let g:enable_file_autosave = 1  " 是否自动保存
 let g:disable_laggy_plugins_for_large_file = 0  " 在启动参数里设置为1就可以加快打开速度
 set updatetime=400  " 检测CursorHold事件的时间间隔,影响性能的主要因素
-let s:default_colorscheme_mode = 0
-let s:colorschemes = ['quantum', 'gruvbox-material', 'forest-night']
+let g:default_colorscheme_mode = 0
+let g:all_colorschemes = ['quantum', 'gruvbox-material', 'forest-night']
 let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night']
 
 
@@ -320,7 +321,7 @@ endfunc
 "}}}
 
 let g:lightline = {}
-let g:lightline.colorscheme = s:lightline_schemes[s:default_colorscheme_mode]
+let g:lightline.colorscheme = s:lightline_schemes[g:default_colorscheme_mode]
 let g:lightline.separator = { 'left': "\ue0b8", 'right': "\ue0be" }
 let g:lightline.subseparator = { 'left': "\ue0b9", 'right': "\ue0b9" }
 let g:lightline.tabline_separator = { 'left': "\ue0bc", 'right': "\ue0ba" }
@@ -1128,14 +1129,15 @@ let g:far#mapping = {
 let g:far#default_file_mask = '%'  " 命令行默认遮罩(搜索的范围)
 " buffer内替换
 " 其他用法: Farr交互式查找，并且可以转换成正则模式
-" Tip: 已经预先复制好了要替换的内容，可以在命令行用<m-p>粘贴
-nnoremap <leader>su :let @0=expand('<cword>')<cr>:Far <c-r>=expand('<cword>')<cr>  %<left><left>
-nnoremap <leader>sU :let @0=expand('<cWORD>')<cr>:Far <c-r>=expand('<cWORD>')<cr>  %<left><left>
-xnoremap <leader>su :<c-u>Far <c-r>=My_get_current_visual_text()<cr>  %<left><left>
+" FIXME: 如果出现Error: File in current buffer is not readable，可以尝试修改该文件的拥有者和权限, chown和chmod重置一遍
+" TIP: 已经预先复制好了要替换的内容，可以在命令行用<m-p>粘贴
+nnoremap <leader>su :let @0=expand('<cword>')<cr>:Far <c-r>=expand('<cword>')<cr>  %<left><left><c-f>i
+nnoremap <leader>sU :let @0=expand('<cWORD>')<cr>:Far <c-r>=expand('<cWORD>')<cr>  %<left><left><c-f>i
+xnoremap <leader>su :<c-u>Far <c-r>=My_get_current_visual_text()<cr>  %<left><left><c-f>i
 " Project内替换
-nnoremap <leader>Su :let @0=expand('<cword>')<cr>:Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  *<left><left>
-nnoremap <leader>SU :let @0=expand('<cWORD>')<cr>:Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  *<left><left>
-xnoremap <leader>Su :Rooter<cr><c-u>:Far <c-r>=My_get_current_visual_text()<cr>  *<left><left>
+nnoremap <leader>Su :let @0=expand('<cword>')<cr>:Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  *<left><left><c-f>i
+nnoremap <leader>SU :let @0=expand('<cWORD>')<cr>:Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  *<left><left><c-f>i
+xnoremap <leader>Su :Rooter<cr><c-u>:Far <c-r>=My_get_current_visual_text()<cr>  *<left><left><c-f>i
 
 " 在quickfix窗口里编辑  " FIXME: 和quickr-preview有冲突
 " Plug 'stefandtw/quickfix-reflector.vim'
@@ -1415,10 +1417,10 @@ nnoremap R @r
 " xnoremap <expr> <leader>@ ":norm! @".nr2char(getchar())."<CR>"
 xnoremap <expr> R ":norm! @r<CR>"
 
-" 替换模式串 NOTE: 目前被Far.vim插件替代
-" nnoremap <leader>su :%s/<c-r>=expand('<cword>')<cr>//gc<left><left><left>
-" nnoremap <leader>sU :%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
-" xnoremap <silent> <leader>su :<c-u>%s/<c-r>=My_get_current_visual_text()<cr>//gc<left><left><left>
+" 替换模式串 NOTE: 目前被Far.vim插件替代, 但是由于那个插件有bug，有时候不能替换，所以留着这个备用了
+nnoremap ,su :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cword>')<cr>//gc<left><left><left><c-f>i
+nnoremap ,sU :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left><c-f>i
+xnoremap  ,su :<c-u>%s/<c-r>=My_get_current_visual_text()<cr>//gc<left><left><left><c-f>i
 
 " 退出系列
 noremap <silent> <leader>q <esc>:q<cr>
@@ -1579,7 +1581,7 @@ nnoremap x "_x
 " Theme Settings  主题设置
 "==========================================
 set termguicolors  " 使用真色彩
-exec 'colorscheme ' . s:colorschemes[s:default_colorscheme_mode]
+exec 'colorscheme ' . g:all_colorschemes[g:default_colorscheme_mode]
 " colorscheme quantum
 " colorscheme onedark
 " colorscheme gruvbox-material
@@ -1779,12 +1781,15 @@ syntax on  " NOTE: 这条语句放在不同的地方会有不同的效果，经�
 
 " 特定标记配色 TODO: FIXME: BUG: NOTE: HACK:
 "{{{
-highlight MyTodo cterm=bold ctermbg=180 ctermfg=black gui=bold guifg=#ff8700
-highlight MyNote cterm=bold ctermbg=75 ctermfg=black gui=bold guifg=#19dd9d
-highlight MyFixme cterm=bold ctermbg=189 ctermfg=black gui=bold guifg=#e697e6
-highlight MyBug cterm=bold ctermbg=168 ctermfg=black gui=bold guifg=#dd698c
-highlight MyHack cterm=bold ctermbg=240 ctermfg=black gui=bold guifg=#f4da9a
-highlight link MyTip MyHack
+function Custom_sign_highlighting()
+    highlight MyTodo cterm=bold ctermbg=180 ctermfg=black gui=bold guifg=#ff8700
+    highlight MyNote cterm=bold ctermbg=75 ctermfg=black gui=bold guifg=#19dd9d
+    highlight MyFixme cterm=bold ctermbg=189 ctermfg=black gui=bold guifg=#e697e6
+    highlight MyBug cterm=bold ctermbg=168 ctermfg=black gui=bold guifg=#dd698c
+    highlight MyHack cterm=bold ctermbg=240 ctermfg=black gui=bold guifg=#f4da9a
+    highlight link MyTip MyHack
+endf
+
 augroup highlight_my_keywords
     autocmd!
     autocmd Syntax * call matchadd('MyTodo',  '\W\zs\(TODO\|CHANGED\|XXX\|DONE\):')
@@ -1792,7 +1797,7 @@ augroup highlight_my_keywords
     autocmd Syntax * call matchadd('MyFixme',  '\W\zsFIXME:')
     autocmd Syntax * call matchadd('MyBug',  '\W\zsBUG:')
     autocmd Syntax * call matchadd('MyHack',  '\W\zsHACK:')
-    autocmd Syntax * call matchadd('MyTip',  '\W\zsTip:')
+    autocmd Syntax * call matchadd('MyTip',  '\W\zsTIP:')
 augroup end
 "}}}
 
@@ -1960,6 +1965,7 @@ function s:Enable_normal_scheme() abort
     " highlight! LineNr guifg=#717172
     highlight! LineNr guifg=#9d9d9d
 
+    call Custom_sign_highlighting()  " TODO: TIP: NOTE: 等的高亮
 endfunction
 
 function s:Enable_transparent_scheme() abort
@@ -2069,19 +2075,38 @@ endf
 "}}}
 nnoremap <leader>cp :call Check_performance()<cr>
 "
-" let g:
+" {{{ 实时改变colorscheme
+let g:current_coloscheme_mode = g:default_colorscheme_mode
 fun My_change_colorscheme(mode) abort
-    let l:length = len(s:colorschemes)
+    let l:length = len(g:all_colorschemes)
     if a:mode < 0 || a:mode >= l:length
         echo 'failed to change colorscheme: invalid parameter'
+        return ''
     endif
-    " let s:default_colorscheme_mode = 0
-    " let s:colorschemes = ['quantum', 'gruvbox-material', 'forest-night']
+    if a:mode == 'next'
+        if g:current_coloscheme_mode < l:length - 1
+            let g:current_coloscheme_mode += 1
+        else
+            let g:current_coloscheme_mode = 0
+        endif
+    elseif a:mode == 'previous'
+        if g:current_coloscheme_mode > 0
+            let g:current_coloscheme_mode -= 1
+        else
+            let g:current_coloscheme_mode = l:length - 1
+        endif
+    else
+        let g:current_coloscheme_mode = a:mode
+    endif
+
+    execute 'colorscheme ' . g:all_colorschemes[g:current_coloscheme_mode]
+    let g:lightline.colorscheme = s:lightline_schemes[g:current_coloscheme_mode]
+
     call lightline#init()
     call lightline#colorscheme()
     call lightline#update()
     call s:Enable_normal_scheme()  " 恢复折叠和column的颜色
-
-    " code
 endf
-" nnoremap <leader>c
+"}}}
+nnoremap <silent> <leader>cj :call My_change_colorscheme('next')<cr>
+nnoremap <silent> <leader>ck :call My_change_colorscheme('previous')<cr>
