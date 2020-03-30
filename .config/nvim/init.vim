@@ -237,25 +237,9 @@ Plug 'wellle/targets.vim'
 " 新增indent object 在python里很好用 cii cai
 Plug 'michaeljsmith/vim-indent-object'
 " iv av variabe-text-object 部分删除变量的名字 比如camel case: getJiggyY 以及 snake case: get_jinggyy
-Plug 'Julian/vim-textobj-variable-segment', {'on': ['<Plug>(textobj-variable-segment-i)', '<Plug>(textobj-variable-segment-a)']}
-"{{{
-let g:textobj_variable_segment_no_default_key_mappings = 1  " 禁用默认映射
-"}}}
-xmap av <Plug>(textobj-variable-segment-a)
-xmap iv <Plug>(textobj-variable-segment-i)
-omap av <Plug>(textobj-variable-segment-a)
-omap iv <Plug>(textobj-variable-segment-i)
-
+Plug 'Julian/vim-textobj-variable-segment'
 " if{char} af{char}
-Plug 'thinca/vim-textobj-between', {'on': [ '<Plug>(textobj-between-i)', '<Plug>(textobj-between-a)' ] }
-"{{{
-let g:textobj_between_no_default_key_mappings = 1  " 禁用默认映射
-"}}}
-xmap af	<Plug>(textobj-between-a)
-xmap if	<Plug>(textobj-between-i)
-omap af	<Plug>(textobj-between-a)
-omap if	<Plug>(textobj-between-i)
-
+Plug 'thinca/vim-textobj-between'
 
 " 自动隐藏搜索的高亮
 Plug 'romainl/vim-cool'
@@ -456,7 +440,7 @@ augroup pencil
     autocmd!
     if exists('*pencil#init')
         autocmd FileType markdown call pencil#init({'wrap': 'hard', 'autoformat': 1}) | setlocal wrap | setlocal textwidth=80
-        autocmd FileType text     call pencil#init({'wrap': 'hard', 'autoformat': 0}) | setlocal wrap | setlocal textwidth=120
+        autocmd FileType text     call pencil#init({'wrap': 'soft', 'autoformat': 0}) | setlocal wrap | setlocal textwidth=120
     endif
 augroup END
 
@@ -778,49 +762,50 @@ nnoremap <leader><leader>* :normal ysiW*<cr>:normal ysiW*<cr>gv<esc>
 nnoremap <leader>( :normal ysiW)<cr>gv<esc>
 nnoremap <leader>[ :normal ysiW]<cr>gv<esc>
 nnoremap <leader>{ :normal ysiW}<cr>gv<esc>
-" surround with <tag></tag>
-nnoremap <leader>< :normal ysiW<<cr>gv<esc>
 " surround with <>
-nnoremap <leader><leader>< :normal ysiW><cr>gv<esc>
+nnoremap <leader>< :normal ysiW><cr>gv<esc>
+" surround with <tag></tag>
+nnoremap <leader>> :normal ysiW<<cr>gv<esc>
 " 这里对|进行了转义
 nnoremap <leader>\| :normal ysiW\|<cr>gv<esc>
 nnoremap <leader>` :normal ysiW`<cr>gv<esc>
+
 vmap <leader>" S"gv<esc>
+"{{{ Visual添加同上
 vmap <leader>' S'gv<esc>
 vmap <leader>* S*gv<esc>
 vmap <leader><leader>* S*gvS*gv<esc>
 vmap <leader>( S(gv<esc>
 vmap <leader>[ S]gv<esc>
 vmap <leader>{ S}gv<esc>
-vmap <leader>< S<gv<esc>
-vmap <leader><leader>< S>gv<esc>
+vmap <leader>< S>gv<esc>
+vmap <leader>> S<gv<esc>
 vmap <leader>\| S\|gv<esc>
 vmap <leader>` S`gv<esc>
+"}}}
 
 nnoremap ," :normal ds"<cr>
+"{{{ 删除同上
 nnoremap ,' :normal ds'<cr>
 nnoremap ,* :normal ds*<cr>
 nnoremap ,,* :normal ds*<cr>:normal ds*<cr>
-nnoremap ,( :normal ds)<cr>
-nnoremap ,[ :normal ds]<cr>
-nnoremap ,{ :normal ds}<cr>
-nnoremap ,< :normal ds<<cr>
-nnoremap ,,< :normal ds><cr>
+nnoremap ,( :normal ds(<cr>
+nnoremap ,[ :normal ds[<cr>
+nnoremap ,{ :normal ds{<cr>
+nnoremap ,< :normal ds><cr>
+nnoremap ,> :normal dst<cr>
 nnoremap ,\| :normal ds\|<cr>
 nnoremap ,` :normal ds`<cr>
-" <ab>aa</ab>
-" <ab>aa</ab>
-" <ab>aa</ab>
-" <ab>aa</ab>
-" <ab>aa</ab>
+"}}}
+
 
 
 " %匹配对象增强, 也许可以把%改成m
 Plug 'andymass/vim-matchup'
 "{{{
 let loaded_matchit = 1
-let g:loaded_matchit           = 1  " 禁用vim默认自带插件
-let g:loaded_matchparen        = 1
+let g:loaded_matchit = 1  " 禁用vim默认自带插件
+let g:loaded_matchparen = 1
 augroup matchup_matchparen_highlight
   autocmd!
   autocmd Colorscheme * hi! link MatchParen Visual
