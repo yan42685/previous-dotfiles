@@ -116,10 +116,14 @@ if g:disable_laggy_plugins_for_large_file == 0
         autocmd VimEnter * highlight SpelunkerComplexOrCompoundWord cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
         " 下两行 取消在startify中的拼写检查 前提是设置了 g:spelunker_check_type = 2:
         let g:spelunker_disable_auto_group = 1
-        " FIXME: 下面这句不能用，不然用--noplugin 开启nvim的时候会一直报错
-        if exists('*spelunker#check_displayed_words')  " --noplugin模式不判断函数存在的话会报错
-            autocmd CursorHold * if &filetype != 'startify' | call spelunker#check_displayed_words() | endif
-        endif
+        " --noplugin模式不判断函数存在的话会报错
+        " if exists('*spelunker#check_displayed_words')
+        "     " autocmd CursorHold * if &filetype != 'startify' | call spelunker#check_displayed_words() | endif
+        "     autocmd CursorHold * call spelunker#check_displayed_words()
+        " endif
+
+        autocmd CursorHold * if exists('*spelunker#check_displayed_words') | call spelunker#check_displayed_words() | endif
+
     augroup end
     "}}}
 endif
@@ -553,7 +557,7 @@ augroup END
 if g:disable_laggy_plugins_for_large_file == 0
     " 侧栏显示git diff情况
     Plug 'mhinz/vim-signify'
-    nnoremap ,gp :SignifyHunkDiff<cr>
+    nnoremap gp :SignifyHunkDiff<cr>
     nnoremap ,gu :SignifyHunkUndo<cr>
     augroup signify_remapping
         autocmd!
@@ -1172,6 +1176,11 @@ Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 nnoremap <silent> <leader> :WhichKey '<space>'<cr>
 nnoremap <silent> , :WhichKey ','<cr>
 nnoremap <silent> g :WhichKey 'g'<cr>
+augroup settings_whichkey_for_t
+    autocmd!
+    autocmd VimEnter * nnoremap <silent> t :WhichKey 't'<cr>
+augroup end
+
 
 
 
@@ -1552,8 +1561,6 @@ endfunction
 "}}}
 command! Chmodx :!chmod a+x %  " make current buffer executable
 command! FixSyntax :syntax sync fromstart  " fix syntax highlighting
-
-
 
 "==========================================
 " HotKey Settings  自定义快捷键设置
@@ -1946,8 +1953,7 @@ augroup auto_actions_for_better_experience
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会不会有性能问题
     autocmd User MyEnterDiffMode if &diff | windo setlocal syntax=off
-    " FIXME: 这里的set syntax=on可能会影响某些特殊的文件类型的高亮渲染
-    " autocmd WinEnter,WinLeave * if (&filetype != '' && &filetype != 'far' && !&diff) | set syntax=on | endif
+    " FIXME: 这里的set syntax=on可能会影响某些特殊的文件类型的高亮渲染, 所以必要时应该排除在外
     autocmd WinEnter,WinLeave * if (&filetype != '' && &syntax != 'on' && !&diff && &filetype != 'far')
                 \ | set syntax=on | endif
 
