@@ -675,11 +675,11 @@ Plug 'rbong/vim-flog', {'on': ['Flog']}
 function! Flogdiff()  " {{{
   let first_commit = flog#get_commit_data(line("'<")).short_commit_hash
   let last_commit = flog#get_commit_data(line("'>")).short_commit_hash
-  call flog#git('vertical belowright', '!', 'diff ' . first_commit . ' ' . last_commit)
+  call flog#git('vertical belowright', '!', 'diff ' . last_commit . ' ' . first_commit )
 endfunction
 "}}}
 augroup flog
-    " 在FlogGraph中visual模式选中两个commit 再按gd可以diff这两个commit
+    " 在FlogGraph中visual模式选中两个commit 再按gd可以显示新commit相比旧commit有哪些区别
     autocmd FileType floggraph vnoremap gd :<C-U>call Flogdiff()<CR>
 augroup end
 let g:flog_default_arguments = { 'max_count': 1000 }  " 约束最大显示的commit数量，防止打开太慢
