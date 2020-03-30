@@ -1438,8 +1438,11 @@ noremap <silent> Q <esc>:call <SID>auto_save_session()<cr>
 "se swap之后，同物理行上线直接跳
 noremap j gjzz
 noremap k gkzz
-noremap zj zjzz
-noremap zk zkzz
+nnoremap zj zjzz
+nnoremap zk zkzz
+" 在同一个折叠的首位跳转
+nnoremap zzj ]zzz
+nnoremap zzk [zzz
 noremap J <C-f>zz
 noremap K <C-b>zz
 nmap gb %zz
