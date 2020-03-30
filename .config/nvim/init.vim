@@ -553,11 +553,13 @@ augroup END
 if g:disable_laggy_plugins_for_large_file == 0
     " 侧栏显示git diff情况
     Plug 'mhinz/vim-signify'
+    nnoremap ,gp :SignifyHunkDiff<cr>
+    nnoremap ,gu :SignifyHunkUndo<cr>
     augroup signify_remapping
         autocmd!
         " 在diff hunk之间跳转
-        autocmd VimEnter * nmap [c <plug>(signify-prev-hunk)zz
-        autocmd VimEnter * nmap ]c <plug>(signify-next-hunk)zz
+        autocmd VimEnter * nmap gk <plug>(signify-prev-hunk)zz
+        autocmd VimEnter * nmap gj <plug>(signify-next-hunk)zz
     augroup end
 
     " ALE静态代码检查和自动排版 NOTE: 默认禁用对log文件的fixer
@@ -652,8 +654,8 @@ autocmd User MyEnterDiffMode echo ''
 nnoremap ,gd :Gdiffsplit<cr>:doautocmd User MyEnterDiffMode<cr>
 nnoremap <silent> ,gs :vert Git<cr>
 " nnoremap ,gl :Glog<cr>  " 由Flog插件替代
-nnoremap ,gps :G push<cr>
-nnoremap ,gpl :G pull<cr>
+nnoremap ,ps :G push<cr>
+nnoremap ,pl :G pull<cr>
 nnoremap ,gf :G fetch<cr>
 nnoremap ,gg :Ggrep<space>
 nnoremap ,gm :GMove<Space>
@@ -693,6 +695,13 @@ vnoremap ,gl :Flog<cr>
 " ===============================
 " coc系列
 " ===============================
+
+" coc-lists
+nnoremap <leader>cl :CocList<cr>
+
+" coc-bookmark
+nmap <leader>bm <Plug>(coc-bookmark-toggle)
+nmap <leader>ba <Plug>(coc-bookmark-annotate)
 
 " coc-explorer 文件树
 "{{{
@@ -743,7 +752,7 @@ let g:coc_global_extensions = [
   \ 'coc-python', 'coc-tabnine', 'coc-lists', 'coc-explorer', 'coc-yank',
   \ 'coc-markdownlint', 'coc-stylelint', 'coc-sh', 'coc-dictionary', 'coc-word', 'coc-emmet',
   \ 'coc-syntax', 'coc-marketplace', 'coc-todolist', 'coc-emoji',
-  \ 'coc-gitignore'
+  \ 'coc-gitignore', 'coc-bookmark'
   \ ]
 
 
@@ -811,8 +820,8 @@ nmap <silent> gf <Plug>(coc-refactor)
 nmap <silent> gt <Plug>(coc-type-definition)
 " 可以用来import
 nmap <leader>do <Plug>(coc-codeaction)
-nnoremap <silent> <leader>gm :CocList --normal marks<cr>
-nnoremap <silent> <leader>gp :CocList sessions<cr>
+nnoremap <silent> <leader>ml :CocList --normal marks<cr>
+nnoremap <silent> <leader>sl :CocList sessions<cr>
 " 查看文档,并跳转
 nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
 " 打开鼠标位置下的链接
@@ -1556,7 +1565,7 @@ inoremap kj <esc>
 cnoremap kj <c-c>
 nnoremap ? /
 noremap ; :
-nmap zo zazz
+nmap zo za
 noremap ,; ;
 nnoremap ,w :w<cr>
 " 解决通过命令let @" = {text}设置的@" 不能被p正确粘贴的问题
@@ -1625,9 +1634,8 @@ nnoremap gv gvzz
 " 定义这个是为了让which-key查询的时候不报错
 nnoremap gg gg
 " 切换大小写
-nnoremap gu viw~
-nnoremap gU viW~
-vnoremap gu ~
+nnoremap gU viw~
+vnoremap gU ~
 nnoremap '' ``zz
 nnoremap '. `.zz
 nnoremap <c-o> <c-o>zz
@@ -2036,6 +2044,7 @@ nnoremap <F2> :call ToggleColumnNumber()<cr>
 function Faster_mode_for_large_file()
     " 开关spelunker拼写检查插件
     execute 'normal ZT'
+    " 这个一般由于向VCS仓库中新增了大文件而导致的大面积column实时重绘, 所以需要关闭
     execute 'SignifyToggle'
 endfunction
 "}}}
