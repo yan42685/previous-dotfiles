@@ -1,15 +1,5 @@
 [
   {
-    "uid": "05f601fd-9e70-48fe-a537-0f632606f5ea",
-    "todo": {
-      "desc": "修改mark的颜色 让spelunker生效但不影响非plugin模式 修复别的exists",
-      "date": "Tue Mar 31 2020 05:24:50 GMT+0800 (China Standard Time)",
-      "status": "active",
-      "remind": false,
-      "due": null
-    }
-  },
-  {
     "uid": "deff125b-4587-4c24-98cf-616278f13be4",
     "todo": {
       "desc": "延迟加载textobj repeat surround, 添加空行",

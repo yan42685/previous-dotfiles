@@ -2098,7 +2098,8 @@ let s:palette = {
               \ 'aqua':       ['#89b482',   '108',  'Cyan'],
               \ 'grey':       ['#868d80',   '109',  'Blue'],
               \ 'purple':     ['#d3869b',   '175',  'Magenta'],
-              \ 'none':       ['NONE',      'NONE', 'NONE']
+              \ 'none':       ['NONE',      'NONE', 'NONE'],
+              \ 'blue':       ['#399ce5', '175', 'Blue'],
               \ }
 
 function! s:HL(group, fg, bg, ...)
@@ -2126,11 +2127,13 @@ function! s:HL(group, fg, bg, ...)
 endfunction
 
 function s:Enable_normal_scheme() abort
+    "             高亮组名     前景色         背景色
     call s:HL('FoldColumn', s:palette.grey, s:palette.bg2)
     call s:HL('Folded', s:palette.grey, s:palette.none)
     call s:HL('SignColumn', s:palette.fg0, s:palette.none)
     call s:HL('OrangeSign', s:palette.orange, s:palette.none)
     call s:HL('PurpleSign', s:palette.purple, s:palette.none)
+    call s:HL('BlueSign', s:palette.blue, s:palette.none)
     " kshenoy/vim-signature 标记的配色
     highlight! link SignatureMarkText OrangeSign
     highlight! link SignatureMarkerText PurpleSign
@@ -2151,6 +2154,7 @@ function s:Enable_transparent_scheme() abort
     call s:HL('SignColumn', s:palette.none, s:palette.none)
     call s:HL('OrangeSign', s:palette.orange, s:palette.none)
     call s:HL('PurpleSign', s:palette.purple, s:palette.none)
+    call s:HL('BlueSign', s:palette.none, s:palette.none)
 endfunction
 
 call s:Enable_normal_scheme()
