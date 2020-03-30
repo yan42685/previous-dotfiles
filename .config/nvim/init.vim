@@ -92,6 +92,9 @@ endif
 call plug#begin('~/.vim/plugged')
 " {{{没有设置快捷键的，在后台默默运行的插件
 
+" 给注释和textobject插件提供支持
+Plug 'libclang-vim/libclang-vim'
+
 " 主题配色
 " Plug 'joshdick/onedark.vim'
 Plug 'tyrannicaltoucan/vim-quantum'
@@ -239,7 +242,7 @@ Plug 'wellle/targets.vim'
 Plug 'kana/vim-textobj-user'
 
 " ii ai 在python里很好用
-Plug 'michaeljsmith/vim-indent-object', {'on': ['<Plug>(textobj-indent-i)', '<Plug>(textobj-indent-a)']}
+" Plug 'michaeljsmith/vim-indent-object', {'on': ['<Plug>(textobj-indent-i)', '<Plug>(textobj-indent-a)']}
 " omap ii <Plug>(textobj-indent-i)
 " omap ai <Plug>(textobj-indent-a)
 " xmap ii <Plug>(textobj-indent-i)
@@ -253,11 +256,11 @@ xmap iv <Plug>(textobj-variable-i)
 xmap av <Plug>(textobj-variable-a)
 
 " if{char} af{char}
-Plug 'thinca/vim-textobj-between', {'on': ['<Plug>(textobj-between-i)', '<Plug>(textobj-between-a)']}
-omap if <Plug>(textobj-between-i)
-omap af <Plug>(textobj-between-a)
-xmap if <Plug>(textobj-between-i)
-xmap af <Plug>(textobj-between-a)
+" Plug 'thinca/vim-textobj-between', {'on': ['<Plug>(textobj-between-i)', '<Plug>(textobj-between-a)']}
+" omap if <Plug>(textobj-between-i)
+" omap af <Plug>(textobj-between-a)
+" xmap if <Plug>(textobj-between-i)
+" xmap af <Plug>(textobj-between-a)
 
 " ic ac
 Plug 'glts/vim-textobj-comment', {'on': ['<Plug>(textobj-comment-i)', '<Plug>(textobj-comment-a)']}
@@ -272,6 +275,28 @@ omap ix <Plug>(textobj-xmlattr-attr-i)
 omap ax <Plug>(textobj-xmlattr-attr-a)
 xmap ix <Plug>(textobj-xmlattr-attr-i)
 xmap ax <Plug>(textobj-xmlattr-attr-a)
+
+" ik iv
+Plug 'vimtaku/vim-textobj-keyvalue'
+" let g:textobj_keyvalue_no_default_key_mappings = 1  " 禁用默认映射
+"
+" iz az
+Plug 'somini/vim-textobj-fold'
+
+" if iF af aF 只支持Java，C
+Plug 'kana/vim-textobj-function'
+" 依赖并增强kana的function对象，FIXME: 可能不支持nvim
+Plug 'haya14busa/vim-textobj-function-syntax'
+" is as 支持markdown
+Plug 'reedes/vim-textobj-sentence'
+" ciq diq yiq viq 最近的引号' ` "
+Plug 'beloglazov/vim-textobj-quotes'
+" ij aj 最近的()[]{}
+Plug 'Julian/vim-textobj-brace'
+Plug 'kana/vim-textobj-line'
+" iu au 支持markdown的url  go打开连接(仅支持Linux)
+Plug 'jceb/vim-textobj-uri'
+
 
 " 自动隐藏搜索的高亮
 Plug 'romainl/vim-cool'
@@ -1880,7 +1905,9 @@ augroup auto_actions_for_better_experience
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会不会有性能问题
     autocmd User MyEnterDiffMode if &diff | windo setlocal syntax=off | wincmd w
     " FIXME: 这里的set syntax=on可能会影响某些特殊的文件类型的高亮渲染
-    autocmd WinEnter,WinLeave * if (&filetype != '' && &filetype != 'far' && !&diff) | set syntax=on | endif
+    " autocmd WinEnter,WinLeave * if (&filetype != '' && &filetype != 'far' && !&diff) | set syntax=on | endif
+    autocmd WinEnter,WinLeave * if (&filetype != '' && &syntax != 'on' && !&diff && &filetype != 'far')
+                \ | set syntax=on | endif
 augroup end
 
 " 开启语法高亮
