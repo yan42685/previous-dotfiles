@@ -62,6 +62,8 @@
 "   5. 用{'on': '<Plug>(?)'}来延迟加载时，必须要自己设置相关映射，否则无法加载(因为原插件的映射并不会被加载)，但是command就不用自己设置映射，比如
 "       {'on': 'Rooter'}这种
 "   6. 因为一行过长导致VimL语法不被成功解析，应该用\ 拆成多行
+"   7. 如果调用了插件的函数，最好使用silent! 因为在使用--noplugin打开时，如果
+"   找不到该函数且不是silent!就会一直报错，导致vim没法使用
 "}}}
 
 " ==========================================
@@ -352,9 +354,6 @@ Plug 'itchyny/lightline.vim'
 " functions
 "{{{
 function! Sy_stats_wrapper()
-  if !exists('*sy#repo#get_stats')  " 大文件模式下signify插件被关闭了，所以这个函数不存在
-      return ''
-  endif
   let l:symbols = ['+', '-', '~']
   let [added, modified, removed] = sy#repo#get_stats()
   let l:stats = [added, removed, modified]  " reorder
@@ -372,7 +371,7 @@ endfunction
 
 function! LightlineFugitive()
     let l:result = ''
-    if &ft !~? 'vimfiler' && exists('*FugitiveHead')
+    if &ft !~? 'vimfiler'
         let l:result = FugitiveHead()
     endif
     return winwidth(0) > 45 ? l:result : ''
@@ -549,6 +548,10 @@ augroup END
 if g:disable_laggy_plugins_for_large_file == 0
     " 侧栏显示git diff情况
     Plug 'mhinz/vim-signify'
+    " 定义进入diff的事件，然后当前窗口关闭syntax
+    autocmd User MyEnterDiffMode echo ''
+    nnoremap ,gd :SignifyDiff<cr>:doautocmd User MyEnterDiffMode<cr>
+
     nnoremap gp :SignifyHunkDiff<cr>
     nnoremap ,gu :SignifyHunkUndo<cr>
     augroup signify_remapping
@@ -645,10 +648,8 @@ Plug 'tpope/vim-fugitive'
 " 还有diffget和diffput可以使用
 nnoremap ,ga :G add %:p<CR><CR>
 nnoremap ,gc :G commit --all<cr>
-" 定义进入diff的事件，然后当前窗口关闭syntax
-autocmd User MyEnterDiffMode echo ''
-" 在新tab中打开diff
-nnoremap ,gd :G difftool -y<cr>:doautocmd User MyEnterDiffMode<cr>
+" 在新tab中打开diff 不能单独在tab中打开不如signify好用
+" nnoremap ,gd :Gdiffsplit<cr>:doautocmd User MyEnterDiffMode<cr>
 nnoremap <silent> ,gs :vert Git<cr>
 " nnoremap ,gl :Glog<cr>  " 由Flog插件替代
 nnoremap ,ps :G push<cr>
@@ -697,6 +698,7 @@ vnoremap ,gl :Flog<cr>
 nnoremap <leader>cl :CocList<cr>
 
 " coc-bookmark
+nnoremap <leader>bl :CocList bookmark<cr>
 nmap <leader>bm <Plug>(coc-bookmark-toggle)
 nmap <leader>ba <Plug>(coc-bookmark-annotate)
 

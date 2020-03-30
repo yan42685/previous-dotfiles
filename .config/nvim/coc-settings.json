@@ -1,12 +1,13 @@
 {
 
+    "bookmark.signHi": "StartifyNumber",
     "snippets.priority": 130,    // 从默认的90提高到130的优先级
     "session.directory": "~/.local/share/nvim/session",  // coclist查找session文件的地址
     "todolist.maxsize": 99999,  // 最多可存放的todo数量
     "todolist.monitor": true,  // 监控todolist时间并提醒
-    "todolist.reminder.background": "#737373",  // 背景色
-    "todolist.reminder.notify": "floating",
-    "todolist.reminder.winblend": 0,  // 透明度
+    "todolist.floatwin.background": "#737373",  // 背景色
+    "todolist.notify": "floating",
+    "todolist.floatwin.winblend": 0,  // 透明度
     // "todolist.autoUpload": true,  // 每天自动上传
     "emmet.excludeLanguages": [  // 不支持的文件类型
         "markdown"
