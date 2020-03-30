@@ -235,6 +235,7 @@ fi
 
 
 
+alias fzfh="rg --hidden -l --glob='!node_modules/*' --glob='!.git/*' '' | fzf"  # fzf搜索隐藏文件
 alias hdfs=/usr/local/hadoop/bin/hdfs
 alias hadoop=/usr/local/hadoop/bin/hadoop
 alias start-dfs=/usr/local/hadoop/sbin/start-dfs.sh

@@ -635,11 +635,11 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "     coc-emoji (仅在markdown里用:触发补全， 查表https://www.webfx.com/tools/emoji-cheat-sheet/)
 "     coc-gitignore (按类型添加gitignore, 用法是在已有git初始化的文件夹内CocList gitignore)
 "     coc-stylelint 检测css, wxss, scss, less, postcss, sugarss, vue NOTE: 非常建议自己为每个workspace建立配置文件，具体参看vscode对应的配置选项
-" vim启动后自动异步安装的插件  NOTE: coc-tabnine的淘宝npm源似乎有问题，可以考虑临时换源
 
+" vim启动后自动异步安装的插件
 let g:coc_global_extensions = [
   \ 'coc-snippets', 'coc-json', 'coc-html', 'coc-css', 'coc-tsserver',
-  \ 'coc-python', 'coc-tabline', 'coc-lists', 'coc-explorer', 'coc-yank',
+  \ 'coc-python', 'coc-tabnine', 'coc-lists', 'coc-explorer', 'coc-yank',
   \ 'coc-markdownlint', 'coc-stylelint', 'coc-sh', 'coc-dictionary', 'coc-word', 'coc-emmet',
   \ 'coc-syntax', 'coc-marketplace', 'coc-todolist', 'coc-emoji',
   \ 'coc-gitignore'
@@ -750,9 +750,33 @@ imap <c-_> <esc><plug>NERDCommenterToggle
 Plug 'tpope/vim-surround'
 nmap ysw ysiw
 nmap ysW ysiW
+" 快速添加pair
 nnoremap <leader>" :normal ysiW"<CR>
 nnoremap <leader>' :normal ysiW'<CR>
+nnoremap <leader>* :normal ysiW*<CR>
+nnoremap <leader><leader>* :normal ysiW*<CR>:normal ysiW*<CR>
 nnoremap <leader>( :normal ysiW(<CR>
+nnoremap <leader>[ :normal ysiW[<CR>
+nnoremap <leader>{ :normal ysiW{<CR>
+nnoremap <leader>< :normal ysiW<<CR>
+vmap <leader>" S"
+vmap <leader>' S'
+vmap <leader>* S*
+vmap <leader><leader>* S*gvS*
+vmap <leader>( S(
+vmap <leader>[ S[
+vmap <leader>{ S{
+vmap <leader>< S<
+
+nnoremap ," :normal ds"<CR>
+nnoremap ,' :normal ds'<CR>
+nnoremap ,* :normal ds*<CR>
+nnoremap ,,* :normal ds*<CR>:normal ds*<CR>
+nnoremap ,( :normal ds(<CR>
+nnoremap ,[ :normal ds[<CR>
+nnoremap ,{ :normal ds{<CR>
+nnoremap ,< :normal ds<<CR>
+
 
 " %匹配对象增强, 也许可以把%改成m
 Plug 'andymass/vim-matchup'
