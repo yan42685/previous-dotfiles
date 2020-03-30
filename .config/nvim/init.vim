@@ -1462,7 +1462,6 @@ endif
 
 
 
-
 " 打算以后再体验的插件
 
 " 多光标插件有bug 用不了
@@ -1814,11 +1813,6 @@ set wildignorecase  " files or directoies auto completion is case insensitive
 set completeopt-=menu  " 让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
 set completeopt+=longest,menuone
 "}}}
-" 设置标记一列的背景颜色和数字一行颜色一致{{{
-hi! link SignColumn   LineNr
-hi! link ShowMarksHLl DiffAdd
-hi! link ShowMarksHLu DiffChange
-"}}}
 " FileType Settings  文件类型设置{{{
 
 " 具体编辑文件类型的一般设置，比如不要 tab 等
@@ -1946,6 +1940,7 @@ augroup auto_actions_for_better_experience
     " autocmd WinEnter,WinLeave * if (&filetype != '' && &filetype != 'far' && !&diff) | set syntax=on | endif
     autocmd WinEnter,WinLeave * if (&filetype != '' && &syntax != 'on' && !&diff && &filetype != 'far')
                 \ | set syntax=on | endif
+
 augroup end
 
 " 开启语法高亮
@@ -1976,11 +1971,6 @@ augroup end
 " =============================================
 " 新增功能
 " =============================================
-"{{{startify启动页面的颜色
-highlight! StartifyHeader cterm=bold ctermbg=black ctermfg=75 gui=bold guifg=#87bb7c
-highlight! StartifyFile cterm=None ctermfg=75 gui=None guifg=#d8b98a
-highlight! StartifyNumber cterm=None ctermfg=75 gui=None guifg=#7daea3
-"}}}
 " {{{自动保存
 function! s:Autosave(timed)
     if &readonly || mode() == 'c' || pumvisible()
@@ -2137,6 +2127,11 @@ function s:Enable_normal_scheme() abort
     highlight! LineNr guifg=#9d9d9d
 
     call Custom_sign_highlighting()  " TODO: TIP: NOTE: 等的高亮
+
+    " startify启动页面的颜色
+    highlight! StartifyHeader cterm=bold ctermbg=black ctermfg=75 gui=bold guifg=#87bb7c
+    highlight! StartifyFile cterm=None ctermfg=75 gui=None guifg=#d8b98a
+    highlight! StartifyNumber cterm=None ctermfg=75 gui=None guifg=#7daea3
 endfunction
 
 function s:Enable_transparent_scheme() abort
@@ -2148,7 +2143,6 @@ function s:Enable_transparent_scheme() abort
 endfunction
 
 call s:Enable_normal_scheme()
-
 
 let t:is_transparent = 0
 function! Toggle_transparent_background()
