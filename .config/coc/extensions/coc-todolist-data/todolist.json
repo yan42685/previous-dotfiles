@@ -1,5 +1,15 @@
 [
   {
+    "uid": "deff125b-4587-4c24-98cf-616278f13be4",
+    "todo": {
+      "desc": "汇报情况 surround中括号不要空格 surround | 延迟加载textobj WinEnter自动Rooter",
+      "date": "Mon Mar 30 2020 21:27:55 GMT+0800 (China Standard Time)",
+      "status": "active",
+      "remind": false,
+      "due": null
+    }
+  },
+  {
     "uid": "a9364c00-3df4-499e-a593-05cafb6b07f9",
     "todo": {
       "desc": "搞定spelunker使用特定文件类型的问题",

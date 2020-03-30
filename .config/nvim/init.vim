@@ -59,6 +59,7 @@
 "   2. 映射ex命令的时候不能用noremap, 因为这会导致按键出现奇奇怪怪的结果, 应该改成nnoremap
 "   3. vimrc文件let语句的等号两边不能写空格, 写了不生效!
 "   4. 单引号是raw String 而双引号才可以转义， 所以设置unicode字体的时候应该用双引号比如"\ue0b0"
+"   5. 想要以 { 'on': '<Plug>(...)' } 的形式延迟加载，就必须先自定义到这个快捷键的映射，否则没法找到它，（因为这不是command而是映射）
 "}}}
 
 " ==========================================
@@ -236,7 +237,25 @@ Plug 'wellle/targets.vim'
 " 新增indent object 在python里很好用 cii cai
 Plug 'michaeljsmith/vim-indent-object'
 " iv av variabe-text-object 部分删除变量的名字 比如camel case: getJiggyY 以及 snake case: get_jinggyy
-Plug 'Julian/vim-textobj-variable-segment'
+Plug 'Julian/vim-textobj-variable-segment', {'on': ['<Plug>(textobj-variable-segment-i)', '<Plug>(textobj-variable-segment-a)']}
+"{{{
+let g:textobj_variable_segment_no_default_key_mappings = 1  " 禁用默认映射
+"}}}
+xmap av <Plug>(textobj-variable-segment-a)
+xmap iv <Plug>(textobj-variable-segment-i)
+omap av <Plug>(textobj-variable-segment-a)
+omap iv <Plug>(textobj-variable-segment-i)
+
+" if{char} af{char}
+Plug 'thinca/vim-textobj-between', {'on': [ '<Plug>(textobj-between-i)', '<Plug>(textobj-between-a)' ] }
+"{{{
+let g:textobj_between_no_default_key_mappings = 1  " 禁用默认映射
+"}}}
+xmap af	<Plug>(textobj-between-a)
+xmap if	<Plug>(textobj-between-i)
+omap af	<Plug>(textobj-between-a)
+omap if	<Plug>(textobj-between-i)
+
 
 " 自动隐藏搜索的高亮
 Plug 'romainl/vim-cool'
@@ -599,7 +618,7 @@ function ToggleCocExplorer()
   execute 'CocCommand explorer --toggle --width=35 --sources=buffer+,file+ ' . getcwd()
 endfunction
 "}}}
-nnoremap <silent> <leader>er :call ToggleCocExplorer()<CR>
+nnoremap <silent> <leader>er :Rooter<cr>:call ToggleCocExplorer()<CR>
 
 " 使用coc-yank (自带复制高亮)
 nnoremap <silent> gy :<C-u>CocList --normal yank<cr>
@@ -732,7 +751,7 @@ vmap <silent> <c-m-v> <Plug>(coc-codeaction-selected)
 Plug 'easymotion/vim-easymotion', {'on': '<Plug>(easymotion-bd-f)'}
 map <silent> <leader>f <Plug>(easymotion-bd-f)
 " easymotion可以根据中文拼音首字母跳转
-Plug 'ZSaberLv0/vim-easymotion-chs'
+Plug 'ZSaberLv0/vim-easymotion-chs'  " (不能延迟加载，否则easymotion不能正常使用)
 
 " 快速注释
 Plug 'preservim/nerdcommenter', {'on': '<plug>NERDCommenterToggle'}
@@ -751,31 +770,49 @@ Plug 'tpope/vim-surround'
 nmap ysw ysiw
 nmap ysW ysiW
 " 快速添加pair
-nnoremap <leader>" :normal ysiW"<CR>
-nnoremap <leader>' :normal ysiW'<CR>
-nnoremap <leader>* :normal ysiW*<CR>
-nnoremap <leader><leader>* :normal ysiW*<CR>:normal ysiW*<CR>
-nnoremap <leader>( :normal ysiW(<CR>
-nnoremap <leader>[ :normal ysiW[<CR>
-nnoremap <leader>{ :normal ysiW{<CR>
-nnoremap <leader>< :normal ysiW<<CR>
-vmap <leader>" S"
-vmap <leader>' S'
-vmap <leader>* S*
-vmap <leader><leader>* S*gvS*
-vmap <leader>( S(
-vmap <leader>[ S[
-vmap <leader>{ S{
-vmap <leader>< S<
+" TIP: cswb == ysiwb, 用于<cword> 而<leader>{?}用于<cWORD>
+nnoremap <leader>" :normal ysiW"<cr>gv<esc>
+nnoremap <leader>' :normal ysiW'<cr>gv<esc>
+nnoremap <leader>* :normal ysiW*<cr>gv<esc>
+nnoremap <leader><leader>* :normal ysiW*<cr>:normal ysiW*<cr>gv<esc>
+nnoremap <leader>( :normal ysiW)<cr>gv<esc>
+nnoremap <leader>[ :normal ysiW]<cr>gv<esc>
+nnoremap <leader>{ :normal ysiW}<cr>gv<esc>
+" surround with <tag></tag>
+nnoremap <leader>< :normal ysiW<<cr>gv<esc>
+" surround with <>
+nnoremap <leader><leader>< :normal ysiW><cr>gv<esc>
+" 这里对|进行了转义
+nnoremap <leader>\| :normal ysiW\|<cr>gv<esc>
+nnoremap <leader>` :normal ysiW`<cr>gv<esc>
+vmap <leader>" S"gv<esc>
+vmap <leader>' S'gv<esc>
+vmap <leader>* S*gv<esc>
+vmap <leader><leader>* S*gvS*gv<esc>
+vmap <leader>( S(gv<esc>
+vmap <leader>[ S]gv<esc>
+vmap <leader>{ S}gv<esc>
+vmap <leader>< S<gv<esc>
+vmap <leader><leader>< S>gv<esc>
+vmap <leader>\| S\|gv<esc>
+vmap <leader>` S`gv<esc>
 
-nnoremap ," :normal ds"<CR>
-nnoremap ,' :normal ds'<CR>
-nnoremap ,* :normal ds*<CR>
-nnoremap ,,* :normal ds*<CR>:normal ds*<CR>
-nnoremap ,( :normal ds(<CR>
-nnoremap ,[ :normal ds[<CR>
-nnoremap ,{ :normal ds{<CR>
-nnoremap ,< :normal ds<<CR>
+nnoremap ," :normal ds"<cr>
+nnoremap ,' :normal ds'<cr>
+nnoremap ,* :normal ds*<cr>
+nnoremap ,,* :normal ds*<cr>:normal ds*<cr>
+nnoremap ,( :normal ds)<cr>
+nnoremap ,[ :normal ds]<cr>
+nnoremap ,{ :normal ds}<cr>
+nnoremap ,< :normal ds<<cr>
+nnoremap ,,< :normal ds><cr>
+nnoremap ,\| :normal ds\|<cr>
+nnoremap ,` :normal ds`<cr>
+" <ab>aa</ab>
+" <ab>aa</ab>
+" <ab>aa</ab>
+" <ab>aa</ab>
+" <ab>aa</ab>
 
 
 " %匹配对象增强, 也许可以把%改成m
