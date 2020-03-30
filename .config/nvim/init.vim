@@ -59,6 +59,9 @@
 "   2. 映射ex命令的时候不能用noremap, 因为这会导致按键出现奇奇怪怪的结果, 应该改成nnoremap
 "   3. vimrc文件let语句的等号两边不能写空格, 写了不生效!
 "   4. 单引号是raw String 而双引号才可以转义， 所以设置unicode字体的时候应该用双引号比如"\ue0b0"
+"   5. 用{'on': '<Plug>(?)'}来延迟加载时，必须要自己设置相关映射，否则无法加载(因为原插件的映射并不会被加载)，但是command就不用自己设置映射，比如
+"       {'on': 'Rooter'}这种
+"   6. 因为一行过长导致VimL语法不被成功解析，应该用\ 拆成多行
 "}}}
 
 " ==========================================
@@ -229,16 +232,46 @@ let g:Illuminate_ftblacklist = [
 " 选择模式和行选择模式下可以用I A批量多行写入(修改了可视模式下I和A的映射)
 Plug 'kana/vim-niceblock'
 
-" 自定义text-object 是vim-textobj-variable-segment插件的依赖
-Plug 'kana/vim-textobj-user'
 " 新增很多方便的text object, 比如 , argument in( il( 并且可以计数比如光标在a时 (((a)b)c)  --d2ab--> (c )
 Plug 'wellle/targets.vim'
-" 新增indent object 在python里很好用 cii cai
-Plug 'michaeljsmith/vim-indent-object'
+
+" 自定义text-object 是vim-textobj-variable-segment插件的依赖
+Plug 'kana/vim-textobj-user'
+
+" ii ai 在python里很好用
+Plug 'michaeljsmith/vim-indent-object', {'on': ['<Plug>(textobj-indent-i)', '<Plug>(textobj-indent-a)']}
+" omap ii <Plug>(textobj-indent-i)
+" omap ai <Plug>(textobj-indent-a)
+" xmap ii <Plug>(textobj-indent-i)
+" xmap ai <Plug>(textobj-indent-a)
+
 " iv av variabe-text-object 部分删除变量的名字 比如camel case: getJiggyY 以及 snake case: get_jinggyy
-Plug 'Julian/vim-textobj-variable-segment'
+Plug 'Julian/vim-textobj-variable-segment', {'on': ['<Plug>(textobj-variable-i)', '<Plug>(textobj-variable-a)']}
+omap iv <Plug>(textobj-variable-i)
+omap av <Plug>(textobj-variable-a)
+xmap iv <Plug>(textobj-variable-i)
+xmap av <Plug>(textobj-variable-a)
+
 " if{char} af{char}
-Plug 'thinca/vim-textobj-between'
+Plug 'thinca/vim-textobj-between', {'on': ['<Plug>(textobj-between-i)', '<Plug>(textobj-between-a)']}
+omap if <Plug>(textobj-between-i)
+omap af <Plug>(textobj-between-a)
+xmap if <Plug>(textobj-between-i)
+xmap af <Plug>(textobj-between-a)
+
+" ic ac
+Plug 'glts/vim-textobj-comment', {'on': ['<Plug>(textobj-comment-i)', '<Plug>(textobj-comment-a)']}
+omap ic <Plug>(textobj-comment-i)
+omap ac <Plug>(textobj-comment-a)
+xmap ic <Plug>(textobj-comment-i)
+xmap ac <Plug>(textobj-comment-a)
+
+" ix ax XML/HTML属性文本对象
+Plug 'whatyouhide/vim-textobj-xmlattr', {'on': ['<Plug>(textobj-xmlattr-attr-i)', '<Plug>(textobj-xmlattr-attr-a)']}
+omap ix <Plug>(textobj-xmlattr-attr-i)
+omap ax <Plug>(textobj-xmlattr-attr-a)
+xmap ix <Plug>(textobj-xmlattr-attr-i)
+xmap ax <Plug>(textobj-xmlattr-attr-a)
 
 " 自动隐藏搜索的高亮
 Plug 'romainl/vim-cool'
@@ -774,7 +807,7 @@ vmap <leader>" S"gv<esc>
 vmap <leader>' S'gv<esc>
 vmap <leader>* S*gv<esc>
 vmap <leader><leader>* S*gvS*gv<esc>
-vmap <leader>( S(gv<esc>
+vmap <leader>( S)gv<esc>
 vmap <leader>[ S]gv<esc>
 vmap <leader>{ S}gv<esc>
 vmap <leader>< S>gv<esc>
@@ -1352,8 +1385,6 @@ if g:enable_front_end_layer == 1
     Plug 'kabbamine/vCoolor.vim', {'on': ['VCoolor', 'VCoolIns']}
     let g:vcoolor_disable_mappings = 1  " 取消默认快捷键
 
-    " ix ax XML/HTML属性文本对象
-    Plug 'whatyouhide/vim-textobj-xmlattr'
 
 endif
 
