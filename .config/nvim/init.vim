@@ -1,5 +1,4 @@
-﻿" TODO: leaderf调低高度并设置一直preview
-" TODO: 去https://github.com/neoclide/coc-tsserver 查看相关的js，ts设置
+﻿" TODO: 去https://github.com/neoclide/coc-tsserver 查看相关的js，ts设置
 " 只考虑NeoVim，不一定兼容Vim
 "
 " 经验之谈:
@@ -1393,6 +1392,10 @@ function! s:Repeatable(command)
   call repeat#set(':Repeatable '.a:command."\<cr>")
 endfunction
 "}}}
+command! Chmodx :!chmod a+x %  " make current buffer executable
+command! FixSyntax :syntax sync fromstart  " fix syntax highlighting
+
+
 
 "==========================================
 " HotKey Settings  自定义快捷键设置
