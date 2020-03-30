@@ -1060,17 +1060,36 @@ let g:Lf_WildIgnore = {
             \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]']
             \}
 
-let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2"  }
+" popup的normal模式是否自动预览
+let g:Lf_PreviewResult = {
+        \ 'File': 1,
+        \ 'Buffer': 1,
+        \ 'Mru': 0,
+        \ 'Tag': 1,
+        \ 'BufTag': 1,
+        \ 'Function': 1,
+        \ 'Line': 1,
+        \ 'Colorscheme': 0,
+        \ 'Rg': 1,
+        \ 'Gtags': 1
+        \}
+
+let g:Lf_WindowPosition = 'popup'
+let g:Lf_PopupWidth = 0.66
+let g:Lf_PopupHeight = 0.3
 let g:Lf_PreviewInPopup = 1  " <c-p>预览弹出窗口
 let g:Lf_CursorBlink = 0  " 取消光标闪烁
 let g:Lf_ShowHidden = 1  " 搜索结果包含隐藏文件
-let g:Lf_PopupHeight = 0.7
+
+let g:Lf_WindowHeight = 0.4  " 非popup窗口的高度
 let g:Lf_HistoryNumber = 200  " default 100
 " let g:Lf_GtagsAutoGenerate = 1  " 有['.git', '.hg', '.svn']之中的文件时自动生成gtags
 let g:Lf_GtagsSource = 2  " 从指定地方找
 let g:Lf_GtagsfilesCmd = {'default': 'rg --no-messager --files ~/.cache/tags_dir' }
 let g:Lf_RecurseSubmodules = 1  " show the files in submodules of git repository
 let g:Lf_Gtagslabel =  "native-pygments"  " 如果不是gtags支持的文件类型，就用pygments
+let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2"  }  " 分隔符样式
+" let g:Lf_FollowLinks = 1  " 是否解析本为link的目录
 let g:Lf_WorkingDirectoryMode = 'a'  " the nearest ancestor of current directory that contains one of directories
                                      " or files defined in |g:Lf_RootMarkers|. Fall back to 'c' if no such
                                      " ancestor directory found.
