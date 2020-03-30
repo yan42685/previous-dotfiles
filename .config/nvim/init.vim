@@ -651,7 +651,8 @@ nnoremap ,ga :G add %:p<CR><CR>
 nnoremap ,gc :G commit --all<cr>
 " 定义进入diff的事件，然后当前窗口关闭syntax
 autocmd User MyEnterDiffMode echo ''
-nnoremap ,gd :Gdiffsplit<cr>:doautocmd User MyEnterDiffMode<cr>
+" 在新tab中打开diff
+nnoremap ,gd :G difftool -y<cr>:doautocmd User MyEnterDiffMode<cr>
 nnoremap <silent> ,gs :vert Git<cr>
 " nnoremap ,gl :Glog<cr>  " 由Flog插件替代
 nnoremap ,ps :G push<cr>
@@ -1634,8 +1635,9 @@ nnoremap gv gvzz
 " 定义这个是为了让which-key查询的时候不报错
 nnoremap gg gg
 " 切换大小写
-nnoremap gU viw~
-vnoremap gU ~
+nnoremap gu viw~
+nnoremap gU viW~
+vnoremap gu ~
 nnoremap '' ``zz
 nnoremap '. `.zz
 nnoremap <c-o> <c-o>zz
@@ -1943,7 +1945,7 @@ augroup auto_actions_for_better_experience
     "}}}
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会不会有性能问题
-    autocmd User MyEnterDiffMode if &diff | windo setlocal syntax=off | wincmd w
+    autocmd User MyEnterDiffMode if &diff | windo setlocal syntax=off
     " FIXME: 这里的set syntax=on可能会影响某些特殊的文件类型的高亮渲染
     " autocmd WinEnter,WinLeave * if (&filetype != '' && &filetype != 'far' && !&diff) | set syntax=on | endif
     autocmd WinEnter,WinLeave * if (&filetype != '' && &syntax != 'on' && !&diff && &filetype != 'far')
@@ -2217,8 +2219,8 @@ if &diff
     noremap <leader><leader>q <esc>:cq<cr>
     noremap Q <esc>:qa<cr>
     " 在diff hunk之间跳转
-    noremap ]c ]czz
-    noremap [c [czz
+    noremap gj ]czz
+    noremap gk [czz
 endif
 
 " 复制当前文件的名字，绝对路径，目录绝对路径
