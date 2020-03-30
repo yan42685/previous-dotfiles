@@ -634,13 +634,13 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "     coc-todolist (可以同步到gist,具体看github)
 "     coc-emoji (仅在markdown里用:触发补全， 查表https://www.webfx.com/tools/emoji-cheat-sheet/)
 "     coc-gitignore (按类型添加gitignore, 用法是在已有git初始化的文件夹内CocList gitignore)
-
+"     coc-stylelint 检测css, wxss, scss, less, postcss, sugarss, vue NOTE: 非常建议自己为每个workspace建立配置文件，具体参看vscode对应的配置选项
 " vim启动后自动异步安装的插件  NOTE: coc-tabnine的淘宝npm源似乎有问题，可以考虑临时换源
 
 let g:coc_global_extensions = [
   \ 'coc-snippets', 'coc-json', 'coc-html', 'coc-css', 'coc-tsserver',
   \ 'coc-python', 'coc-tabline', 'coc-lists', 'coc-explorer', 'coc-yank',
-  \ 'coc-markdownlint', 'coc-sh', 'coc-dictionary', 'coc-word', 'coc-emmet',
+  \ 'coc-markdownlint', 'coc-stylelint', 'coc-sh', 'coc-dictionary', 'coc-word', 'coc-emmet',
   \ 'coc-syntax', 'coc-marketplace', 'coc-todolist', 'coc-emoji',
   \ 'coc-gitignore'
   \ ]
@@ -805,7 +805,16 @@ set nrformats=alpha,hex,bin
 vmap <c-a> <Plug>(VisualIncrement)
 vmap <c-x> <Plug>(VisualDecrement)
 
-
+" 移动选中文本, 支持v:count
+Plug 'matze/vim-move', {'on': [ '<Plug>MoveBlockDown', '<Plug>MoveBlockUp', '<Plug>MoveBlockLeft', '<Plug>MoveBlockRight']}
+"{{{
+let g:move_map_keys = 0  " 禁用默认快捷键
+"}}}
+let g:move_auto_indent = 0  " 禁止移动完成后自动缩进
+vmap <m-j> <Plug>MoveBlockDown
+vmap <m-k> <Plug>MoveBlockUp
+vmap <m-h> <Plug>MoveBlockLeft
+vmap <m-l> <Plug>MoveBlockRight
 
 
 " ============================
@@ -1349,8 +1358,9 @@ endif
 " neoclide/coc-vetur
 "
 
-" React NOTE: 因为有coc-tsserver了 这个好像不太需要
-" Plug 'mxw/vim-jsx', {'for': [ '*jsx','*tsx' ]}
+" React NOTE: 因为有coc-tsserver了 不确定需不需要
+" coc作者早期的插件，高亮以及缩进, js对jsx的适配
+" Plug 'neoclide/vim-jsx-improve'
 
 " 最新的 Stylus 语法高亮，可能被polyglot替代了
 " Plug 'iloginow/vim-stylus'
