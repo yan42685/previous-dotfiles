@@ -1559,9 +1559,7 @@ nnoremap ch c0
 nnoremap cl c$
 
 " 去掉搜索高亮
-nnoremap <silent> <leader>/ :nohls<cr>zz
-" 编辑和当前文件同目录的文件,在命令行按tab会自动展开%:h
-nnoremap <leader>ef :e %:h/
+" nnoremap <silent> <leader>/ :nohls<cr>zz
 
 " 命令行和插入模式增强
 " 上下相比于<c-n> <c-p>更智能的地方:  可以根据已输入的字符补全历史命令
@@ -1615,7 +1613,6 @@ noremap <silent> <leader>k :wincmd k<cr>
 noremap <silent> <leader>h :wincmd h<cr>
 noremap <silent> <leader>l :wincmd l<cr>
 
-
 " Tab操作
 nnoremap <leader><leader>h gT
 nnoremap <leader><leader>l gt
@@ -1635,12 +1632,10 @@ endfunction
 " nnoremap <c-w> :call <SID>my_quit_tab()<cr>
 nnoremap <c-w> :tabclose<cr>
 inoremap <c-t> <esc>:tab split<cr>
-
 " normal模式下切换到确切的tab
 for s:count_num in [1,2,3,4,5,6,7,8,9]
     exec 'nnoremap <leader>' . s:count_num . ' ' . s:count_num . 'gt'
 endfor
-
 
 " 调整缩进后自动选中，方便再次操作
 vnoremap < <gv
@@ -1648,6 +1643,7 @@ vnoremap > >gv
 nnoremap < <<
 nnoremap > >>
 
+" 选择全部
 nnoremap <leader>so ggVG
 " 交换 ' `, 使得可以快速使用'跳到marked相同的位置
 noremap ' `
