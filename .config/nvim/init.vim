@@ -1,4 +1,4 @@
-﻿" TODO: 去https://github.com/neoclide/coc-tsserver 查看相关的js，ts设置
+﻿" TODO: coc.nvim去掉特定tag版本(因为目前最新版本有bug，只能选择特定版本)
 " 只考虑NeoVim，不一定兼容Vim
 "
 " 经验之谈:
@@ -91,9 +91,6 @@ endif
 " NOTE: 对于使用了on或for来延迟加载的插件只有在加载了之后才能用 help 查看文档
 call plug#begin('~/.vim/plugged')
 " {{{没有设置快捷键的，在后台默默运行的插件
-
-" 给注释和textobject插件提供支持
-Plug 'libclang-vim/libclang-vim'
 
 " 主题配色
 " Plug 'joshdick/onedark.vim'
@@ -233,7 +230,13 @@ let g:Illuminate_ftblacklist = [
 "}}}
 
 " 选择模式和行选择模式下可以用I A批量多行写入(修改了可视模式下I和A的映射)
-Plug 'kana/vim-niceblock'
+Plug 'kana/vim-niceblock', {'on': ['<Plug>(niceblock-I)', '<Plug>(niceblock-A)']}
+"{{{
+omap I <Plug>(niceblock-I)
+xmap I <Plug>(niceblock-I)
+xmap A <Plug>(niceblock-A)
+xmap A <Plug>(niceblock-A)
+"}}}
 
 " 新增很多方便的text object, 比如 , argument in( il( 并且可以计数比如光标在a时 (((a)b)c)  --d2ab--> (c )
 Plug 'wellle/targets.vim'
@@ -241,62 +244,100 @@ Plug 'wellle/targets.vim'
 " 自定义text-object 是vim-textobj-variable-segment插件的依赖
 Plug 'kana/vim-textobj-user'
 
-" ii ai 在python里很好用
-" Plug 'michaeljsmith/vim-indent-object', {'on': ['<Plug>(textobj-indent-i)', '<Plug>(textobj-indent-a)']}
-" omap ii <Plug>(textobj-indent-i)
-" omap ai <Plug>(textobj-indent-a)
-" xmap ii <Plug>(textobj-indent-i)
-" xmap ai <Plug>(textobj-indent-a)
+" ii ai 在python里很好用 NOTE: 这个插件是用函数做的映射，所以不能延迟加载
+Plug 'michaeljsmith/vim-indent-object'
 
-" iv av variabe-text-object 部分删除变量的名字 比如camel case: getJiggyY 以及 snake case: get_jinggyy
-Plug 'Julian/vim-textobj-variable-segment', {'on': ['<Plug>(textobj-variable-i)', '<Plug>(textobj-variable-a)']}
-omap iv <Plug>(textobj-variable-i)
-omap av <Plug>(textobj-variable-a)
-xmap iv <Plug>(textobj-variable-i)
-xmap av <Plug>(textobj-variable-a)
+" vic viC vac vaC Column单词自动快选择模式
+Plug 'coderifous/textobj-word-column.vim'  " NOTE:由于插件实现原因，不能延迟加载
 
-" if{char} af{char}
-" Plug 'thinca/vim-textobj-between', {'on': ['<Plug>(textobj-between-i)', '<Plug>(textobj-between-a)']}
-" omap if <Plug>(textobj-between-i)
-" omap af <Plug>(textobj-between-a)
-" xmap if <Plug>(textobj-between-i)
-" xmap af <Plug>(textobj-between-a)
-
-" ic ac
-Plug 'glts/vim-textobj-comment', {'on': ['<Plug>(textobj-comment-i)', '<Plug>(textobj-comment-a)']}
-omap ic <Plug>(textobj-comment-i)
-omap ac <Plug>(textobj-comment-a)
-xmap ic <Plug>(textobj-comment-i)
-xmap ac <Plug>(textobj-comment-a)
-
-" ix ax XML/HTML属性文本对象
-Plug 'whatyouhide/vim-textobj-xmlattr', {'on': ['<Plug>(textobj-xmlattr-attr-i)', '<Plug>(textobj-xmlattr-attr-a)']}
+" ( 前一个句子，)后一个句子的开头, g(去当前句子的结尾 g)去上个句子的结尾
+" NOTE:由于插件实现原因，不能延迟加载, 但是插件会自动根据文件类型加载
+Plug 'reedes/vim-textobj-sentence'
+"{{{
 omap ix <Plug>(textobj-xmlattr-attr-i)
 omap ax <Plug>(textobj-xmlattr-attr-a)
 xmap ix <Plug>(textobj-xmlattr-attr-i)
 xmap ax <Plug>(textobj-xmlattr-attr-a)
+augroup textobj_sentence
+  autocmd!
+  autocmd FileType markdown call textobj#sentence#init()
+  autocmd FileType textile,text call textobj#sentence#init()
+augroup end
+"}}}
 
-" ik iv
-Plug 'vimtaku/vim-textobj-keyvalue'
-" let g:textobj_keyvalue_no_default_key_mappings = 1  " 禁用默认映射
+" iv av variabe-text-object 部分删除变量的名字 比如camel case: getJiggyY 以及 snake case: get_jinggyy
+Plug 'Julian/vim-textobj-variable-segment', {'on': ['<Plug>(textobj-variable-i)', '<Plug>(textobj-variable-a)']}
+"{{{
+omap iv <Plug>(textobj-variable-i)
+omap av <Plug>(textobj-variable-a)
+xmap iv <Plug>(textobj-variable-i)
+xmap av <Plug>(textobj-variable-a)
+"}}}
+
+" ix ax XML/HTML属性文本对象
+Plug 'whatyouhide/vim-textobj-xmlattr', {'on': ['<Plug>(textobj-xmlattr-attr-i)', '<Plug>(textobj-xmlattr-attr-a)']}
+"{{{
+omap ix <Plug>(textobj-xmlattr-attr-i)
+omap ax <Plug>(textobj-xmlattr-attr-a)
+xmap ix <Plug>(textobj-xmlattr-attr-i)
+xmap ax <Plug>(textobj-xmlattr-attr-a)
+"}}}
 "
 " iz az
-Plug 'somini/vim-textobj-fold'
+Plug 'somini/vim-textobj-fold', {'on': ['<Plug>(textobj-fold-i)', '<Plug>(textobj-fold-a)']}
+"{{{
+omap iz <Plug>(textobj-fold-i)
+omap az <Plug>(textobj-fold-a)
+xmap iz <Plug>(textobj-fold-i)
+xmap az <Plug>(textobj-fold-a)
+"}}}
 
-" if iF af aF 只支持Java，C
-Plug 'kana/vim-textobj-function'
-" 依赖并增强kana的function对象，FIXME: 可能不支持nvim
-Plug 'haya14busa/vim-textobj-function-syntax'
-" is as 支持markdown
-Plug 'reedes/vim-textobj-sentence'
+" if iF af aF 只支持Java，C, Vimscript
+Plug 'kana/vim-textobj-function', {'on': ['<Plug>(textobj-xmlattr-attr-i)',
+            \ '<Plug>(textobj-xmlattr-attr-a)', '<Plug>(textobj-xmlattr-attr-I)', '<Plug>(textobj-xmlattr-attr-A)']}
+"{{{
+omap if <Plug>(textobj-xmlattr-attr-i)
+omap af <Plug>(textobj-xmlattr-attr-a)
+xmap if <Plug>(textobj-xmlattr-attr-i)
+xmap af <Plug>(textobj-xmlattr-attr-a)
+omap iF <Plug>(textobj-xmlattr-attr-I)
+omap aF <Plug>(textobj-xmlattr-attr-A)
+xmap iF <Plug>(textobj-xmlattr-attr-I)
+xmap aF <Plug>(textobj-xmlattr-attr-A)
+"}}}
+
+" 依赖 并 增强kana的function文本对象 ()
+Plug 'haya14busa/vim-textobj-function-syntax', {'on': ['<Plug>(textobj-xmlattr-attr-i)',
+            \ '<Plug>(textobj-xmlattr-attr-a)', '<Plug>(textobj-xmlattr-attr-I)', '<Plug>(textobj-xmlattr-attr-A)']}
+
 " ciq diq yiq viq 最近的引号' ` "
-Plug 'beloglazov/vim-textobj-quotes'
-" ij aj 最近的()[]{}
-Plug 'Julian/vim-textobj-brace'
-Plug 'kana/vim-textobj-line'
-" iu au 支持markdown的url  go打开连接(仅支持Linux)
-Plug 'jceb/vim-textobj-uri'
+Plug 'beloglazov/vim-textobj-quotes', {'on': ['<Plug>(textobj-quote-i)', '<Plug>(textobj-quote-a)']}
+"{{{
+omap iq <Plug>(textobj-quote-i)
+omap aq <Plug>(textobj-quote-a)
+xmap iq <Plug>(textobj-quote-i)
+xmap aq <Plug>(textobj-quote-a)
+"}}}
 
+" ij aj 最近的()[]{}
+Plug 'Julian/vim-textobj-brace', {'on': ['<Plug>(textobj-brace-i)', '<Plug>(textobj-brace-a)']}
+"{{{
+omap ij <Plug>(textobj-brace-i)
+omap aj <Plug>(textobj-brace-a)
+xmap ij <Plug>(textobj-brace-i)
+xmap aj <Plug>(textobj-brace-a)
+"}}}
+
+" iu au 支持markdown的url  go打开连接(仅支持Linux)
+Plug 'jceb/vim-textobj-uri', {'on': ['<Plug>(textobj-uri-uri-i)', '<Plug>(textobj-uri-uri-a)']}
+" NOTE: 如果不设置到<Plug>TextobjURIOpen的映射，则插件会映射 go
+"{{{
+omap iu <Plug>(textobj-uri-uri-i)
+omap au <Plug>(textobj-uri-uri-a)
+xmap iu <Plug>(textobj-uri-uri-i)
+xmap au <Plug>(textobj-uri-uri-a)
+"}}}
+nmap gl <Plug>TextobjURIOpen
 
 " 自动隐藏搜索的高亮
 Plug 'romainl/vim-cool'
@@ -686,7 +727,7 @@ nnoremap <leader>tu :CocCommand todolist.upload<cr>
 " nnoremap <leader>te :CocCommand todolist.export<cr>
 
 " COC自动补全框架
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release', 'tag': 'v0.0.77'}
 "{{{
 
 " 部分插件简介
@@ -889,7 +930,7 @@ nnoremap tl :SidewaysRight<cr>
 nnoremap th :SidewaysLeft<cr>
 
 " 驼峰跳转 FIXME: 修改了默认的b w e映射
-Plug 'bkad/CamelCaseMotion'
+Plug 'bkad/CamelCaseMotion', {'on': ['<Plug>CamelCaseMotion_w', '<Plug>CamelCaseMotion_b', '<Plug>CamelCaseMotion_e', '<Plug>(CamelCaseMotion_iw)']}
 let g:camelcasemotion_key = '<C-S-M-F12>'  " 禁用默认快捷键
 "{{{
 map <silent> w <Plug>CamelCaseMotion_w
