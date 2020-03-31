@@ -117,9 +117,6 @@ if g:disable_laggy_plugins_for_large_file == 0
     let s:spelunker_blacklist = ['startify']
     augroup my_highlight_spellbad
         autocmd!
-        autocmd VimEnter * highlight SpelunkerSpellBad cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
-        autocmd VimEnter * highlight SpelunkerComplexOrCompoundWord cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
-        " 下两行 取消在startify中的拼写检查 前提是设置了 g:spelunker_check_type = 2:
         let g:spelunker_disable_auto_group = 1
         " 用silent!的话即时不存在这个函数也不会报错，适用于--noplugin的情况
         autocmd CursorHold * if index(s:spelunker_blacklist, &filetype) < 0 | silent! call spelunker#check_displayed_words()
@@ -322,7 +319,7 @@ omap au <Plug>(textobj-uri-uri-a)
 xmap iu <Plug>(textobj-uri-uri-i)
 xmap au <Plug>(textobj-uri-uri-a)
 "}}}
-nmap gl <Plug>TextobjURIOpen
+nmap tu <Plug>TextobjURIOpen
 
 " 自动隐藏搜索的高亮
 Plug 'romainl/vim-cool'
@@ -954,9 +951,9 @@ sunmap b
 sunmap e
 "}}}
 
-" 支持v:count 块选择模式整列的递增/减数字 <c-a> <c-x> 支持数字，字母，十六进制, 二进制
+" 支持v:count 块选择模式整列的递增/减数字 <c-a> <c-x>
 Plug 'triglav/vim-visual-increment', {'on': ['<Plug>(VisualIncrement)', '<Plug>(VisualDecrement)']}
-set nrformats=alpha,hex,bin
+set nrformats=alpha,hex,bin  " 支持数字，字母，十六进制, 二进制
 vmap <c-a> <Plug>(VisualIncrement)
 vmap <c-x> <Plug>(VisualDecrement)
 
@@ -1622,6 +1619,8 @@ endfunction
 "}}}
 noremap <silent> Q <esc>:call <SID>auto_save_session()<cr>
 
+" set scrolloff=100  " FIXME: 尝试用scroll让视角居中，替换命令后面的zz，不过可能出现性能问题?
+
 "Treat long lines as break lines (useful when moving around in them)
 "se swap之后，同物理行上线直接跳
 noremap j gjzz
@@ -1761,7 +1760,9 @@ noremap ` '
 " 让y复制后光标仍在原位
 vnoremap y ygv<Esc>
 " 让normal模式的s和x不要污染无名寄存器, 因为一个字母没有必要覆盖之前的寄存器内容
-nnoremap s "_s
+" 同时visual模式s表示删除，x表示剪切
+noremap s "_s
+vnoremap s "_s
 nnoremap x "_x
 
 "==========================================
@@ -2158,6 +2159,9 @@ function s:Enable_normal_scheme() abort
     hi Pmenu ctermfg=188 ctermbg=240 cterm=NONE guifg=#aebbc5 guibg=#425762 gui=NONE
     hi PmenuSel ctermfg=237 ctermbg=246 cterm=NONE guifg=#2c3a41 guibg=#69c5ce gui=NONE
 
+    " spelunker 显示错误单词的颜色
+    highlight SpelunkerSpellBad cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
+    highlight SpelunkerComplexOrCompoundWord cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
 endfunction
 
 function s:Enable_transparent_scheme() abort
@@ -2231,7 +2235,7 @@ nnoremap [<space> :<c-u>call <sid>BlankUp(v:count1)<cr>
 " 在git difftool或git mergetool之后  可以用:cq进行强制退出diff/merge模式，而不会不停地recall another diff/merge file
 if &diff
     " 让viewport视角在最中心
-    set scrolloff=100
+    set scrolloff=100  " FIXME: 这个设置可能有会出现性能问题
     syn off  " 自动关闭语法高亮
     " 强制退出difftool, 不再自动唤起difftool
     noremap <leader><leader>q <esc>:cq<cr>
