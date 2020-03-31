@@ -962,57 +962,127 @@ vmap <Plug>My-repeat-surround34 S<gv<esc>
 vmap <Plug>My-repeat-surround35 S\|gv<esc>
 vmap <Plug>My-repeat-surround36 S`gv<esc>
 
+" 注册到repeat插件里
 for i in range(1, 36)
     let my_surround_mapstring = "\<Plug>My-repeat-surround" . i
     silent! call repeat#set(my_surround_mapstring, v:count)
 endfor
-silent! call repeat#set("\<Plug>My-repeat-surround1", v:count)
+
+nmap <leader>" <Plug>My-repeat-surround1
+nmap <leader>' <Plug>My-repeat-surround2
+nmap <leader>* <Plug>My-repeat-surround3
+nmap <leader><leader>* <Plug>My-repeat-surround4
+nmap <leader>( <Plug>My-repeat-surround5
+nmap <leader>) <Plug>My-repeat-surround6
+nmap <leader>[ <Plug>My-repeat-surround7
+nmap <leader>{ <Plug>My-repeat-surround8
+" surround with <>
+nmap <leader>< <Plug>My-repeat-surround9
+" surround with <tag></tag>
+nmap <leader>> <Plug>My-repeat-surround10
+" 这里对|进行了转义
+nmap <leader>\| <Plug>My-repeat-surround11
+nmap <leader>` <Plug>My-repeat-surround12
+
+nmap ," <Plug>My-repeat-surround13
+nmap ,' <Plug>My-repeat-surround14
+nmap ,* <Plug>My-repeat-surround15
+nmap ,,* <Plug>My-repeat-surround16
+nmap ,( <Plug>My-repeat-surround17
+nmap ,) <Plug>My-repeat-surround18
+nmap ,[ <Plug>My-repeat-surround19
+nmap ,{ <Plug>My-repeat-surround20
+nmap ,< <Plug>My-repeat-surround21
+nmap ,> <Plug>My-repeat-surround22
+nmap ,\| <Plug>My-repeat-surround23
+nmap ,` <Plug>My-repeat-surround24
+
+vmap <leader>" <Plug>My-repeat-surround25
+vmap <leader>' <Plug>My-repeat-surround26
+vmap <leader>* <Plug>My-repeat-surround27
+vmap <leader><leader>* <Plug>My-repeat-surround28
+vmap <leader>( <Plug>My-repeat-surround29
+vmap <leader>) <Plug>My-repeat-surround30
+vmap <leader>[ <Plug>My-repeat-surround31
+vmap <leader>{ <Plug>My-repeat-surround32
+vmap <leader>< <Plug>My-repeat-surround33
+vmap <leader>> <Plug>My-repeat-surround34
+vmap <leader>\| <Plug>My-repeat-surround35
+vmap <leader>` <Plug>My-repeat-surround36
+" 32 4 19 4
+" hello 4
+" g/^\d\+$/ s/\d\+/\=g:I/\|let g:I=g:I+1
+" %g/^surround\d\+$/ s/\d\+/\=g:I/|let g:I=g:I+1
+" \= 是子替换表达式, 用来将\w\+替换成g:I
+" nnoremap <leader>an :let g:I=1<CR>:%g/\d\+/ s/\d\+/\=g:I/\|let g:I=g:I+1<CR>
+" hello 4
+" vnoremap <leader>an :let g:I=1<CR>gv:s/\d\+/\=g:I/\|let g:I=g:I+1<CR>
+" nnoremap resync :let g:I=1<CR>:%g/\d\+$/ s/\d\+/\=g:I/\|let g:I=g:I+1<CR>
+" hello 2
+"
+"
+
+" function My_replace
+" 2
+" 2
+" 2
+" 0
+" 8
+" 9
+"
+" 1
+" 2
+" 3
+" 4
+" 5
+" 6
+
 
 
 " ================================================
 " 备份
 " ================================================
-nnoremap <leader>" :normal ysiW"<cr>gv<esc>
-nnoremap <leader>' :normal ysiW'<cr>gv<esc>
-nnoremap <leader>* :normal ysiW*<cr>gv<esc>
-nnoremap <leader><leader>* :normal ysiW*<cr>:normal ysiW*<cr>gv<esc>
-nnoremap <leader>( :normal ysiW)<cr>gv<esc>
-nnoremap <leader>) :normal ysiW)<cr>gv<esc>
-nnoremap <leader>[ :normal ysiW]<cr>gv<esc>
-nnoremap <leader>{ :normal ysiW}<cr>gv<esc>
-" surround with <>
-nnoremap <leader>< :normal ysiW><cr>gv<esc>
-" surround with <tag></tag>
-nnoremap <leader>> :normal ysiW<<cr>gv<esc>
-" 这里对|进行了转义
-nnoremap <leader>\| :normal ysiW\|<cr>gv<esc>
-nnoremap <leader>` :normal ysiW`<cr>gv<esc>
-
-nnoremap ," :normal ds"<cr>
-nnoremap ,' :normal ds'<cr>
-nnoremap ,* :normal ds*<cr>
-nnoremap ,,* :normal ds*<cr>:normal ds*<cr>
-nnoremap ,( :normal ds(<cr>
-nnoremap ,) :normal ds(<cr>
-nnoremap ,[ :normal ds[<cr>
-nnoremap ,{ :normal ds{<cr>
-nnoremap ,< :normal ds><cr>
-nnoremap ,> :normal dst<cr>
-nnoremap ,\| :normal ds\|<cr>
-nnoremap ,` :normal ds`<cr>
-
-vmap <leader>" S"gv<esc>
-vmap <leader>' S'gv<esc>
-vmap <leader>* S*gv<esc>
-vmap <leader><leader>* S*gvS*gv<esc>
-vmap <leader>( S)gv<esc>
-vmap <leader>) S)gv<esc>
-vmap <leader>[ S]gv<esc>
-vmap <leader>{ S}gv<esc>
-vmap <leader>< S>gv<esc>
-vmap <leader>> S<gv<esc>
-vmap <leader>\| S\|gv<esc>
-vmap <leader>` S`gv<esc>
+" nnoremap <leader>" :normal ysiW"<cr>gv<esc>
+" nnoremap <leader>' :normal ysiW'<cr>gv<esc>
+" nnoremap <leader>* :normal ysiW*<cr>gv<esc>
+" nnoremap <leader><leader>* :normal ysiW*<cr>:normal ysiW*<cr>gv<esc>
+" nnoremap <leader>( :normal ysiW)<cr>gv<esc>
+" nnoremap <leader>) :normal ysiW)<cr>gv<esc>
+" nnoremap <leader>[ :normal ysiW]<cr>gv<esc>
+" nnoremap <leader>{ :normal ysiW}<cr>gv<esc>
+" " surround with <>
+" nnoremap <leader>< :normal ysiW><cr>gv<esc>
+" " surround with <tag></tag>
+" nnoremap <leader>> :normal ysiW<<cr>gv<esc>
+" " 这里对|进行了转义
+" nnoremap <leader>\| :normal ysiW\|<cr>gv<esc>
+" nnoremap <leader>` :normal ysiW`<cr>gv<esc>
+"
+" nnoremap ," :normal ds"<cr>
+" nnoremap ,' :normal ds'<cr>
+" nnoremap ,* :normal ds*<cr>
+" nnoremap ,,* :normal ds*<cr>:normal ds*<cr>
+" nnoremap ,( :normal ds(<cr>
+" nnoremap ,) :normal ds(<cr>
+" nnoremap ,[ :normal ds[<cr>
+" nnoremap ,{ :normal ds{<cr>
+" nnoremap ,< :normal ds><cr>
+" nnoremap ,> :normal dst<cr>
+" nnoremap ,\| :normal ds\|<cr>
+" nnoremap ,` :normal ds`<cr>
+"
+" vmap <leader>" S"gv<esc>
+" vmap <leader>' S'gv<esc>
+" vmap <leader>* S*gv<esc>
+" vmap <leader><leader>* S*gvS*gv<esc>
+" vmap <leader>( S)gv<esc>
+" vmap <leader>) S)gv<esc>
+" vmap <leader>[ S]gv<esc>
+" vmap <leader>{ S}gv<esc>
+" vmap <leader>< S>gv<esc>
+" vmap <leader>> S<gv<esc>
+" vmap <leader>\| S\|gv<esc>
+" vmap <leader>` S`gv<esc>
 
 
 
@@ -1407,17 +1477,11 @@ let g:far#auto_delete_replaced_buffers = 1  " 自动关闭替换完成的buffer
 " 自定义快捷键提示样式
 let g:far#prompt_mapping = {
     \ 'quit'           : { 'key' : '<esc>', 'prompt' : '<esc>' },
-    \ 'regex'          : { 'key' : '<c-x>', 'prompt' : '<c-x>'  },
+    \ 'regex'          : { 'key' : '<c-r>', 'prompt' : '<c-r>'  },
     \ 'case_sensitive' : { 'key' : '<c-a>', 'prompt' : '<c-a>'  },
     \ 'word'           : { 'key' : '<c-w>', 'prompt' : '<c-w>'  },
     \ 'substitute'     : { 'key' : '<c-f>', 'prompt' : '<c-f>'  },
     \ }
-"}}}
-" {{{Function: My_get_current_visual_text() 获取当前visual选择的文本
-function My_get_current_visual_text() abort
-    execute "normal! `<v`>y"
-    return @"
-endfunction
 "}}}
 " 定义far buffer的映射, NOTE: 如果自己的vimrc里有对应非递归映射(比如nnoremap zo)，则这个插件的映射会失效, 此外由于 插件bug导致不能映射zo  到za
 " 快捷键r表示执行替换 q快速退出 x取消当前行 i激活当前行 t是toggle  他们的大写形式(X I T)表示全部行
@@ -1427,17 +1491,31 @@ let g:far#mapping = {
             \ 'collapse_all': ['zr', 'zR'],
             \ }
 let g:far#default_file_mask = '%'  " 命令行默认遮罩(搜索的范围)
-" buffer内替换
+" 命令行补全资源
+let g:far#file_mask_favorites = ['%', '**/*.*', '**/*.html', '**/*.js', '**/*.css', '**/*.c', '**/*.cpp',
+            \'**/*.ts', '**/*.jsx', '**/*.tsx', '**/*.vue', '**/*.py', '**/*.java',
+            \'**/*.md'
+            \]
 " 其他用法: Farr交互式查找，并且可以转换成正则模式
 " TIP: 已经预先复制好了要替换的内容，可以在命令行用<m-p>粘贴
+" TIP: 可以用:3,10Far foo bar **/*.py 指定行和文件, 遮罩%表示本文件，*表示所有文件
 " NOTE: 必须要先rooter再替换，否则会找不到文件
+" buffer内替换
 nnoremap <leader>su :let @0=expand('<cword>')<cr>:Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  %<left><left><c-f>i
 nnoremap <leader>sU :let @0=expand('<cWORD>')<cr>:Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  %<left><left><c-f>i
+" {{{Function: My_get_current_visual_text() 获取当前visual选择的文本
+function My_get_current_visual_text() abort
+    execute "normal! `<v`>y"
+    return @"
+endfunction
+"}}}
 xnoremap <leader>su :Rooter<cr>:<c-u>Far <c-r>=My_get_current_visual_text()<cr>  %<left><left><c-f>i
 " Project内替换
 nnoremap <leader>Su :let @0=expand('<cword>')<cr>:Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  *<left><left><c-f>i
 nnoremap <leader>SU :let @0=expand('<cWORD>')<cr>:Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  *<left><left><c-f>i
 xnoremap <leader>Su :Rooter<cr>:<c-u>Far <c-r>=My_get_current_visual_text()<cr>  *<left><left><c-f>i
+" 交互式替换，按<c-r>可以改变匹配模式为正则 <c-f>在查找和替换模式之间切换
+nnoremap <leader>sr :Farr<cr>
 
 " 在quickfix窗口里编辑  " FIXME: 和quickr-preview有冲突
 " Plug 'stefandtw/quickfix-reflector.vim'
@@ -1701,19 +1779,7 @@ inoremap ;; <c-o>A;<esc>jo
 imap [[ <esc>A<space>{<cr>
 " 重复上次执行的寄存器的命令
 nnoremap <leader>r; @:
-" {{{ Quickly make a macro and use it with "."
-let s:simple_macro_active = 0
-function! s:my_simple_macro()
-    if s:simple_macro_active == 0
-        normal! qr
-        let s:simple_macro_active = 1
-    elseif s:simple_macro_active == 1
-        normal! q
-        let s:simple_macro_active = 0
-    endif
-endfunction
-"}}}
-nnoremap <silent> M :call <SID>my_simple_macro()<cr>
+" 执行宏 r
 nnoremap R @r
 " xnoremap <expr> <leader>@ ":norm! @".nr2char(getchar())."<CR>"
 xnoremap <expr> R ":norm! @r<CR>"
