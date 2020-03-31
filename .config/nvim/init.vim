@@ -866,50 +866,50 @@ nmap ysw ysiw
 nmap ysW ysiW
 " 快速添加pair
 " TIP: cswb == ysiwb, 用于<cword> 而<leader>{?}用于<cWORD>
-nnoremap <leader>" :normal ysiW"<cr>gv<esc>
-nnoremap <leader>' :normal ysiW'<cr>gv<esc>
-nnoremap <leader>* :normal ysiW*<cr>gv<esc>
-nnoremap <leader><leader>* :normal ysiW*<cr>:normal ysiW*<cr>gv<esc>
-nnoremap <leader>( :normal ysiW)<cr>gv<esc>
-nnoremap <leader>[ :normal ysiW]<cr>gv<esc>
-nnoremap <leader>{ :normal ysiW}<cr>gv<esc>
-" surround with <>
-nnoremap <leader>< :normal ysiW><cr>gv<esc>
-" surround with <tag></tag>
-nnoremap <leader>> :normal ysiW<<cr>gv<esc>
-" 这里对|进行了转义
-nnoremap <leader>\| :normal ysiW\|<cr>gv<esc>
-nnoremap <leader>` :normal ysiW`<cr>gv<esc>
+" nnoremap <leader>" :normal ysiW"<cr>gv<esc>
+" nnoremap <leader>' :normal ysiW'<cr>gv<esc>
+" nnoremap <leader>* :normal ysiW*<cr>gv<esc>
+" nnoremap <leader><leader>* :normal ysiW*<cr>:normal ysiW*<cr>gv<esc>
+" nnoremap <leader>( :normal ysiW)<cr>gv<esc>
+" nnoremap <leader>[ :normal ysiW]<cr>gv<esc>
+" nnoremap <leader>{ :normal ysiW}<cr>gv<esc>
+" " surround with <>
+" nnoremap <leader>< :normal ysiW><cr>gv<esc>
+" " surround with <tag></tag>
+" nnoremap <leader>> :normal ysiW<<cr>gv<esc>
+" " 这里对|进行了转义
+" nnoremap <leader>\| :normal ysiW\|<cr>gv<esc>
+" nnoremap <leader>` :normal ysiW`<cr>gv<esc>
+"
+" vmap <leader>" S"gv<esc>
+" "{{{ Visual添加同上
+" vmap <leader>' S'gv<esc>
+" vmap <leader>* S*gv<esc>
+" vmap <leader><leader>* S*gvS*gv<esc>
+" vmap <leader>( S)gv<esc>
+" vmap <leader>) S)gv<esc>
+" vmap <leader>[ S]gv<esc>
+" vmap <leader>{ S}gv<esc>
+" vmap <leader>< S>gv<esc>
+" vmap <leader>> S<gv<esc>
+" vmap <leader>\| S\|gv<esc>
+" vmap <leader>` S`gv<esc>
+" "}}}
+" nnoremap ," :normal ds"<cr>
+" "{{{ 删除同上
+" nnoremap ,' :normal ds'<cr>
+" nnoremap ,* :normal ds*<cr>
+" nnoremap ,,* :normal ds*<cr>:normal ds*<cr>
+" nnoremap ,( :normal ds(<cr>
+" nnoremap ,[ :normal ds[<cr>
+" nnoremap ,{ :normal ds{<cr>
+" nnoremap ,< :normal ds><cr>
+" nnoremap ,> :normal dst<cr>
+" nnoremap ,\| :normal ds\|<cr>
+" nnoremap ,` :normal ds`<cr>
+" "}}}
 
-vmap <leader>" S"gv<esc>
-"{{{ Visual添加同上
-vmap <leader>' S'gv<esc>
-vmap <leader>* S*gv<esc>
-vmap <leader><leader>* S*gvS*gv<esc>
-vmap <leader>( S)gv<esc>
-vmap <leader>) S)gv<esc>
-vmap <leader>[ S]gv<esc>
-vmap <leader>{ S}gv<esc>
-vmap <leader>< S>gv<esc>
-vmap <leader>> S<gv<esc>
-vmap <leader>\| S\|gv<esc>
-vmap <leader>` S`gv<esc>
-"}}}
-nnoremap ," :normal ds"<cr>
-"{{{ 删除同上
-nnoremap ,' :normal ds'<cr>
-nnoremap ,* :normal ds*<cr>
-nnoremap ,,* :normal ds*<cr>:normal ds*<cr>
-nnoremap ,( :normal ds(<cr>
-nnoremap ,[ :normal ds[<cr>
-nnoremap ,{ :normal ds{<cr>
-nnoremap ,< :normal ds><cr>
-nnoremap ,> :normal dst<cr>
-nnoremap ,\| :normal ds\|<cr>
-nnoremap ,` :normal ds`<cr>
-"}}}
-
-
+"{{{
 " ===================================================
 " ===================================================
 " =========================================
@@ -918,10 +918,10 @@ nnoremap <expr> <Plug>My-repeat-surround1 ':normal ds(<cr>'
 silent! call repeat#set("\<Plug>My-repeat-surround1", v:count)
 nmap ,( <Plug>My-test-repeat
 
-" =========================================
+"   ''*''''''========================================='''''*''
 
+" nmap <Plug>My-repeat-surround2 ysiW'<cr>gv<esc>
 nnoremap <expr> <Plug>My-repeat-surround1 ':normal ysiW"<cr>gv<esc>'
-nnoremap <expr> <Plug>My-repeat-surround2 ':normal ysiW'<cr>gv<esc>'
 nnoremap <expr> <Plug>My-repeat-surround3 ':normal ysiW*<cr>gv<esc>'
 nnoremap <expr> <Plug>My-repeat-surround4 ':normal ysiW*<cr>:normal ysiW*<cr>gv<esc>'
 nnoremap <expr> <Plug>My-repeat-surround5 ':normal ysiW)<cr>gv<esc>'
@@ -936,8 +936,8 @@ nnoremap <expr> <Plug>My-repeat-surround10 ':normal ysiW<<cr>gv<esc>'
 nnoremap <expr> <Plug>My-repeat-surround11 ':normal ysiW\|<cr>gv<esc>'
 nnoremap <expr> <Plug>My-repeat-surround12 ':normal ysiW`<cr>gv<esc>'
 
-nnoremap <expr> <Plug>My-repeat-surround13 ':normal ds"<cr>'
-nnoremap <expr> <Plug>My-repeat-surround14 ':normal ds'<cr>'
+" nmap <Plug>My-repeat-surround13 ds'
+nnoremap <expr> <Plug>My-repeat-surround14 ':normal ds"<cr>'
 nnoremap <expr> <Plug>My-repeat-surround15 ':normal ds*<cr>'
 nnoremap <expr> <Plug>My-repeat-surround16 ':normal ds*<cr>:normal ds*<cr>'
 nnoremap <expr> <Plug>My-repeat-surround17 ':normal ds(<cr>'
@@ -949,8 +949,8 @@ nnoremap <expr> <Plug>My-repeat-surround22 ':normal dst<cr>'
 nnoremap <expr> <Plug>My-repeat-surround23 ':normal ds\|<cr>'
 nnoremap <expr> <Plug>My-repeat-surround24 ':normal ds`<cr>'
 
-vmap <Plug>My-repeat-surround25 S"gv<esc>
-vmap <Plug>My-repeat-surround26 S'gv<esc>
+" vmap <Plug>My-repeat-surround25 S'gv<esc>
+vmap <Plug>My-repeat-surround26 S"gv<esc>
 vmap <Plug>My-repeat-surround27 S*gv<esc>
 vmap <Plug>My-repeat-surround28 S*gvS*gv<esc>
 vmap <Plug>My-repeat-surround29 S)gv<esc>
@@ -968,8 +968,8 @@ for i in range(1, 36)
     silent! call repeat#set(my_surround_mapstring, v:count)
 endfor
 
-nmap <leader>" <Plug>My-repeat-surround1
-nmap <leader>' <Plug>My-repeat-surround2
+" nmap <leader>' <Plug>My-repeat-surround1
+nmap <leader>" <Plug>My-repeat-surround2
 nmap <leader>* <Plug>My-repeat-surround3
 nmap <leader><leader>* <Plug>My-repeat-surround4
 nmap <leader>( <Plug>My-repeat-surround5
@@ -984,8 +984,8 @@ nmap <leader>> <Plug>My-repeat-surround10
 nmap <leader>\| <Plug>My-repeat-surround11
 nmap <leader>` <Plug>My-repeat-surround12
 
-nmap ," <Plug>My-repeat-surround13
-nmap ,' <Plug>My-repeat-surround14
+" nmap ,' <Plug>My-repeat-surround13
+nmap ," <Plug>My-repeat-surround14
 nmap ,* <Plug>My-repeat-surround15
 nmap ,,* <Plug>My-repeat-surround16
 nmap ,( <Plug>My-repeat-surround17
@@ -997,8 +997,8 @@ nmap ,> <Plug>My-repeat-surround22
 nmap ,\| <Plug>My-repeat-surround23
 nmap ,` <Plug>My-repeat-surround24
 
-vmap <leader>" <Plug>My-repeat-surround25
-vmap <leader>' <Plug>My-repeat-surround26
+" vmap <leader>' <Plug>My-repeat-surround25
+vmap <leader>" <Plug>My-repeat-surround26
 vmap <leader>* <Plug>My-repeat-surround27
 vmap <leader><leader>* <Plug>My-repeat-surround28
 vmap <leader>( <Plug>My-repeat-surround29
@@ -1018,27 +1018,79 @@ vmap <leader>` <Plug>My-repeat-surround36
 " hello 4
 " vnoremap <leader>an :let g:I=1<CR>gv:s/\d\+/\=g:I/\|let g:I=g:I+1<CR>
 " nnoremap resync :let g:I=1<CR>:%g/\d\+$/ s/\d\+/\=g:I/\|let g:I=g:I+1<CR>
-" hello 2
+" "((((hello))))" 2
 "
-"
-
-" function My_replace
-" 2
-" 2
-" 2
-" 0
-" 8
-" 9
-"
-" 1
-" 2
-" 3
-" 4
-" 5
-" 6
+"}}}
 
 
+" -------------------------------------------------
+" -------------------------------------------------
+nmap <leader>' ysiW'<cr>gv<esc>
+nmap ,' ds'
+silent! call repeat#set("\<leader>'", v:count)
+silent! call repeat#set(",'", v:count)
+" -------------------------------------------------
+" -------------------------------------------------
+" -------------------------------------------------
+" -------------------------------------------------
+" nmap <leader>' :normal ysiW'<cr>gv<esc>
+" nmap <leader>" :normal ysiW"<cr>gv<esc>
+" nmap <leader>* :normal ysiW*<cr>gv<esc>
+" nmap <leader><leader>* :normal ysiW*<cr>:normal ysiW*<cr>gv<esc>
+" nmap <leader>) :normal ysiW)<cr>gv<esc>
+" nmap <leader>( :normal ysiW)<cr>gv<esc>
+" nmap <leader>[ :normal ysiW]<cr>gv<esc>
+" nmap <leader>{ :normal ysiW}<cr>gv<esc>
+" " surround with <>
+" nmap <leader>< :normal ysiW><cr>gv<esc>
+" " surround with <tag></tag>
+" nmap <leader>> :normal ysiW<<cr>gv<esc>
+" " 这里对|进行了转义
+" nmap <leader>\| :normal ysiW\|<cr>gv<esc>
+" nmap <leader>` :normal ysiW`<cr>gv<esc>
 
+" vmap <leader>" S"gv<esc>
+" vmap <leader>' S'gv<esc>
+" vmap <leader>* S*gv<esc>
+" vmap <leader><leader>* S*gvS*gv<esc>
+" vmap <leader>( S)gv<esc>
+" vmap <leader>) S)gv<esc>
+" vmap <leader>[ S]gv<esc>
+" vmap <leader>{ S}gv<esc>
+" vmap <leader>< S>gv<esc>
+" vmap <leader>> S<gv<esc>
+" vmap <leader>\| S\|gv<esc>
+" vmap <leader>` S`gv<esc>
+
+" nmap ," :normal ds"<cr>
+" nmap ,' :normal ds'<cr>
+" nmap ,* :normal ds*<cr>
+" nmap ,,* :normal ds*<cr>:normal ds*<cr>
+" nmap ,( :normal ds(<cr>
+" nmap ,) :normal ds(<cr>
+" nmap ,[ :normal ds[<cr>
+" nmap ,{ :normal ds{<cr>
+" nmap ,< :normal ds><cr>
+" nmap ,> :normal dst<cr>
+" nmap ,\| :normal ds\|<cr>
+" nmap ,` :normal ds`<cr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"{{{ 备份
 " ================================================
 " 备份
 " ================================================
@@ -1086,7 +1138,7 @@ vmap <leader>` <Plug>My-repeat-surround36
 
 
 
-
+"}}}
 
 
 
@@ -1501,21 +1553,21 @@ let g:far#file_mask_favorites = ['%', '**/*.*', '**/*.html', '**/*.js', '**/*.cs
 " TIP: 可以用:3,10Far foo bar **/*.py 指定行和文件, 遮罩%表示本文件，*表示所有文件
 " NOTE: 必须要先rooter再替换，否则会找不到文件
 " buffer内替换
-nnoremap <leader>su :let @0=expand('<cword>')<cr>:Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  %<left><left><c-f>i
-nnoremap <leader>sU :let @0=expand('<cWORD>')<cr>:Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  %<left><left><c-f>i
+nnoremap ,su :let @0=expand('<cword>')<cr>:Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  %<left><left><c-f>i
+nnoremap ,sU :let @0=expand('<cWORD>')<cr>:Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  %<left><left><c-f>i
 " {{{Function: My_get_current_visual_text() 获取当前visual选择的文本
 function My_get_current_visual_text() abort
     execute "normal! `<v`>y"
     return @"
 endfunction
 "}}}
-xnoremap <leader>su :Rooter<cr>:<c-u>Far <c-r>=My_get_current_visual_text()<cr>  %<left><left><c-f>i
+xnoremap ,su :Rooter<cr>:<c-u>Far <c-r>=My_get_current_visual_text()<cr>  %<left><left><c-f>i
 " Project内替换
-nnoremap <leader>Su :let @0=expand('<cword>')<cr>:Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  *<left><left><c-f>i
-nnoremap <leader>SU :let @0=expand('<cWORD>')<cr>:Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  *<left><left><c-f>i
-xnoremap <leader>Su :Rooter<cr>:<c-u>Far <c-r>=My_get_current_visual_text()<cr>  *<left><left><c-f>i
+nnoremap ,Su :let @0=expand('<cword>')<cr>:Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  *<left><left><c-f>i
+nnoremap ,SU :let @0=expand('<cWORD>')<cr>:Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  *<left><left><c-f>i
+xnoremap ,Su :Rooter<cr>:<c-u>Far <c-r>=My_get_current_visual_text()<cr>  *<left><left><c-f>i
 " 交互式替换，按<c-r>可以改变匹配模式为正则 <c-f>在查找和替换模式之间切换
-nnoremap <leader>sr :Farr<cr>
+nnoremap ,rsu :Farr<cr>
 
 " 在quickfix窗口里编辑  " FIXME: 和quickr-preview有冲突
 " Plug 'stefandtw/quickfix-reflector.vim'
@@ -1785,9 +1837,13 @@ nnoremap R @r
 xnoremap <expr> R ":norm! @r<CR>"
 
 " 替换模式串 NOTE: 目前被Far.vim插件替代, 但是由于那个插件有bug，有时候不能替换，所以留着这个备用了
-nnoremap ,su :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cword>')<cr>//gc<left><left><left><c-f>i
-nnoremap ,sU :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left><c-f>i
-xnoremap  ,su :<c-u>%s/<c-r>=My_get_current_visual_text()<cr>//gc<left><left><left><c-f>i
+nnoremap <leader>su :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cword>')<cr>//gc<left><left><left>
+nnoremap <leader>sU :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
+xnoremap  <leader>su :s///gc<left><left><left><left>
+" 正则替换
+nnoremap <leader>rsu :let @0=expand('<cword>')<cr>:%s/\v<c-r>=expand('<cword>')<cr>//gc<left><left><left>
+nnoremap <leader>rsU :let @0=expand('<cword>')<cr>:%s/\v<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
+xnoremap <leader>rsu :s/\v//gc<left><left><left><left>
 
 " 退出系列
 noremap <silent> <leader>q <esc>:q<cr>
