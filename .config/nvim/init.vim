@@ -938,7 +938,7 @@ nnoremap tl :SidewaysRight<cr>
 nnoremap th :SidewaysLeft<cr>
 
 " 驼峰跳转 FIXME: 修改了默认的b w e映射
-Plug 'bkad/CamelCaseMotion', {'on': ['<Plug>CamelCaseMotion_w', '<Plug>CamelCaseMotion_b', '<Plug>CamelCaseMotion_e', '<Plug>(CamelCaseMotion_iw)']}
+Plug 'bkad/CamelCaseMotion'
 let g:camelcasemotion_key = '<C-S-M-F12>'  " 禁用默认快捷键
 "{{{
 map <silent> w <Plug>CamelCaseMotion_w
@@ -1468,6 +1468,7 @@ if g:enable_front_end_layer == 1
 endif
 
 
+" =======================================
 
 
 
