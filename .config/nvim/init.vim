@@ -2,13 +2,16 @@
 " 只考虑NeoVim，不一定兼容Vim
 "
 " 一些经验:
-"   1. 抓住主要问题, 用相对简单和有意义的按键映射出现频率高的操作, 而非常冷门的操作设置较长的快捷键，或者设置成command
-"   2. 最小表达力原则: 用尽可能简单的方式组合来完成复杂的需求, 比如easy-motion插件有很多功能，
-"      但其实<Plug>(easymotion-bd-f)就足以胜任日常快速移动所需要的绝大部分功能, 过多的快捷键及功能反而会是干扰
+"   1. 抓住主要问题, 用相对简单和有意义的按键映射出现频率高的操作, 而非常冷门的操作
+"      设置较长的快捷键，或者设置成command
+"   2. 最小表达力原则: 用尽可能简单的方式组合来完成复杂的需求, 比如easy-motion插件有很
+"      多功能，但其实<Plug>(easymotion-bd-f)就足以胜任日常快速移动所需要的绝大部分功能, 过
+"      多的快捷键及功能反而会是干扰
 "
 " 键位设计原则:
 "   1. 有意义，容易记忆.
-"   2. 每个指令均衡左右手指击键, 如果都在同一边手上则尽量用不同的手指击键，尽量减小手指移动距离和次数
+"   2. 每个指令均衡左右手指击键, 如果都在同一边手上则尽量用不同的手指击键，尽量减小
+"      手指移动距离和次数
 "
 "  不建议用appimge安装，因为这样的话将nvim作为manpager会出现奇怪的权限问题
 "==========================================
@@ -505,7 +508,8 @@ let g:gen_tags#gtags_auto_gen = 1
 let g:gen_tags#gtags_auto_gen = 1
 let g:gen_tags#ctags_opts = ['--c++-kinds=+px', '--c-kinds=+px']
 let g:gen_tags#ctags_opts = ['-c', '--verbose']
-let $GTAGSLABEL = 'native-pygments'  " FIXME: 当项目文件的路径包含非ASCII字符时，使用pygments会报UnicodeEncodeError
+" FIXME: 当项目文件的路径包含非ASCII字符时，使用pygments会报UnicodeEncodeError
+let $GTAGSLABEL = 'native-pygments'
 let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
 "}}}
 
@@ -551,7 +555,10 @@ if g:disable_laggy_plugins_for_large_file == 0
     \   '*': ['remove_trailing_lines', 'trim_whitespace'],
     \   'c': ['clang-format'],
     \   'cpp': ['clang-format'],
+    \   'css': ['prettier'],
     \   'javascript': ['prettier'],
+    \   'html': ['prettier'],
+    \   'markdown': ['prettier'],
     \   'python': ['autopep8'],
     \}
     " 极大提升打开log 文件的性能
@@ -609,7 +616,8 @@ nmap <leader>mt <plug>(MergetoolToggle)
 " 切换视图
 nnoremap <silent> <leader>cmt :<C-u>call MergetoolLayoutCustom()<CR>
 
-" 显示当前行的commit信息, o下一个commit，O上一个，d打开该commit在当前文件的diff hunks， D打开该commit的所有diff hunks
+" 显示当前行的commit信息, o下一个commit，O上一个，d打开该commit在当前文件的diff hunks，
+" D打开该commit的所有diff hunks
 Plug 'rhysd/git-messenger.vim', {'on': '<Plug>(git-messenger)'}
 "{{{
 let g:git_messenger_no_default_mappings = v:true
@@ -1481,9 +1489,13 @@ if g:enable_front_end_layer == 1
 endif
 
 
+
 " =======================================
-
-
+" 写作layer
+" NOTE:　目前影响markdown排版的有pangu, ale里设置的prettier, lint是用的coc-markdownlint (如果prettier能做到无报警，
+"        那就可以卸载coc-markdownlint了)
+" =======================================
+"
 
 
 
@@ -1589,7 +1601,8 @@ nnoremap ,w :w<cr>
 " 解决通过命令let @" = {text}设置的@" 不能被p正确粘贴的问题
 nnoremap p ""p
 vnoremap v <esc>
-" 我喜欢使用分号作为插入模式的 leader 键，因为分号后面除了空格和换行之外几乎不会接任何其他字符
+" 我喜欢使用分号作为插入模式的 leader 键，因为分号后面除了空格和换行之外
+" 几乎不会接任何其他字符
 " 快速在行末写分号并换行
 inoremap ;j <c-o>A;<cr>
 inoremap ;; <c-o>A;<esc>jo
@@ -1644,9 +1657,12 @@ nnoremap gv gvzz
 " 定义这个是为了让which-key查询的时候不报错
 nnoremap gg gg
 " 切换大小写
-nnoremap gu viw~
-nnoremap gU viW~
-vnoremap gu ~
+inoremap <C-S-U> <esc>viw~gv<esc>a
+nnoremap <C-S-U> viw~gv<esc>a
+nnoremap gu viw~gv<esc>
+nnoremap gU viW~gv<esc>
+vnoremap gu ~gv<esc>
+
 nnoremap '' ``zz
 nnoremap '. `.zz
 nnoremap <c-o> <c-o>zz
@@ -1715,10 +1731,10 @@ nnoremap <leader>wj <c-w>wJ
 nnoremap <leader>wk <c-w>wK
 nnoremap <leader>wl <c-w>wL
 nnoremap <leader>wf <c-w><c-r>
-nnoremap <leader>ss <c-w>s<c-w>w
 " 窗口最大化 leaving only the help window open/maximized
 nnoremap <leader>wo <c-w>ozz
-noremap <silent> <leader>v :wincmd v<cr>:wincmd w<cr>
+nnoremap <leader>ss <c-w>s<c-w>w
+noremap <silent> <leader>vs :wincmd v<cr>:wincmd w<cr>
 noremap <silent> <leader>j :wincmd j<cr>
 noremap <silent> <leader>k :wincmd k<cr>
 noremap <silent> <leader>h :wincmd h<cr>
@@ -1800,8 +1816,8 @@ set updatecount =100  " FIXME:如果编辑大文件很慢那么考虑调大这�
 set cursorline  " 突出显示当前行
 set diffopt+=vertical,algorithm:patience
 set sessionoptions+=tabpages,globals,localoptions
-set synmaxcol=200  " 每次只渲染200行而不是整个文件
-" set t_ti= t_te=  " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉, 好处：误删什么的，如果以前屏幕打开，可以找回
+" set t_ti= t_te=  " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉,
+                    " 好处：误删什么的，如果以前屏幕打开，可以找回
 set mouse=r  " 启用鼠标, 可以用右键使用系统剪切板来复制粘贴
 set title  " change the terminal's title
 set novisualbell  " 去掉输入错误的提示声音
@@ -1810,6 +1826,7 @@ set vb t_vb= " 彻底禁止错误发出bell
 set tm=500
 set backspace=eol,start,indent  " Configure backspace so it acts as it should act
 set whichwrap+=<,>,h,l
+set synmaxcol=150  " 对于很长的行语法高亮很拖慢速度
 
 set viminfo+=!  " 保存viminfo全局信息
 set lazyredraw  " redraw only when we need to.
@@ -1859,7 +1876,8 @@ set showmode  " 左下角显示当前vim模式
 set number  " 显示行号
 set textwidth=0  " 打字超过一定长度也不会自动换行
 set relativenumber number  " 相对行号: 行号变成相对，可以用 nj/nk 进行跳转
-" set statusline=%<%f\ %h%m%r%=%k[%{(&fenc==\"\")?&enc:&fenc}%{(&bomb?\",BOM\":\"\")}]\ %-14.(%l,%c%V%)\ %P  " 命令行（在状态行下）的高度，默认为1，这里是2
+" set statusline=%<%f\ %h%m%r%=%k[%{(&fenc==\"\")?&enc:&fenc}%{(&bomb?\",BOM\":\"\")}]\ %-14.(%l,%c%V%)\ %P
+" " 命令行（在状态行下）的高度，默认为1，这里是2
 set laststatus=2  " Always show the status line - use 2 lines for the status bar
 set showmatch  " 括号配对情况, 跳转并高亮一下匹配的括号
 set matchtime=2  " How many tenths of a second to blink when matching brackets
@@ -2000,7 +2018,7 @@ function! s:Autosave(timed)
     if a:timed == 0 || s:time_delta >= 1
         let s:last_update = current_time
         if &buftype != 'nofile'  " 不对非文件的buffer进行检测
-            checktime  " checktime with autoread will sync files on a last-writer-wins basis. FIXME: 但是在命令行按<c-f>进入normal-command编辑模式会报错的
+            checktime  " checktime with autoread will sync files on a last-writer-wins basis.
         endif
         silent! doautocmd BufWritePre %  " needed for soft checks
         silent! update  " only updates if there are changes to the file.
@@ -2205,9 +2223,8 @@ nnoremap <leader>ec :execute "normal 'C"<cr>
 " 编辑该文件类型的snippets
 nnoremap <leader>es :CocCommand snippets.editSnippets<cr>
 " 编辑同目录下的文件
-nnoremap ,e :Rooter<cr>:e <c-r>=expand('%:p:h')<cr>/
-nnoremap ,n :Rooter<cr>:!mkdir <c-r>=expand('%:p:h')<cr>/
-nnoremap ,N :Rooter<cr>:!mkdir <c-r>=expand(getcwd())<cr>/
+nnoremap ,e :e <c-r>=expand('%:p:h')<cr>/
+nnoremap ,n :!mkdir <c-r>=expand('%:p:h')<cr>/
 
 " {{{查看highlighting group
 function! s:synstack()
