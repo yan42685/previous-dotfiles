@@ -797,8 +797,10 @@ endfunction
 
 
 " 层进式范围选择
-nmap <cr> <Plug>(coc-range-select)
-vmap <cr> <Plug>(coc-range-select)
+let g:coc_range_select_map_blacklist = ['vim']
+" 这样映射是为了在命令行按下<c-f>进入的buffer内，可以在normal模式按回车执行指令
+nmap <expr> <cr> index(g:coc_range_select_map_blacklist, &filetype) >=0 ? '<cr>' : '<Plug>(coc-range-select)'
+vmap <expr> <cr> index(g:coc_range_select_map_blacklist, &filetype) >=0 ? '<cr>' : '<Plug>(coc-range-select)'
 vmap <backspace> <Plug>(coc-range-select-backward)
 " 触发鼠标悬浮事件
 nnoremap <silent> gh :call CocActionAsync('doHover')<cr>
@@ -885,6 +887,7 @@ vmap <leader>' S'gv<esc>
 vmap <leader>* S*gv<esc>
 vmap <leader><leader>* S*gvS*gv<esc>
 vmap <leader>( S)gv<esc>
+vmap <leader>) S)gv<esc>
 vmap <leader>[ S]gv<esc>
 vmap <leader>{ S}gv<esc>
 vmap <leader>< S>gv<esc>
@@ -905,6 +908,119 @@ nnoremap ,> :normal dst<cr>
 nnoremap ,\| :normal ds\|<cr>
 nnoremap ,` :normal ds`<cr>
 "}}}
+
+
+" ===================================================
+" ===================================================
+" =========================================
+
+nnoremap <expr> <Plug>My-repeat-surround1 ':normal ds(<cr>'
+silent! call repeat#set("\<Plug>My-repeat-surround1", v:count)
+nmap ,( <Plug>My-test-repeat
+
+" =========================================
+
+nnoremap <expr> <Plug>My-repeat-surround1 ':normal ysiW"<cr>gv<esc>'
+nnoremap <expr> <Plug>My-repeat-surround2 ':normal ysiW'<cr>gv<esc>'
+nnoremap <expr> <Plug>My-repeat-surround3 ':normal ysiW*<cr>gv<esc>'
+nnoremap <expr> <Plug>My-repeat-surround4 ':normal ysiW*<cr>:normal ysiW*<cr>gv<esc>'
+nnoremap <expr> <Plug>My-repeat-surround5 ':normal ysiW)<cr>gv<esc>'
+nnoremap <expr> <Plug>My-repeat-surround6 ':normal ysiW)<cr>gv<esc>'
+nnoremap <expr> <Plug>My-repeat-surround7 ':normal ysiW]<cr>gv<esc>'
+nnoremap <expr> <Plug>My-repeat-surround8 ':normal ysiW}<cr>gv<esc>'
+" surround with <>
+nnoremap <expr> <Plug>My-repeat-surround9 ':normal ysiW><cr>gv<esc>'
+" surround with <tag></tag>
+nnoremap <expr> <Plug>My-repeat-surround10 ':normal ysiW<<cr>gv<esc>'
+" 这里对|进行了转义
+nnoremap <expr> <Plug>My-repeat-surround11 ':normal ysiW\|<cr>gv<esc>'
+nnoremap <expr> <Plug>My-repeat-surround12 ':normal ysiW`<cr>gv<esc>'
+
+nnoremap <expr> <Plug>My-repeat-surround13 ':normal ds"<cr>'
+nnoremap <expr> <Plug>My-repeat-surround14 ':normal ds'<cr>'
+nnoremap <expr> <Plug>My-repeat-surround15 ':normal ds*<cr>'
+nnoremap <expr> <Plug>My-repeat-surround16 ':normal ds*<cr>:normal ds*<cr>'
+nnoremap <expr> <Plug>My-repeat-surround17 ':normal ds(<cr>'
+nnoremap <expr> <Plug>My-repeat-surround18 ':normal ds(<cr>'
+nnoremap <expr> <Plug>My-repeat-surround19 ':normal ds[<cr>'
+nnoremap <expr> <Plug>My-repeat-surround20 ':normal ds{<cr>'
+nnoremap <expr> <Plug>My-repeat-surround21 ':normal ds><cr>'
+nnoremap <expr> <Plug>My-repeat-surround22 ':normal dst<cr>'
+nnoremap <expr> <Plug>My-repeat-surround23 ':normal ds\|<cr>'
+nnoremap <expr> <Plug>My-repeat-surround24 ':normal ds`<cr>'
+
+vmap <Plug>My-repeat-surround25 S"gv<esc>
+vmap <Plug>My-repeat-surround26 S'gv<esc>
+vmap <Plug>My-repeat-surround27 S*gv<esc>
+vmap <Plug>My-repeat-surround28 S*gvS*gv<esc>
+vmap <Plug>My-repeat-surround29 S)gv<esc>
+vmap <Plug>My-repeat-surround30 S)gv<esc>
+vmap <Plug>My-repeat-surround31 S]gv<esc>
+vmap <Plug>My-repeat-surround32 S}gv<esc>
+vmap <Plug>My-repeat-surround33 S>gv<esc>
+vmap <Plug>My-repeat-surround34 S<gv<esc>
+vmap <Plug>My-repeat-surround35 S\|gv<esc>
+vmap <Plug>My-repeat-surround36 S`gv<esc>
+
+for i in range(1, 36)
+    let my_surround_mapstring = "\<Plug>My-repeat-surround" . i
+    silent! call repeat#set(my_surround_mapstring, v:count)
+endfor
+silent! call repeat#set("\<Plug>My-repeat-surround1", v:count)
+
+
+" ================================================
+" 备份
+" ================================================
+nnoremap <leader>" :normal ysiW"<cr>gv<esc>
+nnoremap <leader>' :normal ysiW'<cr>gv<esc>
+nnoremap <leader>* :normal ysiW*<cr>gv<esc>
+nnoremap <leader><leader>* :normal ysiW*<cr>:normal ysiW*<cr>gv<esc>
+nnoremap <leader>( :normal ysiW)<cr>gv<esc>
+nnoremap <leader>) :normal ysiW)<cr>gv<esc>
+nnoremap <leader>[ :normal ysiW]<cr>gv<esc>
+nnoremap <leader>{ :normal ysiW}<cr>gv<esc>
+" surround with <>
+nnoremap <leader>< :normal ysiW><cr>gv<esc>
+" surround with <tag></tag>
+nnoremap <leader>> :normal ysiW<<cr>gv<esc>
+" 这里对|进行了转义
+nnoremap <leader>\| :normal ysiW\|<cr>gv<esc>
+nnoremap <leader>` :normal ysiW`<cr>gv<esc>
+
+nnoremap ," :normal ds"<cr>
+nnoremap ,' :normal ds'<cr>
+nnoremap ,* :normal ds*<cr>
+nnoremap ,,* :normal ds*<cr>:normal ds*<cr>
+nnoremap ,( :normal ds(<cr>
+nnoremap ,) :normal ds(<cr>
+nnoremap ,[ :normal ds[<cr>
+nnoremap ,{ :normal ds{<cr>
+nnoremap ,< :normal ds><cr>
+nnoremap ,> :normal dst<cr>
+nnoremap ,\| :normal ds\|<cr>
+nnoremap ,` :normal ds`<cr>
+
+vmap <leader>" S"gv<esc>
+vmap <leader>' S'gv<esc>
+vmap <leader>* S*gv<esc>
+vmap <leader><leader>* S*gvS*gv<esc>
+vmap <leader>( S)gv<esc>
+vmap <leader>) S)gv<esc>
+vmap <leader>[ S]gv<esc>
+vmap <leader>{ S}gv<esc>
+vmap <leader>< S>gv<esc>
+vmap <leader>> S<gv<esc>
+vmap <leader>\| S\|gv<esc>
+vmap <leader>` S`gv<esc>
+
+
+
+
+
+
+
+
 
 " %匹配对象增强, 也许可以把%改成m
 Plug 'andymass/vim-matchup'
@@ -1313,15 +1429,15 @@ let g:far#mapping = {
 let g:far#default_file_mask = '%'  " 命令行默认遮罩(搜索的范围)
 " buffer内替换
 " 其他用法: Farr交互式查找，并且可以转换成正则模式
-" FIXME: 如果出现Error: File in current buffer is not readable，可以尝试修改该文件的拥有者和权限, chown和chmod重置一遍
 " TIP: 已经预先复制好了要替换的内容，可以在命令行用<m-p>粘贴
-nnoremap <leader>su :let @0=expand('<cword>')<cr>:Far <c-r>=expand('<cword>')<cr>  %<left><left><c-f>i
-nnoremap <leader>sU :let @0=expand('<cWORD>')<cr>:Far <c-r>=expand('<cWORD>')<cr>  %<left><left><c-f>i
-xnoremap <leader>su :<c-u>Far <c-r>=My_get_current_visual_text()<cr>  %<left><left><c-f>i
+" NOTE: 必须要先rooter再替换，否则会找不到文件
+nnoremap <leader>su :let @0=expand('<cword>')<cr>:Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  %<left><left><c-f>i
+nnoremap <leader>sU :let @0=expand('<cWORD>')<cr>:Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  %<left><left><c-f>i
+xnoremap <leader>su :Rooter<cr>:<c-u>Far <c-r>=My_get_current_visual_text()<cr>  %<left><left><c-f>i
 " Project内替换
 nnoremap <leader>Su :let @0=expand('<cword>')<cr>:Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  *<left><left><c-f>i
 nnoremap <leader>SU :let @0=expand('<cWORD>')<cr>:Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  *<left><left><c-f>i
-xnoremap <leader>Su :Rooter<cr><c-u>:Far <c-r>=My_get_current_visual_text()<cr>  *<left><left><c-f>i
+xnoremap <leader>Su :Rooter<cr>:<c-u>Far <c-r>=My_get_current_visual_text()<cr>  *<left><left><c-f>i
 
 " 在quickfix窗口里编辑  " FIXME: 和quickr-preview有冲突
 " Plug 'stefandtw/quickfix-reflector.vim'
