@@ -106,6 +106,8 @@ Plug 'sainnhe/forest-night'
 " 在大文件下会影响性能
 " =================================
 if g:disable_laggy_plugins_for_large_file == 0
+    " 为spelunker提供弹窗支持, 设置的Pmenu，PmenuSel只支持cterm的
+    Plug 'kamykn/popup-menu.nvim'
     " 拼写检查 zl出现list选择修复，zf自动使用list第一个，zg添加到词典里，zw设置为错误单词
     Plug 'kamykn/spelunker.vim'
     "{{{
@@ -2147,6 +2149,11 @@ function s:Enable_normal_scheme() abort
     highlight! StartifyHeader cterm=bold ctermbg=black ctermfg=75 gui=bold guifg=#87bb7c
     highlight! StartifyFile cterm=None ctermfg=75 gui=None guifg=#d8b98a
     highlight! StartifyNumber cterm=None ctermfg=75 gui=None guifg=#7daea3
+
+    " spelunker的popup menue配色(只支持cterm, 但又要兼顾coc的gui补全配色)
+    hi Pmenu ctermfg=188 ctermbg=240 cterm=NONE guifg=#aebbc5 guibg=#425762 gui=NONE
+    hi PmenuSel ctermfg=237 ctermbg=246 cterm=NONE guifg=#2c3a41 guibg=#69c5ce gui=NONE
+
 endfunction
 
 function s:Enable_transparent_scheme() abort
