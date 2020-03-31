@@ -536,13 +536,8 @@ if g:disable_laggy_plugins_for_large_file == 0
 
     nnoremap gp :SignifyHunkDiff<cr>
     nnoremap ,gu :SignifyHunkUndo<cr>
-    augroup signify_remapping
-        autocmd!
-        " 在diff hunk之间跳转
-        autocmd VimEnter * nmap gk <plug>(signify-prev-hunk)
-        autocmd VimEnter * nmap gj <plug>(signify-next-hunk)
-    augroup end
-
+    nmap gk <plug>(signify-prev-hunk)
+    nmap gj <plug>(signify-next-hunk)
     " ALE静态代码检查和自动排版 NOTE: 默认禁用对log文件的fixer
     Plug 'dense-analysis/ale'
     "{{{
@@ -1617,10 +1612,8 @@ endfunction
 "}}}
 noremap <silent> Q <esc>:call <SID>auto_save_session()<cr>
 
-" set scrolloff=100  " FIXME: 尝试用scroll让视角居中，替换命令后面的zz，不过可能出现性能问题?
-
-"Treat long lines as break lines (useful when moving around in them)
-"se swap之后，同物理行上线直接跳
+" set scrolloff=100  " FIXME: 尝试用scroll让视角居中，替换很多命令后面的zz，不过可能出现性能问题?
+"set wrap之后，在折行之间也可以跳
 noremap j gjzz
 noremap k gkzz
 nnoremap zj zjzz
@@ -1951,11 +1944,10 @@ augroup auto_actions_for_better_experience
     "}}}
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会不会有性能问题
-    autocmd User MyEnterDiffMode if &diff | windo setlocal syntax=off | setlocal scrolloff=100
+    autocmd User MyEnterDiffMode if (&filetype != '' && &diff) | windo setlocal syntax=off | setlocal scrolloff=100
     " FIXME: 这里的set syntax=on可能会影响某些特殊的文件类型的高亮渲染, 所以必要时应该排除在外
     autocmd WinEnter,WinLeave * if (&filetype != '' && &syntax != 'on' && !&diff && &filetype != 'far')
                 \ | set syntax=on | endif
-
 augroup end
 
 " 开启语法高亮
