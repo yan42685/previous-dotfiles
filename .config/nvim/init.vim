@@ -295,24 +295,6 @@ xmap iz <Plug>(textobj-fold-i)
 xmap az <Plug>(textobj-fold-a)
 "}}}
 
-" if iF af aF 只支持Java，C, Vimscript
-Plug 'kana/vim-textobj-function', {'on': ['<Plug>(textobj-xmlattr-attr-i)',
-            \ '<Plug>(textobj-xmlattr-attr-a)', '<Plug>(textobj-xmlattr-attr-I)', '<Plug>(textobj-xmlattr-attr-A)']}
-"{{{
-omap if <Plug>(textobj-xmlattr-attr-i)
-omap af <Plug>(textobj-xmlattr-attr-a)
-xmap if <Plug>(textobj-xmlattr-attr-i)
-xmap af <Plug>(textobj-xmlattr-attr-a)
-omap iF <Plug>(textobj-xmlattr-attr-I)
-omap aF <Plug>(textobj-xmlattr-attr-A)
-xmap iF <Plug>(textobj-xmlattr-attr-I)
-xmap aF <Plug>(textobj-xmlattr-attr-A)
-"}}}
-
-" 依赖 并 增强kana的function文本对象 ()
-Plug 'haya14busa/vim-textobj-function-syntax', {'on': ['<Plug>(textobj-xmlattr-attr-i)',
-            \ '<Plug>(textobj-xmlattr-attr-a)', '<Plug>(textobj-xmlattr-attr-I)', '<Plug>(textobj-xmlattr-attr-A)']}
-
 " ciq diq yiq viq 最近的引号' ` "
 Plug 'beloglazov/vim-textobj-quotes', {'on': ['<Plug>(textobj-quote-i)', '<Plug>(textobj-quote-a)']}
 "{{{
@@ -813,16 +795,32 @@ endfunction
 "}}}
 " 跳转Placeholder的时候自动显示函数签名
 " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+" <C-o>       - 切换到正常模式。
+" <C-c>       - 停止后台任务。
+
+
+" 层进式范围选择
+nmap <cr> <Plug>(coc-range-select)
+vmap <cr> <Plug>(coc-range-select)
+vmap <backspace> <Plug>(coc-range-select-backward)
 " 触发鼠标悬浮事件
 nnoremap <silent> gh :call CocActionAsync('doHover')<cr>
+" 跳转到声明
+nmap <silent> gD <Plug>(coc-declaration)
+" 跳转到定义
 nmap <silent> gd <Plug>(coc-definition)zz
 nmap <silent> gm <Plug>(coc-implementation)zz
 nmap <silent> gr <Plug>(coc-references)zz
 nmap <silent> gf <Plug>(coc-refactor)
 nmap <silent> gt <Plug>(coc-type-definition)
+" 函数文本对象
+omap if <Plug>(coc-funcobj-i)
+omap af <Plug>(coc-funcobj-a)
+xmap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
 " 可以用来import
 nmap <leader>do <Plug>(coc-codeaction)
-nnoremap <silent> <leader>ml :CocList --normal marks<cr>
+nnoremap <silent> <leader>ml :CocList --normal --number-select --auto-preview marks<cr>
 nnoremap <silent> <leader>sl :CocList sessions<cr>
 " 查看文档,并跳转
 nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
@@ -832,6 +830,11 @@ nmap <silent> <leader>re <Plug>(coc-rename)
 imap <silent> <c-m-v> <esc><Plug>(coc-codeaction)
 nmap <silent> <c-m-v> <Plug>(coc-codeaction)
 vmap <silent> <c-m-v> <Plug>(coc-codeaction-selected)
+" TODO: 测试效果 在代码片段跳转后显示函数签名。
+" autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+" FIXME: 如果不想显示ref的虚拟文本，需要在coc-setting里关闭codelents
+nmap <leader><leader>a call CocActionAsync('coc-action-codeLensAction')
+
 
 
 
