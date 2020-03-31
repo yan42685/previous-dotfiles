@@ -1124,6 +1124,18 @@ augroup goyo_toggle_callback
     autocmd! User GoyoLeave nested call <SID>goyo_leave()
 augroup end
 
+" 中文自动排版，不能连续重复使用除感叹号以外的标点 连续句号转换成省略号，中英文之间自动加标点，中文前后的半角符号转成全角
+" NOTE: 文档书写规范见https://github.com/sparanoid/chinese-copywriting-guidelines
+" TIP: 持久化禁用 在编辑的文档中任何位置注明 PANGU_DISABLE，则整个文档不自动规范化
+" :PanguDisable禁用自动排版，对于多个文件可以使用vi a.xx b.xx c.xx 然后:argdo Pangu | update
+Plug 'hotoo/pangu.vim', {'for': ['markdown','vimwiki', 'text','txt', 'wiki']}
+"{{{ 根据文件类型自动开启
+augroup auto_enable_pangu
+    autocmd!
+    autocmd BufWritePre *.markdown,*.md,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
+augroup end
+"}}}
+
 " 模糊非视觉中心的字符
 Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
 
@@ -1703,7 +1715,7 @@ nnoremap <leader>wj <c-w>wJ
 nnoremap <leader>wk <c-w>wK
 nnoremap <leader>wl <c-w>wL
 nnoremap <leader>wf <c-w><c-r>
-nnoremap <leader>ws <c-w>s<c-w>w
+nnoremap <leader>ss <c-w>s<c-w>w
 " 窗口最大化 leaving only the help window open/maximized
 nnoremap <leader>wo <c-w>ozz
 noremap <silent> <leader>v :wincmd v<cr>:wincmd w<cr>
@@ -1749,11 +1761,10 @@ noremap ' `
 noremap ` '
 " 让y复制后光标仍在原位
 vnoremap y ygv<esc>
-" 让normal模式的s和x不要污染无名寄存器, 因为一个字母没有必要覆盖之前的寄存器内容
+" 让normal模式的s不要污染无名寄存器, 因为一个字母没有必要覆盖之前的寄存器内容
 " 同时visual模式s表示删除，x表示剪切
 noremap s "_s
 vnoremap s "_s
-nnoremap x "_x
 
 "==========================================
 " Theme Settings  主题设置
