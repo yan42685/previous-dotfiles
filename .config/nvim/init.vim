@@ -1,8 +1,8 @@
 ﻿" TODO: coc.nvim去掉特定tag版本(因为目前最新版本有bug，只能选择特定版本)
 " 只考虑NeoVim，不一定兼容Vim
 "
-" 经验之谈:
-"   1. 抓住主要问题, 用相对简单和有意义的按键映射出现频率高的操作, 而非常冷门的操作不设置快捷键，可以考虑用别的方式替代
+" 一些经验:
+"   1. 抓住主要问题, 用相对简单和有意义的按键映射出现频率高的操作, 而非常冷门的操作设置较长的快捷键，或者设置成command
 "   2. 最小表达力原则: 用尽可能简单的方式组合来完成复杂的需求, 比如easy-motion插件有很多功能，
 "      但其实<Plug>(easymotion-bd-f)就足以胜任日常快速移动所需要的绝大部分功能, 过多的快捷键及功能反而会是干扰
 "
@@ -53,16 +53,16 @@
 "            FIXME: 如果在Leaderf里调用rg出现~/.config文件夹permission deny的情况 就需要 sudo chown -R $USER:$GROUP ~/.config
 "  6. 使用vim-signify显示diff，必须要注册好git账户，比如git config --global user.name "username" && git config --global user.email "useremail@qq.com"
 "}}}
-" 【初次配置Vim必看】配置文件的坑{{{
-"   1. 映射<Plug>(...)必须用递归映射, 否则不生效
-"   2. 映射ex命令的时候不能用noremap, 因为这会导致按键出现奇奇怪怪的结果, 应该改成nnoremap
-"   3. vimrc文件let语句的等号两边不能写空格, 写了不生效!
+" 【配置过程中遇到的坑】{{{
+"   1. 映射<Plug>(...)时必须用递归映射
+"   2. 映射ex命令的时候尽量不用noremap, 因为这可能会导致按键出现奇奇怪怪的结果, 应该改成nnoremap
+"   3. vimrc文件let语句的等号两边不能有空格
 "   4. 单引号是raw String 而双引号才可以转义， 所以设置unicode字体的时候应该用双引号比如"\ue0b0"
 "   5. 用{'on': '<Plug>(?)'}来延迟加载时，必须要自己设置相关映射，否则无法加载(因为原插件的映射并不会被加载)，但是command就不用自己设置映射，比如
 "       {'on': 'Rooter'}这种
 "   6. 因为一行过长导致VimL语法不被成功解析，应该用\ 拆成多行
 "   7. 如果调用了插件的函数，最好使用silent! 因为在使用--noplugin打开时，如果
-"   找不到该函数且不是silent!就会一直报错，导致vim没法使用
+"   找不到该函数且不是silent! call的话，就会一直报错，导致vim没法使用
 "}}}
 
 " ==========================================
@@ -1590,7 +1590,7 @@ nnoremap R @q
 " xnoremap <expr> <leader>@ ":norm! @".nr2char(getchar())."<CR>"
 xnoremap <expr> R ":norm! @q<CR>"
 
-" 替换模式串 NOTE: 目前被Far.vim插件替代, 但是由于那个插件有bug，有时候不能替换，所以留着这个备用了
+" 替换模式串 NOTE: 目前被Far.vim插件替代, 不过同一文件内小范围的替换用这个方式还是更方便一些
 nnoremap <leader>su :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cword>')<cr>//gc<left><left><left>
 nnoremap <leader>sU :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
 xnoremap  <leader>su :s///gc<left><left><left><left>
