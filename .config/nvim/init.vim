@@ -8,7 +8,7 @@
 "
 " 键位设计原则:
 "   1. 有意义，容易记忆.
-"   2. 每个指令均衡左右手指击键, 如果都在同一手上则尽量用不同的手指击键，尽量减小手指移动距离
+"   2. 每个指令均衡左右手指击键, 如果都在同一边手上则尽量用不同的手指击键，尽量减小手指移动距离和次数
 "
 "  不建议用appimge安装，因为这样的话将nvim作为manpager会出现奇怪的权限问题
 "==========================================
@@ -32,8 +32,8 @@
 "           在官网下载最新的tar.gz 解压后进入 执行 sudo apt install ncurses-dev && ./configure && make && sudo make install && sudo pip3 install pygments
 "  8. ctags(插件vista依赖):
         " sudo apt install software-properties-common && sudo add-apt-repository ppa:hnakamur/universal-ctags && sudo apt update && sudo apt install universal-ctags
+"  9.  "coc-tabnine需要**单独**用CocCommand tabnine.openConfig 设置'ignore_all_lsp': true来加强补全效果
 "
-"  9. 在:CocConfig 写入下面的JSON设置
 "}}}
 " 【可选项】{{{
 "  1. 使用Alacritty终端模拟器 设置cursor不闪烁, <c-c>复制，<m-i>粘贴系统剪切板， 而Vim里面的<m-i>会被终端拦截，所以有相同的效果，
@@ -52,7 +52,6 @@
 "            curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb && sudo dpkg -i ripgrep_11.0.2_amd64.deb
 "            FIXME: 如果在Leaderf里调用rg出现~/.config文件夹permission deny的情况 就需要 sudo chown -R $USER:$GROUP ~/.config
 "  6. 使用vim-signify显示diff，必须要注册好git账户，比如git config --global user.name "username" && git config --global user.email "useremail@qq.com"
-"  7.  "coc-tabnine需要设置'ignore_all_lsp': true来加强补全效果
 "}}}
 " 【初次配置Vim必看】配置文件的坑{{{
 "   1. 映射<Plug>(...)必须用递归映射, 否则不生效
@@ -114,7 +113,7 @@ if g:disable_laggy_plugins_for_large_file == 0
     set nospell  " 禁用默认的难看的高亮红色
     let g:spelunker_check_type = 2  " 只在window内动态check, 对大文件十分友好
     let g:spelunker_highlight_type = 2  " Highlight only SpellBad.
-    let s:spelunker_blacklist = ['startify', 'far', 'vim-plug', '']
+    let s:spelunker_blacklist = ['startify', 'far', 'vim-plug', '', 'vim']  " 这里包括了文件类型的空的buffer
     augroup my_highlight_spellbad
         autocmd!
         let g:spelunker_disable_auto_group = 1
