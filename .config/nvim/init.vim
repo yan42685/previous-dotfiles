@@ -114,7 +114,7 @@ if g:disable_laggy_plugins_for_large_file == 0
     set nospell  " 禁用默认的难看的高亮红色
     let g:spelunker_check_type = 2  " 只在window内动态check, 对大文件十分友好
     let g:spelunker_highlight_type = 2  " Highlight only SpellBad.
-    let s:spelunker_blacklist = ['startify']
+    let s:spelunker_blacklist = ['startify', 'far', 'vim-plug', '']
     augroup my_highlight_spellbad
         autocmd!
         let g:spelunker_disable_auto_group = 1
@@ -319,7 +319,7 @@ omap au <Plug>(textobj-uri-uri-a)
 xmap iu <Plug>(textobj-uri-uri-i)
 xmap au <Plug>(textobj-uri-uri-a)
 "}}}
-nmap tu <Plug>TextobjURIOpen
+nmap <silent> tu <Plug>TextobjURIOpen
 
 " 自动隐藏搜索的高亮
 Plug 'romainl/vim-cool'
@@ -622,7 +622,7 @@ let g:git_messenger_no_default_mappings = v:true
 "}}}
 " 开启预览后光标始终进入popup window, 否则要再次使用快捷键才能让光标进入popup window
 " let g:git_messenger_always_into_popup = v:true
-nmap go <Plug>(git-messenger)
+nmap gc <Plug>(git-messenger)
 
 " git
 Plug 'tpope/vim-fugitive'
@@ -1009,27 +1009,7 @@ let g:startify_fortune_use_unicode = 1  " 首页banner使用utf-8字符编码
 let g:startify_enable_special = 0  " 不显示<empty buffer> 和 <quit>
 let g:startify_session_sort = 1  " Sort sessions by modification time (when the session files were written) rather than alphabetically.
 let g:startify_custom_indices = map(range(1,100), 'string(v:val)')  " index从1开始数起
-let g:utf8_image = [
-            \ '(っ＾▿＾)۶🍸🌟🍺٩(˘◡˘  )',
-            \ '',
-            \]
-
-let g:utf8_middle_finger = [
-            \ '░░░░░░░░░░░░░░░▄▄░░░░░░░░░░░',
-            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
-            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
-            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
-            \ '░░░░░░░░░░░░░░█░░█░░░░░░░░░░',
-            \ '██████▄███▄████░░███▄░░░░░░░',
-            \ '▓▓▓▓▓▓█░░░█░░░█░░█░░░███░░░░',
-            \ '▓▓▓▓▓▓█░░░█░░░█░░█░░░█░░█░░░',
-            \ '▓▓▓▓▓▓█░░░░░░░░░░░░░░█░░█░░░',
-            \ '▓▓▓▓▓▓█░░░░░░░░░░░░░░░░█░░░░',
-            \ '▓▓▓▓▓▓█░░░░░░░░░░░░░░██░░░░░',
-            \ '▓▓▓▓▓▓█████░░░░░░░░░██░░░░░░',
-            \ ]
-
-" I get it from https://fsymbols.com/text-art/
+" I got it from https://fsymbols.com/text-art/
 let g:utf8_double_moon = [
             \ '┊┊┊┊      ' . '███████╗██╗     ██╗ ██████╗ ██████╗ ███████╗██████╗ ',
             \ '┊┊┊☆      ' . '██╔════╝██║     ██║ ██╔══██╗██╔══██╗██╔════╝██╔══██╗',
@@ -1038,7 +1018,6 @@ let g:utf8_double_moon = [
             \ '┊☆ °      ' . '██║     ███████╗██║ ██║     ██║     ███████╗██████╔╝',
             \ '🌙        ' . '╚═╝     ╚══════╝╚═╝ ╚═╝     ╚═╝     ╚══════╝╚═════╝ ',
             \ ]
-
 
 let g:startify_custom_header =
             \ 'startify#pad(g:utf8_double_moon)'
@@ -1353,7 +1332,7 @@ nnoremap ,rsu :Farr<cr>
 
 " 在quickfix窗口里编辑  " FIXME: 和quickr-preview有冲突
 " Plug 'stefandtw/quickfix-reflector.vim'
-let g:qf_join_changes = 1  " 允许在同一个quickfix里undo多个文件
+" let g:qf_join_changes = 1  " 允许在同一个quickfix里undo多个文件
 
 " 自动预览quickfix  FIXME: 和quickfix-reflector.vim有冲突
 Plug 'ronakg/quickr-preview.vim', {'for': 'qf'}
@@ -1538,8 +1517,7 @@ endif
 " 以下插件可能用不到，作为备用吧
 
 " Vue支持
-" neoclide/coc-vetur
-"
+" coc-vetur
 
 " React NOTE: 因为有coc-tsserver了 不确定需不需要
 " coc作者早期的插件，高亮以及缩进, js对jsx的适配
@@ -1778,7 +1756,7 @@ nnoremap <leader>so ggVG
 noremap ' `
 noremap ` '
 " 让y复制后光标仍在原位
-vnoremap y ygv<Esc>
+vnoremap y ygv<esc>
 " 让normal模式的s和x不要污染无名寄存器, 因为一个字母没有必要覆盖之前的寄存器内容
 " 同时visual模式s表示删除，x表示剪切
 noremap s "_s
@@ -1791,7 +1769,6 @@ nnoremap x "_x
 set termguicolors  " 使用真色彩
 exec 'colorscheme ' . g:all_colorschemes[g:default_colorscheme_mode]
 " colorscheme quantum
-" colorscheme onedark
 " colorscheme gruvbox-material
 " colorscheme neodark
 " colorscheme nova
