@@ -116,12 +116,20 @@ if g:disable_laggy_plugins_for_large_file == 0
     set nospell  " 禁用默认的难看的高亮红色
     let g:spelunker_check_type = 2  " 只在window内动态check, 对大文件十分友好
     let g:spelunker_highlight_type = 2  " Highlight only SpellBad.
-    let s:spelunker_blacklist = ['startify', 'far', 'vim-plug', '', 'vim']  " 这里包括了文件类型的空的buffer
+    let s:spelunker_blacklist = ['startify', 'far', 'vim-plug', 'vim', '', 'coc-explorer']  " 这里包括了文件类型的空的buffer
     augroup my_highlight_spellbad
         autocmd!
         let g:spelunker_disable_auto_group = 1
+"{{{
+        fun My_should_enable_spelunker()
+            if index(s:spelunker_blacklist, &filetype) >= 0 || &filetype == '' || &diff
+                return 0
+            endif
+            return 1
+        endf
+"}}}
         " 用silent!的话即时不存在这个函数也不会报错，适用于--noplugin的情况
-        autocmd CursorHold * if index(s:spelunker_blacklist, &filetype) < 0 | silent! call spelunker#check_displayed_words()
+        autocmd CursorHold * if  My_should_enable_spelunker() | silent! call spelunker#check_displayed_words() | endif
     augroup end
     "}}}
 endif
@@ -692,12 +700,14 @@ function ToggleCocExplorer()
   execute 'CocCommand explorer --toggle --width=35 --sources=buffer+,file+ ' . getcwd()
 endfunction
 "}}}
-nnoremap <silent> <leader>er :Rooter<cr>:call ToggleCocExplorer()<CR>
+nnoremap <silent> <leader>er :call ToggleCocExplorer()<CR>
 
 " 使用coc-yank (自带复制高亮)
 nnoremap <silent> gy :<C-u>CocList --normal yank<cr>
 
 " coc-translator  可以先输入再查词, 作为一个简单的英汉词典,
+" view word history
+nnoremap <leader>vw :CocList translation<cr>
 nmap tt <Plug>(coc-translator-p)
 vmap tt <Plug>(coc-translator-pv)
 
@@ -932,8 +942,7 @@ nmap ,` :normal ds`<cr>
 Plug 'andymass/vim-matchup'
 "{{{
 let loaded_matchit = 1
-let g:loaded_matchit = 1  " 禁用vim默认自带插件
-let g:loaded_matchparen = 1
+let loaded_matchparen = 1
 augroup matchup_matchparen_highlight
   autocmd!
   autocmd Colorscheme * hi! link MatchParen Visual
@@ -1171,6 +1180,10 @@ nmap <F10> :VimspectorReset
 
 " 查看各个插件启动时间
 Plug 'tweekmonster/startuptime.vim', { 'on': 'StartupTime' }
+nnoremap <leader>St :StartupTime<cr>
+nnoremap <leader>Pi :PlugInstall<cr>
+nnoremap <leader>Pc :PlugClean<cr>
+nnoremap <leader>Ps :PlugStatus<cr>
 
 " MarkDown预览
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for':['markdown', 'vimwiki'] , 'on': '<Plug>MarkdownPreviewToggle'}
@@ -1276,13 +1289,13 @@ let g:Lf_ShortcutB = ''
 "}}}
 let g:Lf_CommandMap = {'<C-]>':['<C-l>']}  " 搜索后<c-l>在右侧窗口打开文件
 nnoremap <silent> <c-p> :Leaderf command<cr>
-nnoremap <silent> <leader>gf :Rooter<cr>:Leaderf file<cr>
+nnoremap <silent> <leader>gf :Leaderf file<cr>
 nnoremap <silent> <leader>gb :Leaderf buffer<cr>
 nnoremap <silent> <leader>gr :Leaderf mru<cr>
 nnoremap <silent> <leader>gc :Leaderf cmdHistory<cr>
 nnoremap <silent> <leader>gs :Leaderf searchHistory<cr>
 " 项目下即时搜索
-nnoremap <silent> <leader>rg :Rooter<cr>:<C-U>Leaderf rg<cr>
+nnoremap <silent> <leader>rg :<C-U>Leaderf rg<cr>
 " 项目下搜索词 -F是fix 即不是正则模式
 nnoremap <silent> <Leader>sw :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cword>"))<CR><cr>
 nnoremap <silent> <Leader>sW :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cWORD>"))<CR><cr>
@@ -1454,6 +1467,15 @@ let g:doge_filetype_aliases = {
 \}
 nnoremap <leader>cc :DogeGenerate<cr>
 
+"  选择区域进行diff
+Plug 'rickhowe/spotdiff.vim', {'on': 'Diffthis'}
+let s:in_diff_hunk_status = 0
+" diff selsct
+vnoremap <leader>ds :Diffthis<cr>
+" diff close
+nnoremap <leader>dc :Diffoff<cr>
+"  单词级对比,　diff模式自动启动, 高亮组是DiffText
+Plug 'rickhowe/diffchar.vim', {'on': 'TDChar'}
 
 
 
@@ -1476,15 +1498,16 @@ if g:enable_front_end_layer == 1
     nnoremap <leader>pv :Bracey<cr>
 
     " 具体的snippets见 https://github.com/mlaursen/vim-react-snippets
-    Plug 'mlaursen/vim-react-snippets'
+    " Plug 'mlaursen/vim-react-snippets'
 
     " plug 模板引擎
-    Plug 'digitaltoad/vim-pug'
+    " Plug 'digitaltoad/vim-pug'
 
     " 选择，插入，修改css颜色,配合取色器, NOTE: 可能不支持nvim
-    Plug 'kabbamine/vCoolor.vim', {'on': ['VCoolor', 'VCoolIns']}
+    " Plug 'kabbamine/vCoolor.vim', {'on': ['VCoolor', 'VCoolIns']}
+"{{{
     let g:vcoolor_disable_mappings = 1  " 取消默认快捷键
-
+"}}}
 
 endif
 
@@ -1863,6 +1886,7 @@ augroup tab_indent_settings_by_filetype
     " 下两行是coc-tsserver这么要求的
     autocmd BufRead,BufNewFile *.jsx set filetype=javascript.jsx
     autocmd BufRead,BufNewFile *.tsx set filetype=typescript.tsx
+    autocmd BufRead,BufNewFile *.java setlocal synmaxcol=200   " java的代码可能比较长，所以高亮长度设置长一点
     " NOTE: 如果js之类的大文件高亮渲染不同步 可以开启这两个可能影响性能的选项
     " autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
     " autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear"
@@ -1972,7 +1996,7 @@ augroup auto_actions_for_better_experience
     "}}}
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会不会有性能问题
-    autocmd User MyEnterDiffMode if (&filetype != '' && &diff) | windo setlocal syntax=off | setlocal scrolloff=100
+    autocmd User MyEnterDiffMode if (&filetype != '' && &diff) | windo setlocal syntax=off | windo setlocal wrap | setlocal scrolloff=100
     " FIXME: 这里的set syntax=on可能会影响某些特殊的文件类型的高亮渲染, 所以必要时应该排除在外
     autocmd WinEnter,WinLeave * if (&filetype != '' && &syntax != 'on' && !&diff && &filetype != 'far')
                 \ | set syntax=on | endif
@@ -2206,6 +2230,10 @@ function! Toggle_transparent_background()
     let t:is_transparent = 1
   endif
 endfunction
+
+" diff单词的高亮
+hi! DiffText ctermfg=237 ctermbg=246 cterm=undercurl guifg=#a6b4fb gui=undercurl,bold
+
 "}}}
 nnoremap <silent> <leader>tt :call Toggle_transparent_background()<CR>
 
