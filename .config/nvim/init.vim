@@ -1,4 +1,5 @@
-﻿" TODO: coc.nvim去掉特定tag版本(因为目前最新版本有bug，只能选择特定版本)
+﻿
+" TODO: coc.nvim去掉特定tag版本(因为目前最新版本有bug，只能选择特定版本)
 " 只考虑NeoVim，不一定兼容Vim
 "
 " 一些经验:
@@ -642,7 +643,7 @@ endfunction
 "}}}
 nmap <leader>mt <plug>(MergetoolToggle)
 " 切换视图
-nnoremap <silent> <leader>cmt :<C-u>call MergetoolLayoutCustom()<CR>
+nnoremap <silent> <leader>mc :<C-u>call MergetoolLayoutCustom()<CR>
 
 " 显示当前行的commit信息, o下一个commit，O上一个，d打开该commit在当前文件的diff hunks，
 " D打开该commit的所有diff hunks
@@ -844,7 +845,7 @@ xmap if <Plug>(coc-funcobj-i)
 xmap af <Plug>(coc-funcobj-a)
 " 可以用来import
 nmap <leader>do <Plug>(coc-codeaction)
-nnoremap <silent> <leader>ml :CocList --normal --number-select --auto-preview marks<cr>
+nnoremap <silent> <leader>ml :CocList --normal --number-select marks<cr>
 nnoremap <silent> <leader>sl :CocList sessions<cr>
 " 查看文档,并跳转
 nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
@@ -1145,12 +1146,17 @@ autocmd VimEnter * call which_key#register('t', "g:which_key_map_t")
 " 快捷键注释
 "{{{ <Space> 快捷键注释
 let g:which_key_map_space = {}
+let g:which_key_map_space['0'] = 'toggle-sytax'
+let g:which_key_map_space.a = {
+            \ 'name': '+absolute-path',
+            \ 'p': 'absolute-path-copy'
+            \}
 let g:which_key_map_space.b = {
     \ 'name': '+buffer/bookmark/build',
     \ 'd': 'buffer-close',
     \ }
 let g:which_key_map_space.c = {
-            \ 'name': '+comment/colors-scheme/custom',
+            \ 'name': '+comment/colors-scheme',
             \ }
 let g:which_key_map_space.d = {
             \ 'name': '+diff/directory',
@@ -1173,7 +1179,7 @@ let g:which_key_map_space.m = {
             \ 'name': '+markdown/mergetool/marks',
             \}
 let g:which_key_map_space.n = {
-            \ 'name': '+name-of',
+            \ 'name': '+filename',
             \ 'm': 'filename-copy',
             \}
 let g:which_key_map_space.o = {
@@ -1196,6 +1202,9 @@ let g:which_key_map_space.s = {
             \ 'a': 'select-all',
             \ 'u': 'buffer-substitute-cword',
             \ 'U': 'buffer-substitute-cWORD',
+            \}
+let g:which_key_map_space.S = {
+            \ 'name': '+startuptime'
             \}
 let g:which_key_map_space.t = {
             \ 'name': '+todolist/transparent',
@@ -1834,7 +1843,7 @@ function! s:my_quit_tab()
 endfunction
 "}}}
 " nnoremap <c-w> :call <SID>my_quit_tab()<cr>
-nnoremap <c-w> :tabclose<cr>
+nnoremap <silent> <c-w> :tabclose<cr>
 inoremap <c-t> <esc>:tab split<cr>
 " normal模式下切换到确切的tab
 for s:count_num in [1,2,3,4,5,6,7,8,9]
@@ -2133,12 +2142,12 @@ endfunction
 " 切换colorscheme时需要调用这个函数覆盖默认的设置
 function s:Enable_normal_scheme() abort
     "{{{ TODO: FIXME: BUG: NOTE: HACK: 自定义标记配色
-        highlight MyTodo cterm=bold ctermbg=180 ctermfg=black gui=bold guifg=#ff8700
-        highlight MyNote cterm=bold ctermbg=75 ctermfg=black gui=bold guifg=#19dd9d
-        highlight MyFixme cterm=bold ctermbg=189 ctermfg=black gui=bold guifg=#e697e6
-        highlight MyBug cterm=bold ctermbg=168 ctermfg=black gui=bold guifg=#dd698c
-        highlight MyHack cterm=bold ctermbg=240 ctermfg=black gui=bold guifg=#f4da9a
-        highlight link MyTip MyHack
+        highlight! MyTodo cterm=bold ctermbg=180 ctermfg=black gui=bold guifg=#ff8700
+        highlight! MyNote cterm=bold ctermbg=75 ctermfg=black gui=bold guifg=#19dd9d
+        highlight! MyFixme cterm=bold ctermbg=189 ctermfg=black gui=bold guifg=#e697e6
+        highlight! MyBug cterm=bold ctermbg=168 ctermfg=black gui=bold guifg=#dd698c
+        highlight! MyHack cterm=bold ctermbg=240 ctermfg=black gui=bold guifg=#f4da9a
+        highlight! link MyTip MyHack
 
     augroup highlight_my_keywords
         autocmd!
@@ -2171,16 +2180,15 @@ function s:Enable_normal_scheme() abort
 "}}}
 "{{{ Spelunker 拼写检查
     " spelunker的popup menue配色(只支持cterm, 但又要兼顾coc的gui补全配色)
-    hi Pmenu ctermfg=188 ctermbg=240 cterm=NONE guifg=#aebbc5 guibg=#425762 gui=NONE
-    hi PmenuSel ctermfg=237 ctermbg=246 cterm=NONE guifg=#2c3a41 guibg=#69c5ce gui=NONE
+    hi! Pmenu ctermfg=188 ctermbg=240 cterm=NONE guifg=#aebbc5 guibg=#425762 gui=NONE
+    hi! PmenuSel ctermfg=237 ctermbg=246 cterm=NONE guifg=#2c3a41 guibg=#69c5ce gui=NONE
 
     " spelunker 显示错误单词的颜色
-    highlight SpelunkerSpellBad cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
-    highlight SpelunkerComplexOrCompoundWord cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
+    highlight! SpelunkerSpellBad cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
+    highlight! SpelunkerComplexOrCompoundWord cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
 "}}}
 "{{{ diff单词的高亮
-
-    hi! DiffText ctermfg=237 ctermbg=246 cterm=undercurl guifg=#a6b4fb gui=undercurl,bold
+    hi! DiffText ctermfg=237 ctermbg=246 cterm=undercurl guifg=#3397dd gui=undercurl
 "}}}
 "{{{让JSONC的注释高亮正常
 augroup enable_comment_highlighting_for_json
@@ -2189,12 +2197,12 @@ augroup enable_comment_highlighting_for_json
 augroup end
 "}}}
 "{{{ Vim-Which-Key高亮
-highlight WhichKey gui=None guifg=#c765c8
-highlight WhichKeySeperator gui=None guifg=#00b37d
-highlight WhichKeyGroup   gui=None guifg=#3397dd
-highlight WhichKeyDesc    gui=None  guifg=#5686dd
+highlight! WhichKey gui=None guifg=#c765c8
+highlight! WhichKeySeperator gui=None guifg=#00b37d
+highlight! WhichKeyGroup   gui=None guifg=#3397dd
+highlight! WhichKeyDesc    gui=None  guifg=#5686dd
 " 让弹窗背景自适应主题的背景色
-highlight WhichKeyFloating gui=None
+highlight! WhichKeyFloating gui=None
 "}}}
 endfunction
 
