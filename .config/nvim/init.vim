@@ -69,7 +69,8 @@
 "}}}
 
 " ==========================================
-" 【可自行调整的重要参数】
+" 可自行调整的全局配置
+" ==========================================
 let g:enable_front_end_layer = 1  " 前端Layer, 启动所有前端相关插件
 let g:enable_file_autosave = 1  " 是否自动保存
 let g:disable_laggy_plugins_for_large_file = 0  " 在启动参数里设置为1就可以加快打开速度
@@ -1605,7 +1606,8 @@ call plug#end()
 " 如果需要覆盖插件定义的映射，可用如下方式
 " autocmd VimEnter * noremap <leader>cc echo "my purpose"
 
-" 主要按键重定义
+" ===================================
+" {{{重要的按键重定义
 inoremap kj <esc>
 cnoremap kj <c-c>
 nnoremap ? /
@@ -1627,34 +1629,12 @@ inoremap ;j <c-o>A;<cr>
 inoremap ;; <c-o>A;<esc>jo
 " NOTE: 这里用imap是因为要借用auto-pairs插件提供的{}自动配对
 imap [[ <esc>A<space>{<cr>
-" 重复上次执行的寄存器的命令
-nnoremap <leader>r; @:
-" 执行宏 q
-nnoremap R @q
-" xnoremap <expr> <leader>@ ":norm! @".nr2char(getchar())."<CR>"
-xnoremap <expr> R ":norm! @q<CR>"
-
-" 替换模式串 NOTE: 目前被Far.vim插件替代, 不过同一文件内小范围的替换用这个方式还是更方便一些
-nnoremap <leader>su :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cword>')<cr>//gc<left><left><left>
-nnoremap <leader>sU :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
-xnoremap  <leader>su :s///gc<left><left><left><left>
-" 正则替换
-nnoremap <leader>rsu :let @0=expand('<cword>')<cr>:%s/\v<c-r>=expand('<cword>')<cr>//gc<left><left><left>
-nnoremap <leader>rsU :let @0=expand('<cword>')<cr>:%s/\v<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
-xnoremap <leader>rsu :s/\v//gc<left><left><left><left>
-
-" 退出系列
-noremap <silent> <leader>q <esc>:q<cr>
-"{{{ 自动保存会话
-function s:auto_save_session() abort
-    let session_name = fnamemodify(v:this_session,':t')
-    let session_name = session_name == '' ? 'default.vim' : session_name
-    execute 'SSave! ' . session_name
-    execute 'qa'
-endfunction
+" 连接下一行
+nnoremap tj J
+" 废弃ZZ退出
+noremap ZZ <nop>
 "}}}
-noremap <silent> Q <esc>:call <SID>auto_save_session()<cr>
-
+"{{{ 更便捷的移动以及视角居中
 " set scrolloff=100  " FIXME: 尝试用scroll让视角居中，替换很多命令后面的zz，不过可能出现性能问题?
 "set wrap之后，在折行之间也可以跳
 noremap j gjzz
@@ -1666,7 +1646,6 @@ nnoremap zzj ]zzz
 nnoremap zzk [zzz
 noremap J <C-f>zz
 noremap K <C-b>zz
-nnoremap tj J
 nmap gb %zz
 " 去上次修改的地方
 nnoremap gi gi<esc>zzi
@@ -1674,13 +1653,6 @@ nnoremap gi gi<esc>zzi
 nnoremap g; g;zz
 nnoremap g, g,zz
 nnoremap gv gvzz
-" 切换大小写
-inoremap <C-S-U> <esc>viw~gv<esc>a
-nnoremap <C-S-U> viw~gv<esc>a
-nnoremap gu viw~gv<esc>
-nnoremap gU viW~gv<esc>
-vnoremap gu ~gv<esc>
-
 nnoremap '' ``zz
 nnoremap '. `.zz
 nnoremap <c-o> <c-o>zz
@@ -1688,9 +1660,9 @@ nnoremap <c-i> <c-i>zz
 nnoremap u uzz
 nnoremap <c-r> <c-r>zz
 nnoremap G Gzz
-nnoremap [z [zzz
-nnoremap ]z ]zzz
-
+" 交换 ' `, 使得可以快速使用'跳到marked相同的位置
+noremap ' `
+noremap ` '
 nnoremap H ^
 nnoremap L $
 vnoremap H ^
@@ -1702,11 +1674,8 @@ nnoremap dh d0
 nnoremap dl d$
 nnoremap ch c0
 nnoremap cl c$
-
-" 去掉搜索高亮
-" nnoremap <silent> <leader>/ :nohls<cr>zz
-
-" 命令行和插入模式增强
+"}}}
+" 命令行和插入模式增强{{{
 " 上下相比于<c-n> <c-p>更智能的地方:  可以根据已输入的字符补全历史命令
 cnoremap ' ''<left>
 cnoremap " ""<left>
@@ -1725,7 +1694,8 @@ nnoremap <c-l> $
 inoremap <c-e> <delete>
 inoremap <m-p> <c-r>0
 nnoremap <m-p> "0p
-
+"}}}
+"{{{ Buffer Window Tab 操作
 " Buffer操作
 nnoremap <silent> <m-l> :bp<cr>
 nnoremap <silent> <m-h> :bn<cr>
@@ -1782,29 +1752,67 @@ inoremap <c-t> <esc>:tab split<cr>
 for s:count_num in [1,2,3,4,5,6,7,8,9]
     exec 'nnoremap <leader>' . s:count_num . ' ' . s:count_num . 'gt'
 endfor
-
+"}}}
+" 当前buffer（正则）替换{{{
+" 替换模式串 NOTE: 目前被Far.vim插件替代, 不过同一文件内小范围的替换用这个方式还是更方便一些
+nnoremap <leader>su :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cword>')<cr>//gc<left><left><left>
+nnoremap <leader>sU :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
+xnoremap  <leader>su :s///gc<left><left><left><left>
+" 正则替换
+nnoremap <leader>rsu :let @0=expand('<cword>')<cr>:%s/\v<c-r>=expand('<cword>')<cr>//gc<left><left><left>
+nnoremap <leader>rsU :let @0=expand('<cword>')<cr>:%s/\v<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
+xnoremap <leader>rsu :s/\v//gc<left><left><left><left>
+"}}}
+"{{{修改默认快捷键到更令人舒适的行为
 " 调整缩进后自动选中，方便再次操作
 vnoremap < <gv
 vnoremap > >gv
 nnoremap < <<
 nnoremap > >>
-
-" 选择全部
-nnoremap <leader>so ggVG
-" 交换 ' `, 使得可以快速使用'跳到marked相同的位置
-noremap ' `
-noremap ` '
 " 让y复制后光标仍在原位
 vnoremap y ygv<esc>
 " 让normal模式的s不要污染无名寄存器, 因为一个字母没有必要覆盖之前的寄存器内容
 " 同时visual模式s表示删除，x表示剪切
 noremap s "_s
 vnoremap s "_s
+"}}}
+" ===================================
+" 通过快捷键实现新功能
+" ===================================
+
+" 重复上次执行的寄存器的命令
+nnoremap <leader>r; @:
+" 执行宏 q
+nnoremap R @q
+" 可以在选中的行执行宏　xnoremap <expr> <leader>@ ":norm! @".nr2char(getchar())."<CR>"
+xnoremap <expr> R ":norm! @q<CR>"
+
+" 选择全部
+nnoremap <leader>so ggVG
+" 切换大小写
+inoremap <C-S-U> <esc>viw~gv<esc>a
+nnoremap <C-S-U> viw~gv<esc>a
+nnoremap gu viw~gv<esc>
+nnoremap gU viW~gv<esc>
+vnoremap gu ~gv<esc>
+" 去掉搜索高亮
+" nnoremap <silent> <leader>/ :nohls<cr>zz
+
+" 退出系列
+noremap <silent> <leader>q <esc>:q<cr>
+"{{{ 退出Vim并自动保存会话
+function s:auto_save_session() abort
+    let session_name = fnamemodify(v:this_session,':t')
+    let session_name = session_name == '' ? 'default.vim' : session_name
+    execute 'SSave! ' . session_name
+    execute 'qa'
+endfunction
+"}}}
+noremap <silent> Q <esc>:call <SID>auto_save_session()<cr>
 
 "==========================================
 " 设置 Settings
 "==========================================
-
 " {{{ 基础设置 Basic Settings
 set termguicolors  " 使用真色彩  NOTE: 此条设置应在colorscheme命令之前
 exec 'colorscheme ' . g:all_colorschemes[g:default_colorscheme_mode]
@@ -1993,8 +2001,7 @@ augroup end
 "}}}
 "{{{ 自定义 ColorScheme, Highlighting
 
-" 基础调色盘
-" {{{
+" {{{ 基础调色盘
 let s:palette = {
               \ 'bg0':        ['#282828',   '235',  'Black'],
               \ 'bg1':        ['#302f2e',   '236',  'DarkGrey'],
@@ -2039,8 +2046,7 @@ endfunction
 
 " 切换colorscheme时需要调用这个函数覆盖默认的设置
 function s:Enable_normal_scheme() abort
-    " 特定标记配色 TODO: FIXME: BUG: NOTE: HACK:
-    "{{{
+    "{{{ TODO: FIXME: BUG: NOTE: HACK: 自定义标记配色
         highlight MyTodo cterm=bold ctermbg=180 ctermfg=black gui=bold guifg=#ff8700
         highlight MyNote cterm=bold ctermbg=75 ctermfg=black gui=bold guifg=#19dd9d
         highlight MyFixme cterm=bold ctermbg=189 ctermfg=black gui=bold guifg=#e697e6
@@ -2058,7 +2064,6 @@ function s:Enable_normal_scheme() abort
         autocmd Syntax * call matchadd('MyTip',  '\W\zsTIP:')
     augroup end
     "}}}
-
     " {{{折叠，侧栏，Signature的mark标记
     "             高亮组名     前景色         背景色
     call s:HL('FoldColumn', s:palette.grey, s:palette.bg2)
@@ -2091,12 +2096,16 @@ function s:Enable_normal_scheme() abort
 
     hi! DiffText ctermfg=237 ctermbg=246 cterm=undercurl guifg=#a6b4fb gui=undercurl,bold
 "}}}
-
+"{{{让JSONC的注释高亮正常
+augroup enable_comment_highlighting_for_json
+    autocmd!
+    autocmd FileType json syntax match Comment +\/\/.\+$+
+augroup end
+"}}}
 endfunction
 
 call s:Enable_normal_scheme()
 "}}}
-"==========================================
 
 "==========================================
 " 自定义命令
@@ -2135,9 +2144,10 @@ endfunction
 command! Chmodx :!chmod a+x %  " make current buffer executable
 command! FixSyntax :syntax sync fromstart  " fix syntax highlighting
 
-" =============================================
+"==============================================
 " 新增功能
-" =============================================
+"==============================================
+" ---------- 自动生效的功能 ----------
 " {{{自动保存
 function! s:Autosave(timed)
     if &readonly || mode() == 'c' || pumvisible()
@@ -2167,11 +2177,6 @@ if g:enable_file_autosave
     augroup END
 endif
 "}}}
-"{{{让JSONC的注释显色正常
-augroup enable_comment_highlighting_for_json
-    autocmd FileType json syntax match Comment +\/\/.\+$+
-augroup end
-"}}}
 "{{{ 更方便的跳转标记
 let s:alphabet =['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
             \'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -2181,38 +2186,26 @@ for single_char in s:alphabet
     exec "nnoremap '" . single_char . ' `' . single_char . 'zz'
 endfor
 "}}}
+" ------------------------------------
 
-" 废弃ZZ退出
-noremap ZZ <nop>
-
-" {{{ <F2> 行号开关，用于鼠标复制代码用, 为方便复制
-function! ToggleColumnNumber()
-  if(&relativenumber == &number)
-    set relativenumber! number!
-  elseif(&number)
-    set number!
-  else
-    set relativenumber!
-  endif
-  set number?
-endfunc
-" }}}
-nnoremap <F2> :call ToggleColumnNumber()<cr>
-
-"{{{ <F4> 部分插件开关，提升大文件编辑体验
-function Faster_mode_for_large_file()
-    " 开关spelunker拼写检查插件
-    execute 'normal ZT'
-    " 这个一般由于向VCS仓库中新增了大文件而导致的大面积column实时重绘, 所以需要关闭
-    execute 'SignifyToggle'
-endfunction
+" ------------------------------------
+" 对vim作为git difftoll的增强, <leader><leader>q强制退出difftool{{{
+" 当把vim作为git的difftool时，设置 git config --global difftool.trustExitCode true && git config --global mergetool.trustExitCode true
+" 在git difftool或git mergetool之后  可以用:cq进行强制退出diff/merge模式，而不会不停地recall another diff/merge file
+if &diff
+    " 让viewport视角在最中心
+    set scrolloff=100  " FIXME: 这个设置可能有会出现性能问题
+    syn off  " 自动关闭语法高亮
+    " 强制退出difftool, 不再自动唤起difftool
+    noremap <leader><leader>q <esc>:cq<cr>
+    noremap Q <esc>:qa<cr>
+    " 在diff hunk之间跳转
+    noremap gj ]c
+    noremap gk [c
+endif
 "}}}
-nnoremap <F4> :call Faster_mode_for_large_file()<cr>
-
-" 代码高亮开关
-" nnoremap <F4> :exec exists('syntax_on') ? 'syn off' : 'syn on'<cr>
-
-"{{{当有两个窗口时, 滚动另一个窗口
+"{{{当有两个窗口时, 滚动另一个窗口 <c-j/k/d/e/gg/G>
+"{{{ function
 function! ScrollAnotherWindow(mode)
     if winnr('$') <= 1
         return
@@ -2240,34 +2233,8 @@ nnoremap <c-e> :call ScrollAnotherWindow(3)<CR>
 nnoremap <c-d> :call ScrollAnotherWindow(4)<CR>
 nnoremap <c-g><c-g> :call ScrollAnotherWindow(5)<CR>
 nnoremap <c-s-g> :call ScrollAnotherWindow(6)<CR>
-
-" {{{ 切换透明模式, 需要预先设置好终端的透明度
-function s:Enable_transparent_scheme() abort
-    call s:HL('FoldColumn', s:palette.grey, s:palette.none)
-    call s:HL('Folded', s:palette.grey, s:palette.none)
-    call s:HL('SignColumn', s:palette.none, s:palette.none)
-    call s:HL('OrangeSign', s:palette.orange, s:palette.none)
-    call s:HL('PurpleSign', s:palette.purple, s:palette.none)
-    call s:HL('BlueSign', s:palette.none, s:palette.none)
-endfunction
-
-let t:is_transparent = 0
-function! Toggle_transparent_background()
-  if t:is_transparent == 1
-    windo set cursorline
-    syn off | syn on
-    call s:Enable_normal_scheme()
-    let t:is_transparent = 0
-  else
-    windo set nocursorline
-    hi Normal guibg=NONE ctermbg=NONE
-    call s:Enable_transparent_scheme()
-    let t:is_transparent = 1
-  endif
-endfunction
 "}}}
-nnoremap <silent> <leader>tt :call Toggle_transparent_background()<CR>
-
+"{{{ 快速编辑特定文件 <leader>e{?}
 " 快速编辑init.vim
 nnoremap <leader>en :e $MYVIMRC<CR>
 " 快速编辑tmux配置文件
@@ -2284,15 +2251,9 @@ nnoremap <leader>es :CocCommand snippets.editSnippets<cr>
 " 编辑同目录下的文件
 nnoremap ,e :e <c-r>=expand('%:p:h')<cr>/
 nnoremap ,n :!mkdir <c-r>=expand('%:p:h')<cr>/
-
-" {{{查看highlighting group
-function! s:synstack()
-    echo join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ' -> ')
-endfunction
 "}}}
-nnoremap <F12> :<C-u>call <SID>synstack()<CR>
-
-"{{{添加空白行
+"{{{ 快速添加空白行 {v:count} ]或[<space>
+"{{{ function
 function! s:BlankUp(count) abort
     put!=repeat(nr2char(10), a:count)
     ']+1
@@ -2305,50 +2266,9 @@ endfunction
 "}}}
 nnoremap ]<space> :<c-u>call <sid>BlankDown(v:count1)<cr>
 nnoremap [<space> :<c-u>call <sid>BlankUp(v:count1)<cr>
-
-" 当把vim作为git的difftool时，设置 git config --global difftool.trustExitCode true && git config --global mergetool.trustExitCode true
-" 在git difftool或git mergetool之后  可以用:cq进行强制退出diff/merge模式，而不会不停地recall another diff/merge file
-if &diff
-    " 让viewport视角在最中心
-    set scrolloff=100  " FIXME: 这个设置可能有会出现性能问题
-    syn off  " 自动关闭语法高亮
-    " 强制退出difftool, 不再自动唤起difftool
-    noremap <leader><leader>q <esc>:cq<cr>
-    noremap Q <esc>:qa<cr>
-    " 在diff hunk之间跳转
-    noremap gj ]c
-    noremap gk [c
-endif
-
-" 复制当前文件的名字，绝对路径，目录绝对路径
-function Copy_to_registers(text) abort  "{{{
-    let @" = a:text
-    let @0 = a:text
-    let @+ = a:text  " system clipboard on Linux
-    let @* = a:text  " system clipboard on Windows
-endfunction
 "}}}
-nnoremap <leader>nm :call Copy_to_registers(expand('%:t'))<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
-nnoremap <leader>ap :call Copy_to_registers(expand('%:p'))<cr>:echo printf('absolute path yanked: %s', expand('%:p'))<cr>
-nnoremap <leader>dr :call Copy_to_registers(expand('%:p:h'))<cr>:echo printf('absolute dir yanked: %s', expand('%:p:h'))<cr>
-
-"{{{ 检查Vim运行性能, 结果放在profile.log中
-let g:check_performance_enabled = 0
-fun Check_performance()
-    if g:check_performance_enabled == 0
-        execute 'profile start profile.log'
-        execute 'profile file *'
-        execute 'profile func *'
-        let g:check_performance_enabled = 1
-    else
-        execute 'profile stop'
-        execute 'normal Q'
-    endif
-endf
-"}}}
-nnoremap <leader>cp :call Check_performance()<cr>
-"
-" {{{ 实时改变colorscheme
+" {{{ 实时改变colorscheme <leader>cj/k
+"{{{ function
 let g:current_coloscheme_mode = g:default_colorscheme_mode
 fun My_change_colorscheme(mode) abort
     let l:length = len(g:all_colorschemes)
@@ -2383,5 +2303,100 @@ endf
 "}}}
 nnoremap <silent> <leader>cj :call My_change_colorscheme('next')<cr>
 nnoremap <silent> <leader>ck :call My_change_colorscheme('previous')<cr>
+"}}}
+" {{{ 行号开关，用于鼠标复制代码用, 为方便复制 <F2>
+"{{{ function
+function! ToggleColumnNumber()
+  if(&relativenumber == &number)
+    set relativenumber! number!
+  elseif(&number)
+    set number!
+  else
+    set relativenumber!
+  endif
+  set number?
+endfunc
+"}}}
+nnoremap <F2> :call ToggleColumnNumber()<cr>
+" }}}
+"{{{ 部分插件开关，提升大文件编辑体验 <F4>
+"{{{ function
+function Faster_mode_for_large_file()
+    " 开关spelunker拼写检查插件
+    execute 'normal ZT'
+    " 这个一般由于向VCS仓库中新增了大文件而导致的大面积column实时重绘, 所以需要关闭
+    execute 'SignifyToggle'
+endfunction
+"}}}
+nnoremap <F4> :call Faster_mode_for_large_file()<cr>
+"}}}
+" {{{查看highlighting group
+"{{{ function
+function! s:synstack()
+    echo join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ' -> ')
+endfunction
+"}}}
+nnoremap <F12> :<C-u>call <SID>synstack()<CR>
+"}}}
+" 代码高亮开关 <leader>0{{{
+nnoremap <leader>0 :exec exists('syntax_on') ? 'syn off' : 'syn on'<cr>
+"}}}
+" {{{ 切换透明模式, 需要预先设置好终端的透明度 <leader>tt
+"{{{ function
+function s:Enable_transparent_scheme() abort
+    call s:HL('FoldColumn', s:palette.grey, s:palette.none)
+    call s:HL('Folded', s:palette.grey, s:palette.none)
+    call s:HL('SignColumn', s:palette.none, s:palette.none)
+    call s:HL('OrangeSign', s:palette.orange, s:palette.none)
+    call s:HL('PurpleSign', s:palette.purple, s:palette.none)
+    call s:HL('BlueSign', s:palette.none, s:palette.none)
+endfunction
+
+let t:is_transparent = 0
+function! Toggle_transparent_background()
+  if t:is_transparent == 1
+    windo set cursorline
+    syn off | syn on
+    call s:Enable_normal_scheme()
+    let t:is_transparent = 0
+  else
+    windo set nocursorline
+    hi Normal guibg=NONE ctermbg=NONE
+    call s:Enable_transparent_scheme()
+    let t:is_transparent = 1
+  endif
+endfunction
+"}}}
+nnoremap <silent> <leader>tt :call Toggle_transparent_background()<CR>
+"}}}
+" ------------------------------------
+
+" 复制当前文件的名字，绝对路径，目录绝对路径
+function Copy_to_registers(text) abort  "{{{
+    let @" = a:text
+    let @0 = a:text
+    let @+ = a:text  " system clipboard on Linux
+    let @* = a:text  " system clipboard on Windows
+endfunction
+"}}}
+nnoremap <leader>nm :call Copy_to_registers(expand('%:t'))<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
+nnoremap <leader>ap :call Copy_to_registers(expand('%:p'))<cr>:echo printf('absolute path yanked: %s', expand('%:p'))<cr>
+nnoremap <leader>dr :call Copy_to_registers(expand('%:p:h'))<cr>:echo printf('absolute dir yanked: %s', expand('%:p:h'))<cr>
+
+"{{{ 检查Vim运行性能, 结果放在profile.log中
+let g:check_performance_enabled = 0
+fun Check_performance()
+    if g:check_performance_enabled == 0
+        execute 'profile start profile.log'
+        execute 'profile file *'
+        execute 'profile func *'
+        let g:check_performance_enabled = 1
+    else
+        execute 'profile stop'
+        execute 'normal Q'
+    endif
+endf
+"}}}
+nnoremap <leader>cp :call Check_performance()<cr>
 
 " TIP: g<c-g> 可以统计字数,行，字节，字符 会将汉字、标点、空格、英文字母都看做一个字, 还可以选择模式使用, 具体信息查看:h g^g
