@@ -18,7 +18,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - snap
 - zsh
 - zgen
-- neovim-remote(命令为nvr) `pip3 install neovim-remote`
+- neovim-remote(命令为 nvr) `pip3 install neovim-remote`
 - nvim
 - lua
 - node, npm
@@ -26,12 +26,12 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - ccls （from snap)
 - universal ctags
 - global
-- NerdFont终端字体: SauceCodePro NF
-(regular+bold+italic+bold italic) + DroidSansMono NF
+- NerdFont 终端字体: SauceCodePro NF
+  (regular+bold+italic+bold italic) + DroidSansMono NF
 - eslint prettier pylint autopep8 cppcheck clang-format
 - rg
 - fzf
-- tmux (tmux-finger插件依赖gawk包, `sudo apt install gawk`)
+- tmux (tmux-finger 插件依赖 gawk 包, `sudo apt install gawk`)
 
 可有可无的软件
 
@@ -40,7 +40,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - 无道词典
 - gdb-dashboard
 
-## 如何在远程机器上使用本地zsh
+## 如何在远程机器上使用本地 zsh
 
 [https://github.com/rutchkiwi/copyzshell](https://github.com/rutchkiwi/copyzshell)
 
@@ -52,8 +52,8 @@ git clone https://github.com/rutchkiwi/copyzshell.git ~ZSH_CUSTOM/plugins/copyzs
 copyzshell <remote machine>
 ```
 
-## 如何在远程机器上使用本地vim
+## 如何在远程机器上使用本地 vim
 
 [https://unix.stackexchange.com/questions/202918/how-do-i-remotely-edit-files-via-ssh](https://unix.stackexchange.com/questions/202918/how-do-i-remotely-edit-files-via-ssh)
 
-使用sshfs把远程文件夹mount到本地
+使用 sshfs 把远程文件夹 mount 到本地

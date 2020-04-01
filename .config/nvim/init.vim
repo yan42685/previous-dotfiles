@@ -75,8 +75,8 @@ let g:enable_file_autosave = 1  " 是否自动保存
 let g:disable_laggy_plugins_for_large_file = 0  " 在启动参数里设置为1就可以加快打开速度
 set updatetime=400  " 检测CursorHold事件的时间间隔,影响性能的主要因素
 let g:default_colorscheme_mode = 0
-let g:all_colorschemes = ['quantum', 'gruvbox-material', 'forest-night']
-let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night']
+let g:all_colorschemes = ['quantum', 'gruvbox-material', 'forest-night', 'pencil']
+let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night', 'forest_night']
 
 
 let mapleader=' '  " 此条命令的位置应在插件之前
@@ -103,6 +103,12 @@ Plug 'tyrannicaltoucan/vim-quantum'
 " Plug 'trevordmiller/nova-vim'
 Plug 'sainnhe/gruvbox-material'
 Plug 'sainnhe/forest-night'
+" 专为markdown适配的colorscheme
+Plug 'reedes/vim-colors-pencil'
+"{{{
+let g:pencil_gutter_color = 0  " 灰色的signify指示图标
+let g:pencil_terminal_italics = 0  " 注释不用斜体
+"}}}
 
 " =================================
 " 在大文件下会影响性能
@@ -257,7 +263,7 @@ Plug 'kana/vim-textobj-user'
 " ii ai 在python里很好用 NOTE: 这个插件是用函数做的映射，所以不能延迟加载
 Plug 'michaeljsmith/vim-indent-object', {'for': ['python']}
 
-" vic viC vac vaC Column单词自动快选择模式
+" vic viC vac vaC Column单词自动快选择模式, 然后按I A多列添加字符
 Plug 'coderifous/textobj-word-column.vim'  " NOTE:由于插件实现原因，不能延迟加载
 
 " ( 前一个句子，)后一个句子的开头, g(去当前句子的结尾 g)去上个句子的结尾
@@ -1119,6 +1125,9 @@ Plug 'vimwiki/vimwiki', {'on': ['VimwikiIndex']}
             \ 'syntax': 'markdown', 'ext': '.md'}]
 "}}}
 
+"　自动commit,push　vimwiki
+Plug 'michal-h21/vimwiki-sync', { 'for': 'vimwiki', 'on': ['VimwikiIndex'] }
+
 " Sink沉浸写作模式
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 "{{{
@@ -1189,10 +1198,10 @@ nmap <F10> :VimspectorReset
 
 " 查看各个插件启动时间
 Plug 'tweekmonster/startuptime.vim', { 'on': 'StartupTime' }
-nnoremap <leader>St :StartupTime<cr>
-nnoremap <leader>Pi :PlugInstall<cr>
-nnoremap <leader>Pc :PlugClean<cr>
-nnoremap <leader>Ps :PlugStatus<cr>
+nnoremap <leader>ST :StartupTime<cr>
+nnoremap <leader>PI :PlugInstall<cr>
+nnoremap <leader>PC :PlugClean<cr>
+nnoremap <leader>PS :PlugStatus<cr>
 
 " MarkDown预览
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for':['markdown', 'vimwiki'] , 'on': '<Plug>MarkdownPreviewToggle'}
@@ -1205,12 +1214,21 @@ Plug 'AndrewRadev/inline_edit.vim', {'on': 'InlineEdit'}
 
 " keymap提示
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
-nnoremap <silent> <leader> :WhichKey '<space>'<cr>
-nnoremap <silent> , :WhichKey ','<cr>
-nnoremap <silent> g :WhichKey 'g'<cr>
+let g:which_key_display_names = { ' ': 'SPC', '<TAB>': 'TAB', }  " 定义快捷键的别名, key必须是大写字母
+let g:which_key_fallback_to_native_key = 1  " 如果没有自定义则不报警
+let g:which_key_run_map_on_popup = 1  " 每次popup自动更新词典，防止buffer local的keymap改变时vim-whichkey信息过时了
+let g:which_key_use_floating_win = 1  " 使用浮动窗口,优点是在多窗口的时候兼容性很好
+nnoremap <silent> <leader> :<C-U>WhichKey '<space>'<cr>
+nnoremap <silent> , :<C-U>WhichKey ','<cr>
+nnoremap <silent> g :<C-U>WhichKey 'g'<cr>
+" 在Visual模式显示WhichKey
+vnoremap <silent> <leader> :<C-U>WhichKeyVisual '<space>'<cr>
+vnoremap <silent> , :<C-U>WhichKeyVisual ','<cr>
+vnoremap <silent> g :<C-U>WhichKeyVisual  'g'<cr>
 augroup settings_whichkey_for_t
     autocmd!
     autocmd VimEnter * nnoremap <silent> t :WhichKey 't'<cr>
+    autocmd VimEnter * vnoremap <silent> t :WhichKeyVisual 't'<cr>
 augroup end
 
 
@@ -1311,6 +1329,8 @@ nnoremap <silent> <Leader>sW :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", 
 xnoremap <silent> <leader>sw :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", leaderf#Rg#visual())<CR><cr>
 " buffer内即时搜索
 nnoremap <silent> / :Leaderf rg --current-buffer<cr>
+" 重复上次搜索
+nnoremap <silent> g/ :Leaderf rg --current-buffer<cr><up>
 " buffer内搜索词
 xnoremap <silent> * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s", leaderf#Rg#visual())<CR><cr>
 
@@ -1580,43 +1600,6 @@ endif
 call plug#end()
 
 "==========================================
-" 自定义命令
-"==========================================
-"{{{ Ctabs: Open all files in quickfix window in tabs
-command! Ctabs call s:Ctabs()
-function! s:Ctabs()
-  let files = {}
-  for entry in getqflist()
-    let filename = bufname(entry.bufnr)
-    let files[filename] = 1
-  endfor
-
-  for file in keys(files)
-    silent exe "tabedit ".file
-  endfor
-endfunction
-"}}}
-"{{{ Gfiles: Open all git-modified files in tabs
-command! Gfiles call s:Gfiles()
-function! s:Gfiles()
-  let files = split(system('git status -s -uall | cut -b 4-'), '\n')
-
-  for file in files
-    silent exe "tabedit ".file
-  endfor
-endfunction
-"}}}
-"{{{ Repeatable: Make the given command repeatable using repeat.vim
-command! -nargs=* Repeatable call s:Repeatable(<q-args>)
-function! s:Repeatable(command)
-  exe a:command
-  call repeat#set(':Repeatable '.a:command."\<cr>")
-endfunction
-"}}}
-command! Chmodx :!chmod a+x %  " make current buffer executable
-command! FixSyntax :syntax sync fromstart  " fix syntax highlighting
-
-"==========================================
 " HotKey Settings  自定义快捷键设置
 "==========================================
 " 如果需要覆盖插件定义的映射，可用如下方式
@@ -1626,6 +1609,8 @@ command! FixSyntax :syntax sync fromstart  " fix syntax highlighting
 inoremap kj <esc>
 cnoremap kj <c-c>
 nnoremap ? /
+" 重复上次搜索
+nnoremap g? /<c-r>/
 noremap ; :
 nmap zo za
 noremap ,; ;
@@ -1633,6 +1618,8 @@ nnoremap ,w :w<cr>
 " 解决通过命令let @" = {text}设置的@" 不能被p正确粘贴的问题
 nnoremap p ""p
 vnoremap v <esc>
+" 快速退出选择模式
+xnoremap v <esc>
 " 我喜欢使用分号作为插入模式的 leader 键，因为分号后面除了空格和换行之外
 " 几乎不会接任何其他字符
 " 快速在行末写分号并换行
@@ -1679,6 +1666,7 @@ nnoremap zzj ]zzz
 nnoremap zzk [zzz
 noremap J <C-f>zz
 noremap K <C-b>zz
+nnoremap tj J
 nmap gb %zz
 " 去上次修改的地方
 nnoremap gi gi<esc>zzi
@@ -1686,8 +1674,6 @@ nnoremap gi gi<esc>zzi
 nnoremap g; g;zz
 nnoremap g, g,zz
 nnoremap gv gvzz
-" 定义这个是为了让which-key查询的时候不报错
-nnoremap gg gg
 " 切换大小写
 inoremap <C-S-U> <esc>viw~gv<esc>a
 nnoremap <C-S-U> viw~gv<esc>a
@@ -1758,11 +1744,12 @@ endfunction
 nnoremap <leader>bc :call DeleteHiddenBuffers()<cr>
 
 " Window操作
-nnoremap <leader>wh <c-w>wH
-nnoremap <leader>wj <c-w>wJ
-nnoremap <leader>wk <c-w>wK
-nnoremap <leader>wl <c-w>wL
-nnoremap <leader>wf <c-w><c-r>
+" 调整窗口布局
+nnoremap <silent> <leader>wh :wincmd H<cr>
+nnoremap <silent> <leader>wj :wincmd J<cr>
+nnoremap <silent> <leader>wk :wincmd K<cr>
+nnoremap <silent> <leader>wl :wincmd L<cr>
+nnoremap <silent> <leader>wf <c-w><c-r>
 " 窗口最大化 leaving only the help window open/maximized
 nnoremap <leader>wo <c-w>ozz
 nnoremap <leader>ss <c-w>s<c-w>w
@@ -1815,18 +1802,12 @@ noremap s "_s
 vnoremap s "_s
 
 "==========================================
-" Theme Settings  主题设置
+" 设置 Settings
 "==========================================
-set termguicolors  " 使用真色彩
-exec 'colorscheme ' . g:all_colorschemes[g:default_colorscheme_mode]
-" colorscheme quantum
-" colorscheme gruvbox-material
-" colorscheme neodark
-" colorscheme nova
-" colorscheme forest-night
 
-"==========================================
-" 基础设置{{{
+" {{{ 基础设置 Basic Settings
+set termguicolors  " 使用真色彩  NOTE: 此条设置应在colorscheme命令之前
+exec 'colorscheme ' . g:all_colorschemes[g:default_colorscheme_mode]
 set background=dark
 set t_Co=256
 set tags=./.tags;,.tags  " 让ctags改名为.tags，不污染工作区
@@ -1858,7 +1839,7 @@ set vb t_vb= " 彻底禁止错误发出bell
 set tm=500
 set backspace=eol,start,indent  " Configure backspace so it acts as it should act
 set whichwrap+=<,>,h,l
-set synmaxcol=150  " 对于很长的行语法高亮很拖慢速度
+set synmaxcol=200  " 对于很长的行语法高亮很拖慢速度
 
 set viminfo+=!  " 保存viminfo全局信息
 set lazyredraw  " redraw only when we need to.
@@ -1881,7 +1862,7 @@ set wildignorecase  " files or directoies auto completion is case insensitive
 set completeopt-=menu  " 让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
 set completeopt+=longest,menuone
 "}}}
-" FileType Settings  文件类型设置{{{
+" {{{  文件类型设置 FileType Settings
 
 " 具体编辑文件类型的一般设置，比如不要 tab 等
 augroup tab_indent_settings_by_filetype
@@ -1895,15 +1876,13 @@ augroup tab_indent_settings_by_filetype
     " 下两行是coc-tsserver这么要求的
     autocmd BufRead,BufNewFile *.jsx set filetype=javascript.jsx
     autocmd BufRead,BufNewFile *.tsx set filetype=typescript.tsx
-    autocmd BufRead,BufNewFile *.java setlocal synmaxcol=200   " java的代码可能比较长，所以高亮长度设置长一点
     " NOTE: 如果js之类的大文件高亮渲染不同步 可以开启这两个可能影响性能的选项
     " autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
     " autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear"
 
 augroup end
 "}}}
-" Display Settings 展示/排版等界面格式设置{{{
-
+" {{{ 展示/排版等界面格式设置 Display Settings
 set ruler  " 显示当前的行号列号
 set showmode  " 左下角显示当前vim模式
 set number  " 显示行号
@@ -1960,8 +1939,10 @@ if &term =~ '256color'
   " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
   set t_ut=
 endif
+
+syntax on  " NOTE: 这条语句放在不同的地方会有不同的效果，经测试,放在这里是比较合适的
 "}}}
-" FileEncode Settings 文件编码,格式{{{
+" {{{ 文件编码,格式 FileEncode Settings
 
 set fencs=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1
 set encoding=utf-8  " 设置新文件的编码为 UTF-8
@@ -1971,8 +1952,7 @@ set termencoding=utf-8  " 下面这句只影响普通模式 (非图形界面) �
 set formatoptions+=m  " 如遇Unicode值大于255的文本，不必等到空格再折行
 set formatoptions+=B  " 合并两行中文时，不在中间加空格
 "}}}
-"==========================================
-" 自动行为设置
+"{{{ 自动行为设置 Autocmds Settings
 augroup auto_actions_for_better_experience
     autocmd!
     " 自动source VIMRC
@@ -2010,31 +1990,150 @@ augroup auto_actions_for_better_experience
     autocmd WinEnter,WinLeave * if (&filetype != '' && &syntax != 'on' && !&diff && &filetype != 'far')
                 \ | set syntax=on | endif
 augroup end
-
-" 开启语法高亮
-syntax on  " NOTE: 这条语句放在不同的地方会有不同的效果，经测试,放在这里是比较合适的
-
-" 特定标记配色 TODO: FIXME: BUG: NOTE: HACK:
-"{{{
-function Custom_sign_highlighting()
-    highlight MyTodo cterm=bold ctermbg=180 ctermfg=black gui=bold guifg=#ff8700
-    highlight MyNote cterm=bold ctermbg=75 ctermfg=black gui=bold guifg=#19dd9d
-    highlight MyFixme cterm=bold ctermbg=189 ctermfg=black gui=bold guifg=#e697e6
-    highlight MyBug cterm=bold ctermbg=168 ctermfg=black gui=bold guifg=#dd698c
-    highlight MyHack cterm=bold ctermbg=240 ctermfg=black gui=bold guifg=#f4da9a
-    highlight link MyTip MyHack
-endf
-
-augroup highlight_my_keywords
-    autocmd!
-    autocmd Syntax * call matchadd('MyTodo',  '\W\zs\(TODO\|CHANGED\|XXX\|DONE\):')
-    autocmd Syntax * call matchadd('MyNote',  '\W\zsNOTE:')
-    autocmd Syntax * call matchadd('MyFixme',  '\W\zsFIXME:')
-    autocmd Syntax * call matchadd('MyBug',  '\W\zsBUG:')
-    autocmd Syntax * call matchadd('MyHack',  '\W\zsHACK:')
-    autocmd Syntax * call matchadd('MyTip',  '\W\zsTIP:')
-augroup end
 "}}}
+"{{{ 自定义 ColorScheme, Highlighting
+
+" 基础调色盘
+" {{{
+let s:palette = {
+              \ 'bg0':        ['#282828',   '235',  'Black'],
+              \ 'bg1':        ['#302f2e',   '236',  'DarkGrey'],
+              \ 'bg2':        ['#32302f',   '236',  'DarkGrey'],
+              \ 'fg0':        ['#d4be98',   '223',  'White'],
+              \ 'fg1':        ['#ddc7a1',   '223',  'White'],
+              \ 'red':        ['#ea6962',   '167',  'Red'],
+              \ 'orange':     ['#e78a4e',   '208',  'DarkYellow'],
+              \ 'yellow':     ['#d8a657',   '214',  'Yellow'],
+              \ 'green':      ['#a9b665',   '142',  'Green'],
+              \ 'aqua':       ['#89b482',   '108',  'Cyan'],
+              \ 'grey':       ['#868d80',   '109',  'Blue'],
+              \ 'purple':     ['#d3869b',   '175',  'Magenta'],
+              \ 'none':       ['NONE',      'NONE', 'NONE'],
+              \ 'blue':       ['#399ce5', '175', 'Blue'],
+              \ }
+
+function! s:HL(group, fg, bg, ...)
+    let hl_string = [
+          \ 'highlight', a:group,
+          \ 'guifg=' . a:fg[0],
+          \ 'guibg=' . a:bg[0],
+          \ ]
+    if a:0 >= 1
+      if a:1 ==# 'undercurl'
+        call add(hl_string, 'gui=undercurl')
+        call add(hl_string, 'cterm=underline')
+      else
+        call add(hl_string, 'gui=' . a:1)
+        call add(hl_string, 'cterm=' . a:1)
+      endif
+    else
+      call add(hl_string, 'gui=NONE')
+      call add(hl_string, 'cterm=NONE')
+    endif
+    if a:0 >= 2
+      call add(hl_string, 'guisp=' . a:2[0])
+    endif
+    execute join(hl_string, ' ')
+endfunction
+"}}}
+
+" 切换colorscheme时需要调用这个函数覆盖默认的设置
+function s:Enable_normal_scheme() abort
+    " 特定标记配色 TODO: FIXME: BUG: NOTE: HACK:
+    "{{{
+        highlight MyTodo cterm=bold ctermbg=180 ctermfg=black gui=bold guifg=#ff8700
+        highlight MyNote cterm=bold ctermbg=75 ctermfg=black gui=bold guifg=#19dd9d
+        highlight MyFixme cterm=bold ctermbg=189 ctermfg=black gui=bold guifg=#e697e6
+        highlight MyBug cterm=bold ctermbg=168 ctermfg=black gui=bold guifg=#dd698c
+        highlight MyHack cterm=bold ctermbg=240 ctermfg=black gui=bold guifg=#f4da9a
+        highlight link MyTip MyHack
+
+    augroup highlight_my_keywords
+        autocmd!
+        autocmd Syntax * call matchadd('MyTodo',  '\W\zs\(TODO\|CHANGED\|XXX\|DONE\):')
+        autocmd Syntax * call matchadd('MyNote',  '\W\zsNOTE:')
+        autocmd Syntax * call matchadd('MyFixme',  '\W\zsFIXME:')
+        autocmd Syntax * call matchadd('MyBug',  '\W\zsBUG:')
+        autocmd Syntax * call matchadd('MyHack',  '\W\zsHACK:')
+        autocmd Syntax * call matchadd('MyTip',  '\W\zsTIP:')
+    augroup end
+    "}}}
+
+    " {{{折叠，侧栏，Signature的mark标记
+    "             高亮组名     前景色         背景色
+    call s:HL('FoldColumn', s:palette.grey, s:palette.bg2)
+    call s:HL('Folded', s:palette.grey, s:palette.none)
+    call s:HL('SignColumn', s:palette.fg0, s:palette.none)
+    call s:HL('OrangeSign', s:palette.orange, s:palette.none)
+    call s:HL('PurpleSign', s:palette.purple, s:palette.none)
+    call s:HL('BlueSign', s:palette.blue, s:palette.none)
+    " kshenoy/vim-signature 标记的配色
+    highlight! link SignatureMarkText OrangeSign
+    highlight! link SignatureMarkerText PurpleSign
+    " highlight! LineNr guifg=#717172
+    highlight! LineNr guifg=#9d9d9d
+"}}}
+" {{{ startify启动页面
+    highlight! StartifyHeader cterm=bold ctermbg=black ctermfg=75 gui=bold guifg=#87bb7c
+    highlight! StartifyFile cterm=None ctermfg=75 gui=None guifg=#d8b98a
+    highlight! StartifyNumber cterm=None ctermfg=75 gui=None guifg=#7daea3
+"}}}
+"{{{ 拼写检查 Spelunker
+    " spelunker的popup menue配色(只支持cterm, 但又要兼顾coc的gui补全配色)
+    hi Pmenu ctermfg=188 ctermbg=240 cterm=NONE guifg=#aebbc5 guibg=#425762 gui=NONE
+    hi PmenuSel ctermfg=237 ctermbg=246 cterm=NONE guifg=#2c3a41 guibg=#69c5ce gui=NONE
+
+    " spelunker 显示错误单词的颜色
+    highlight SpelunkerSpellBad cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
+    highlight SpelunkerComplexOrCompoundWord cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
+"}}}
+"{{{ diff单词的高亮
+
+    hi! DiffText ctermfg=237 ctermbg=246 cterm=undercurl guifg=#a6b4fb gui=undercurl,bold
+"}}}
+
+endfunction
+
+call s:Enable_normal_scheme()
+"}}}
+"==========================================
+
+"==========================================
+" 自定义命令
+"==========================================
+"{{{ Ctabs: Open all files in quickfix window in tabs
+command! Ctabs call s:Ctabs()
+function! s:Ctabs()
+  let files = {}
+  for entry in getqflist()
+    let filename = bufname(entry.bufnr)
+    let files[filename] = 1
+  endfor
+
+  for file in keys(files)
+    silent exe "tabedit ".file
+  endfor
+endfunction
+"}}}
+"{{{ Gfiles: Open all git-modified files in tabs
+command! Gfiles call s:Gfiles()
+function! s:Gfiles()
+  let files = split(system('git status -s -uall | cut -b 4-'), '\n')
+
+  for file in files
+    silent exe "tabedit ".file
+  endfor
+endfunction
+"}}}
+"{{{ Repeatable: Make the given command repeatable using repeat.vim
+command! -nargs=* Repeatable call s:Repeatable(<q-args>)
+function! s:Repeatable(command)
+  exe a:command
+  call repeat#set(':Repeatable '.a:command."\<cr>")
+endfunction
+"}}}
+command! Chmodx :!chmod a+x %  " make current buffer executable
+command! FixSyntax :syntax sync fromstart  " fix syntax highlighting
 
 " =============================================
 " 新增功能
@@ -2142,78 +2241,7 @@ nnoremap <c-d> :call ScrollAnotherWindow(4)<CR>
 nnoremap <c-g><c-g> :call ScrollAnotherWindow(5)<CR>
 nnoremap <c-s-g> :call ScrollAnotherWindow(6)<CR>
 
-" {{{切换透明模式, 需要预先设置好终端的透明度
-let s:palette = {
-              \ 'bg0':        ['#282828',   '235',  'Black'],
-              \ 'bg1':        ['#302f2e',   '236',  'DarkGrey'],
-              \ 'bg2':        ['#32302f',   '236',  'DarkGrey'],
-              \ 'fg0':        ['#d4be98',   '223',  'White'],
-              \ 'fg1':        ['#ddc7a1',   '223',  'White'],
-              \ 'red':        ['#ea6962',   '167',  'Red'],
-              \ 'orange':     ['#e78a4e',   '208',  'DarkYellow'],
-              \ 'yellow':     ['#d8a657',   '214',  'Yellow'],
-              \ 'green':      ['#a9b665',   '142',  'Green'],
-              \ 'aqua':       ['#89b482',   '108',  'Cyan'],
-              \ 'grey':       ['#868d80',   '109',  'Blue'],
-              \ 'purple':     ['#d3869b',   '175',  'Magenta'],
-              \ 'none':       ['NONE',      'NONE', 'NONE'],
-              \ 'blue':       ['#399ce5', '175', 'Blue'],
-              \ }
-
-function! s:HL(group, fg, bg, ...)
-    let hl_string = [
-          \ 'highlight', a:group,
-          \ 'guifg=' . a:fg[0],
-          \ 'guibg=' . a:bg[0],
-          \ ]
-    if a:0 >= 1
-      if a:1 ==# 'undercurl'
-        call add(hl_string, 'gui=undercurl')
-        call add(hl_string, 'cterm=underline')
-      else
-        call add(hl_string, 'gui=' . a:1)
-        call add(hl_string, 'cterm=' . a:1)
-      endif
-    else
-      call add(hl_string, 'gui=NONE')
-      call add(hl_string, 'cterm=NONE')
-    endif
-    if a:0 >= 2
-      call add(hl_string, 'guisp=' . a:2[0])
-    endif
-    execute join(hl_string, ' ')
-endfunction
-
-function s:Enable_normal_scheme() abort
-    "             高亮组名     前景色         背景色
-    call s:HL('FoldColumn', s:palette.grey, s:palette.bg2)
-    call s:HL('Folded', s:palette.grey, s:palette.none)
-    call s:HL('SignColumn', s:palette.fg0, s:palette.none)
-    call s:HL('OrangeSign', s:palette.orange, s:palette.none)
-    call s:HL('PurpleSign', s:palette.purple, s:palette.none)
-    call s:HL('BlueSign', s:palette.blue, s:palette.none)
-    " kshenoy/vim-signature 标记的配色
-    highlight! link SignatureMarkText OrangeSign
-    highlight! link SignatureMarkerText PurpleSign
-    " highlight! LineNr guifg=#717172
-    highlight! LineNr guifg=#9d9d9d
-
-    call Custom_sign_highlighting()  " TODO: TIP: NOTE: 等的高亮
-
-    " startify启动页面的颜色
-    highlight! StartifyHeader cterm=bold ctermbg=black ctermfg=75 gui=bold guifg=#87bb7c
-    highlight! StartifyFile cterm=None ctermfg=75 gui=None guifg=#d8b98a
-    highlight! StartifyNumber cterm=None ctermfg=75 gui=None guifg=#7daea3
-
-    " spelunker的popup menue配色(只支持cterm, 但又要兼顾coc的gui补全配色)
-    hi Pmenu ctermfg=188 ctermbg=240 cterm=NONE guifg=#aebbc5 guibg=#425762 gui=NONE
-    hi PmenuSel ctermfg=237 ctermbg=246 cterm=NONE guifg=#2c3a41 guibg=#69c5ce gui=NONE
-
-    " spelunker 显示错误单词的颜色
-    highlight SpelunkerSpellBad cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
-    highlight SpelunkerComplexOrCompoundWord cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
-endfunction
-
+" {{{ 切换透明模式, 需要预先设置好终端的透明度
 function s:Enable_transparent_scheme() abort
     call s:HL('FoldColumn', s:palette.grey, s:palette.none)
     call s:HL('Folded', s:palette.grey, s:palette.none)
@@ -2222,8 +2250,6 @@ function s:Enable_transparent_scheme() abort
     call s:HL('PurpleSign', s:palette.purple, s:palette.none)
     call s:HL('BlueSign', s:palette.none, s:palette.none)
 endfunction
-
-call s:Enable_normal_scheme()
 
 let t:is_transparent = 0
 function! Toggle_transparent_background()
@@ -2239,10 +2265,6 @@ function! Toggle_transparent_background()
     let t:is_transparent = 1
   endif
 endfunction
-
-" diff单词的高亮
-hi! DiffText ctermfg=237 ctermbg=246 cterm=undercurl guifg=#a6b4fb gui=undercurl,bold
-
 "}}}
 nnoremap <silent> <leader>tt :call Toggle_transparent_background()<CR>
 
@@ -2361,3 +2383,5 @@ endf
 "}}}
 nnoremap <silent> <leader>cj :call My_change_colorscheme('next')<cr>
 nnoremap <silent> <leader>ck :call My_change_colorscheme('previous')<cr>
+
+" TIP: g<c-g> 可以统计字数,行，字节，字符 会将汉字、标点、空格、英文字母都看做一个字, 还可以选择模式使用, 具体信息查看:h g^g
