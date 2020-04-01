@@ -23,8 +23,13 @@
 #		endsnippet
 #
 # Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
-snippet au
+snippet au "augroup block" b
 augroup ${1:group_name}
 	autocmd!
-	${2}
+	${2:}
 augroup end
+endsnippet
+
+snippet auc "autocmd" b
+autocmd ${0:}
+endsnippet

@@ -80,8 +80,9 @@ let g:all_colorschemes = ['quantum', 'gruvbox-material', 'forest-night', 'pencil
 let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night', 'forest_night']
 
 
-let mapleader=' '  " 此条命令的位置应在插件之前
-let g:mapleader=' '
+let mapleader='<space>'  " 此条命令的位置应在插件之前
+let g:mapleader = "\<Space>"
+let g:maplocalleader = ','
 
 " =========================================
 " 插件管理
@@ -875,20 +876,7 @@ let g:NERDDefaultAlign = 'left'  " Align line-wise comment delimiters flush left
 let g:NERDAltDelims_java = 1  " Set a language to use its alternate delimiters by default
 let g:NERDTrimTrailingWhitespace = 1  " Enable trimming of trailing whitespace when uncommenting
 let g:NERDCommentEmptyLines = 1  " Allow commenting and inverting empty lines (useful when commenting a region)
-
- " 让surround的快捷键可以用 `.` 重复
-let s:key_mappings_of_surround = [
-            \ "<leader>'", '<leader>"', '<leader>*', '<leader><leader>*', '<leader>)', '<leader>(',
-            \ '<leader>[', '<leader>{', '<leader><', '<leader>>', '<leader>\|', '<leader>`',
-            \ ",'", ',"', ',*', ',,*', ',(',
-            \ ',)', ',[', ',{', ',<', ',>', ',\|', ',`'
-            \ ]
-
-for keymap in s:key_mappings_of_surround
-    silent! call repeat#set(keymap, v:count)
-endfor
 "}}}
-
 nmap <c-_> <plug>NERDCommenterToggle
 " 添加gv<esc>就可以回到原地
 vmap <c-_> <plug>NERDCommenterTogglegv<esc>
@@ -896,6 +884,18 @@ imap <c-_> <esc><plug>NERDCommenterToggle
 
 " Vim-Surround快捷操作
 Plug 'tpope/vim-surround'
+"{{{
+ " 让surround的快捷键可以用 `.` 重复
+let s:key_mappings_of_surround = [
+            \ "<leader>'", '<leader>"', '<leader>*', '<leader><leader>*', '<leader>)', '<leader>(',
+            \ '<leader>[', '<leader>{', '<leader><', '<leader>>', '<leader>\|', '<leader>`',
+            \ ",'", ',"', ',*', ',,*', ',(',
+            \ ',)', ',[', ',{', ',<', ',>', ',\|', ',`'
+            \ ]
+for keymap in s:key_mappings_of_surround
+    silent! call repeat#set(keymap, v:count)
+endfor
+"}}}
 nmap ysw ysiw
 nmap ysW ysiW
 " 快速添加pair
@@ -1135,23 +1135,151 @@ nnoremap <leader>PC :PlugClean<cr>
 nnoremap <leader>PS :PlugStatus<cr>
 
 " keymap提示
-Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
+Plug 'liuchengxu/vim-which-key'
+" Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
+"{{{
+autocmd VimEnter * call which_key#register('<Space>', "g:which_key_map_space")
+autocmd VimEnter * call which_key#register(',', "g:which_key_map_comma")
+autocmd VimEnter * call which_key#register('g', "g:which_key_map_g")
+autocmd VimEnter * call which_key#register('t', "g:which_key_map_t")
+" 快捷键注释
+"{{{ <Space> 快捷键注释
+let g:which_key_map_space = {}
+let g:which_key_map_space.b = {
+    \ 'name': '+buffer/bookmark/build',
+    \ 'd': 'buffer-close',
+    \ }
+let g:which_key_map_space.c = {
+            \ 'name': '+comment/colors-scheme/custom',
+            \ }
+let g:which_key_map_space.d = {
+            \ 'name': '+diff/directory',
+            \ 'r': 'dir-path-copy',
+            \}
+let g:which_key_map_space.e = {
+            \ 'name': '+edit/explorer',
+            \ 'c': 'edit-c/cpp',
+            \ 'h': 'edit-.h',
+            \ 'n': 'edit-$VIMRC',
+            \ 's': 'edit-snippets',
+            \ 't': 'edit-tmux-config',
+            \}
+let g:which_key_map_space.g = {
+            \ 'name': '+goto',
+            \ 'w': 'goto-<cword>',
+            \ 'W': 'goto-<cWORD>',
+            \}
+let g:which_key_map_space.m = {
+            \ 'name': '+markdown/mergetool/marks',
+            \}
+let g:which_key_map_space.n = {
+            \ 'name': '+name-of',
+            \ 'm': 'filename-copy',
+            \}
+let g:which_key_map_space.o = {
+            \ 'name': '+outline',
+            \ 't': 'outline-open',
+            \}
+let g:which_key_map_space.p = {
+            \ 'name': '+project(session)',
+            \}
+let g:which_key_map_space.P = {
+            \ 'name': '+Plug',
+            \}
+let g:which_key_map_space.r = {
+            \ 'name': '+run/rename/rooter/rg/regex-search',
+            \}
+let g:which_key_map_space.s = {
+            \ 'name': '+buffer-substitute/split/select',
+            \ 's': 'split-horizontal',
+            \ 'v': 'split-vertical',
+            \ 'a': 'select-all',
+            \ 'u': 'buffer-substitute-cword',
+            \ 'U': 'buffer-substitute-cWORD',
+            \}
+let g:which_key_map_space.t = {
+            \ 'name': '+todolist/transparent',
+            \}
+let g:which_key_map_space.u = {
+            \ 'name': '+undo-tree',
+            \}
+let g:which_key_map_space.v = {
+            \ 'name': '+view',
+            \}
+
+let g:which_key_map_space['w'] = {
+      \ 'name': '+windows',
+      \ 'o': 'window-full-screen',
+      \ 'f': 'window-swap',
+      \ 'r': 'window-resize-mode',
+      \ 'm': 'window-move-mode',
+      \ }
+"}}}
+"{{{ "," 快捷键注释
+let g:which_key_map_comma = {}
+let g:which_key_map_comma.e = 'edit-file'
+let g:which_key_map_comma.g = {
+            \ 'name': '+git',
+            \ 'd': 'diff-current-file',
+            \ 'l': 'git-log',
+            \ 's': 'git-status',
+            \ 'u': 'undo-diff-hunk',
+            \ 'r': 'git-rename',
+            \}
+let g:which_key_map_comma.p = {
+            \ 'name': '+pull/push',
+            \}
+let g:which_key_map_comma.s = {
+            \ 'name': '+buffer-substitute/sink',
+            \ 'n': 'sink-mode (zen-mode)',
+            \ 'u': 'buffer-substitute-cword',
+            \ 'U': 'buffer-substitute-cWORD',
+            \ 'r': 'regex-substitute',
+            \}
+let g:which_key_map_comma.w = 'write (save-buffer)'
+"}}}
+"{{{ "g" 快捷键注释
+let g:which_key_map_g = {}
+" HACK: 特殊字符就不能用 . 了，　只能用['']的形式
+let g:which_key_map_g[';'] = 'last-edit-positon-normal-mode'
+let g:which_key_map_g['/'] = 'last-buffer-grep'
+let g:which_key_map_g['?'] = 'last-buffer-search'
+let g:which_key_map_g.b = 'next-braket'
+let g:which_key_map_g.c = 'line-commit-message'
+let g:which_key_map_g.e = 'next-lint-error'
+let g:which_key_map_g.E = 'last-lint-error'
+let g:which_key_map_g.i = 'last-edit-positon-insert-mode'
+let g:which_key_map_g.q = 'toggle-quickfix-window'
+let g:which_key_map_g.u = 'toggle-upper-case-<cword>'
+let g:which_key_map_g.U = 'toggle-upper-case-<cWORD>'
+let g:which_key_map_g.y = 'yank-history'
+"}}}
+"{{{ "t" 快捷键注释
+let g:which_key_map_t = {}
+let g:which_key_map_t.h = 'swap-left'
+let g:which_key_map_t.l = 'swap-right'
+let g:which_key_map_t.j = 'join-line'
+let g:which_key_map_t.t = 'translate-<cword>'
+let g:which_key_map_t.u = 'open-URL'
+"}}}
 let g:which_key_display_names = { ' ': 'SPC', '<TAB>': 'TAB', }  " 定义快捷键的别名, key必须是大写字母
-let g:which_key_fallback_to_native_key = 1  " 如果没有自定义则不报警
 let g:which_key_run_map_on_popup = 1  " 每次popup自动更新词典，防止buffer local的keymap改变时vim-whichkey信息过时了
 let g:which_key_use_floating_win = 1  " 使用浮动窗口,优点是在多窗口的时候兼容性很好
-nnoremap <silent> <leader> :<C-U>WhichKey '<space>'<cr>
-nnoremap <silent> , :<C-U>WhichKey ','<cr>
-nnoremap <silent> g :<C-U>WhichKey 'g'<cr>
+"}}}
+let g:which_key_fallback_to_native_key = 1  " 如果没有自定义则不报警
+nnoremap <silent> <leader> :<C-U>WhichKey '<Space>'<cr>
+nnoremap <silent> <localleader> :<C-U>WhichKey ','<cr>
 " 在Visual模式显示WhichKey
 vnoremap <silent> <leader> :<C-U>WhichKeyVisual '<space>'<cr>
-vnoremap <silent> , :<C-U>WhichKeyVisual ','<cr>
+vnoremap <silent> <localleader> :<C-U>WhichKeyVisual ','<cr>
+nnoremap <silent> g :<C-U>WhichKey 'g'<cr>
 vnoremap <silent> g :<C-U>WhichKeyVisual  'g'<cr>
-augroup settings_whichkey_for_t
+augroup settings_whichkey_for_t  " 因为有插件映射了t所以这里要用autocmd来映射
     autocmd!
     autocmd VimEnter * nnoremap <silent> t :WhichKey 't'<cr>
     autocmd VimEnter * vnoremap <silent> t :WhichKeyVisual 't'<cr>
 augroup end
+
 "}}}
 "{{{Project增强
 " 切换到项目根目录
@@ -1239,9 +1367,9 @@ nnoremap <silent> <leader>gs :Leaderf searchHistory<cr>
 " 项目下即时搜索
 nnoremap <silent> <leader>rg :<C-U>Leaderf rg<cr>
 " 项目下搜索词 -F是fix 即不是正则模式
-nnoremap <silent> <Leader>sw :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cword>"))<CR><cr>
-nnoremap <silent> <Leader>sW :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cWORD>"))<CR><cr>
-xnoremap <silent> <leader>sw :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", leaderf#Rg#visual())<CR><cr>
+nnoremap <silent> <Leader>gw :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cword>"))<CR><cr>
+nnoremap <silent> <Leader>gW :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cWORD>"))<CR><cr>
+xnoremap <silent> <leader>gw :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", leaderf#Rg#visual())<CR><cr>
 " buffer内即时搜索
 nnoremap <silent> / :Leaderf rg --current-buffer<cr>
 " 重复上次搜索
@@ -1258,11 +1386,11 @@ let g:far#enable_undo = 1  " 允许按u进行undo替换
 let g:far#auto_write_replaced_buffers = 1  " 自动写入
 let g:far#auto_delete_replaced_buffers = 1  " 自动关闭替换完成的buffer
 " 快捷键
-let g:far#mapping = { 　
-            \ 'replace_do': 'r',
-            \ 'expand_all': ['zm', 'zM'],
-            \ 'collapse_all': ['zr', 'zR'],
-            \ }
+let g:far#mapping = {
+    \ 'replace_do': ['r'],
+    \ 'expand_all': ['zm', 'zM'],
+    \ 'collapse_all': ['zr', 'zR'],
+    \ }
 let g:far#default_file_mask = '%'  " 命令行默认遮罩(搜索的范围)
 " 命令行补全资源
 let g:far#file_mask_favorites = ['%', '**/*.*', '**/*.html', '**/*.js', '**/*.css', '**/*.c', '**/*.cpp',
@@ -1299,7 +1427,7 @@ nnoremap ,Su :let @0=expand('<cword>')<cr>:Rooter<cr>:Far <c-r>=expand('<cword>'
 nnoremap ,SU :let @0=expand('<cWORD>')<cr>:Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  *<left><left><c-f>i
 xnoremap ,Su :Rooter<cr>:<c-u>Far <c-r>=My_get_current_visual_text()<cr>  *<left><left><c-f>i
 " 交互式替换，按<c-r>可以改变匹配模式为正则 <c-f>在查找和替换模式之间切换
-nnoremap ,rsu :Farr<cr>
+nnoremap ,sr :Farr<cr>
 
 " 在quickfix窗口里编辑  " FIXME: 和quickr-preview有冲突
 " Plug 'stefandtw/quickfix-reflector.vim'
@@ -1365,7 +1493,6 @@ augroup auto_open_quickfix
 augroup end
 "}}}
 nmap gq <plug>(asyncrun-qftoggle)
-nnoremap <leader>ma :AsyncRun -mode=term -pos=bottom -rows=10 python "$(VIM_FILEPATH)"
 "}}}
 "{{{杂项, 优化使用体验
 " 编辑嵌套的代码，可以有独立的缩进和补全，使用场景: JS, Css在Html里面，
@@ -1684,7 +1811,7 @@ nnoremap <silent> <leader>wf <c-w><c-r>
 " 窗口最大化 leaving only the help window open/maximized
 nnoremap <leader>wo <c-w>ozz
 nnoremap <leader>ss <c-w>s<c-w>w
-noremap <silent> <leader>vs :wincmd v<cr>:wincmd w<cr>
+noremap <silent> <leader>sv :wincmd v<cr>:wincmd w<cr>
 noremap <silent> <leader>j :wincmd j<cr>
 noremap <silent> <leader>k :wincmd k<cr>
 noremap <silent> <leader>h :wincmd h<cr>
@@ -1749,7 +1876,7 @@ nnoremap R @q
 xnoremap <expr> R ":norm! @q<CR>"
 
 " 选择全部
-nnoremap <leader>so ggVG
+nnoremap <leader>sa ggVG
 " 切换大小写
 inoremap <C-S-U> <esc>viw~gv<esc>a
 nnoremap <C-S-U> viw~gv<esc>a
@@ -1919,7 +2046,7 @@ set termencoding=utf-8  " 下面这句只影响普通模式 (非图形界面) �
 set formatoptions+=m  " 如遇Unicode值大于255的文本，不必等到空格再折行
 set formatoptions+=B  " 合并两行中文时，不在中间加空格
 "}}}
-"{{{ 自动行为设置 Autocmds Settings
+"{{{ 自动命令设置 Autocmds Settings
 augroup auto_actions_for_better_experience
     autocmd!
     " 自动source VIMRC
@@ -1958,7 +2085,7 @@ augroup auto_actions_for_better_experience
                 \ | set syntax=on | endif
 augroup end
 "}}}
-"{{{ 自定义 ColorScheme, Highlighting
+"{{{ 自定义高亮 Highlighting, ColorScheme
 
 " {{{ 基础调色盘
 let s:palette = {
@@ -2042,7 +2169,7 @@ function s:Enable_normal_scheme() abort
     highlight! StartifyFile cterm=None ctermfg=75 gui=None guifg=#d8b98a
     highlight! StartifyNumber cterm=None ctermfg=75 gui=None guifg=#7daea3
 "}}}
-"{{{ 拼写检查 Spelunker
+"{{{ Spelunker 拼写检查
     " spelunker的popup menue配色(只支持cterm, 但又要兼顾coc的gui补全配色)
     hi Pmenu ctermfg=188 ctermbg=240 cterm=NONE guifg=#aebbc5 guibg=#425762 gui=NONE
     hi PmenuSel ctermfg=237 ctermbg=246 cterm=NONE guifg=#2c3a41 guibg=#69c5ce gui=NONE
@@ -2060,6 +2187,14 @@ augroup enable_comment_highlighting_for_json
     autocmd!
     autocmd FileType json syntax match Comment +\/\/.\+$+
 augroup end
+"}}}
+"{{{ Vim-Which-Key高亮
+highlight WhichKey gui=None guifg=#c765c8
+highlight WhichKeySeperator gui=None guifg=#00b37d
+highlight WhichKeyGroup   gui=None guifg=#3397dd
+highlight WhichKeyDesc    gui=None  guifg=#5686dd
+" 让弹窗背景自适应主题的背景色
+highlight WhichKeyFloating gui=None
 "}}}
 endfunction
 
