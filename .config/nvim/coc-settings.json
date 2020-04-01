@@ -1,4 +1,5 @@
 {
+  "coc.source.emoji.filetypes": ["markdown", "gitcommit"],
   "codeLens.separator": "  ‣",
   "codeLens.enable": true, // 使用codelens特性
   "bookmark.signHi": "BlueSign",

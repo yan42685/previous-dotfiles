@@ -2147,7 +2147,7 @@ command! FixSyntax :syntax sync fromstart  " fix syntax highlighting
 "==============================================
 " 新增功能
 "==============================================
-" ---------- 自动生效的功能 ----------
+" ---------- 自动生效的功能 -----------
 " {{{自动保存
 function! s:Autosave(timed)
     if &readonly || mode() == 'c' || pumvisible()
@@ -2189,7 +2189,7 @@ endfor
 " ------------------------------------
 
 " ------------------------------------
-" 对vim作为git difftoll的增强, <leader><leader>q强制退出difftool{{{
+" {{{对vim作为git difftoll的增强, <leader><leader>q 强制退出difftool
 " 当把vim作为git的difftool时，设置 git config --global difftool.trustExitCode true && git config --global mergetool.trustExitCode true
 " 在git difftool或git mergetool之后  可以用:cq进行强制退出diff/merge模式，而不会不停地recall another diff/merge file
 if &diff
@@ -2330,7 +2330,7 @@ endfunction
 "}}}
 nnoremap <F4> :call Faster_mode_for_large_file()<cr>
 "}}}
-" {{{查看highlighting group
+" {{{查看highlighting group <F12>
 "{{{ function
 function! s:synstack()
     echo join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ' -> ')
@@ -2369,21 +2369,8 @@ endfunction
 "}}}
 nnoremap <silent> <leader>tt :call Toggle_transparent_background()<CR>
 "}}}
-" ------------------------------------
-
-" 复制当前文件的名字，绝对路径，目录绝对路径
-function Copy_to_registers(text) abort  "{{{
-    let @" = a:text
-    let @0 = a:text
-    let @+ = a:text  " system clipboard on Linux
-    let @* = a:text  " system clipboard on Windows
-endfunction
-"}}}
-nnoremap <leader>nm :call Copy_to_registers(expand('%:t'))<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
-nnoremap <leader>ap :call Copy_to_registers(expand('%:p'))<cr>:echo printf('absolute path yanked: %s', expand('%:p'))<cr>
-nnoremap <leader>dr :call Copy_to_registers(expand('%:p:h'))<cr>:echo printf('absolute dir yanked: %s', expand('%:p:h'))<cr>
-
-"{{{ 检查Vim运行性能, 结果放在profile.log中
+"{{{ 检查Vim运行性能,结果放在profile.log中,需要用两次 <leader>cp
+"{{{ function
 let g:check_performance_enabled = 0
 fun Check_performance()
     if g:check_performance_enabled == 0
@@ -2398,5 +2385,19 @@ fun Check_performance()
 endf
 "}}}
 nnoremap <leader>cp :call Check_performance()<cr>
+"}}}
+" ------------------------------------
+
+" 复制当前文件的名字，绝对路径，目录绝对路径
+function Copy_to_registers(text) abort  "{{{
+    let @" = a:text
+    let @0 = a:text
+    let @+ = a:text  " system clipboard on Linux
+    let @* = a:text  " system clipboard on Windows
+endfunction
+"}}}
+nnoremap <leader>nm :call Copy_to_registers(expand('%:t'))<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
+nnoremap <leader>ap :call Copy_to_registers(expand('%:p'))<cr>:echo printf('absolute path yanked: %s', expand('%:p'))<cr>
+nnoremap <leader>dr :call Copy_to_registers(expand('%:p:h'))<cr>:echo printf('absolute dir yanked: %s', expand('%:p:h'))<cr>
 
 " TIP: g<c-g> 可以统计字数,行，字节，字符 会将汉字、标点、空格、英文字母都看做一个字, 还可以选择模式使用, 具体信息查看:h g^g
