@@ -93,6 +93,7 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 " }}}
+
 " NOTE: 对于使用了on或for来延迟加载的插件只有在加载了之后才能用 help 查看文档
 call plug#begin('~/.vim/plugged')
 " {{{没有设置快捷键的，在后台默默运行的插件
@@ -353,6 +354,11 @@ Plug 'itchyny/lightline.vim'
 " functions
 "{{{
 function! Sy_stats_wrapper()
+  " 防止--noplugin模式下报错
+  if g:disable_laggy_plugins_for_large_file == 1
+    return ''
+  endif
+
   let l:symbols = ['+', '-', '~']
   let [added, modified, removed] = sy#repo#get_stats()
   let l:stats = [added, removed, modified]  " reorder
@@ -537,14 +543,17 @@ augroup pencil
     autocmd FileType text silent! call pencil#init({'wrap': 'soft', 'autoformat': 0}) | setlocal wrap | setlocal textwidth=120
 augroup END
 
+"  单词级对比,　diff模式自动启动, 高亮组是DiffText
+Plug 'rickhowe/diffchar.vim', {'on': 'TDChar'}
+
 "===========================================================================
 "===========================================================================
 "}}}
-" {{{需要知道快捷键的插件
 
-" =======================================
-" 开关非常影响打开大文件性能的插件
-" =======================================
+" 需要知道用法的插件
+" ---------------------------------------
+" 通用功能插件
+"{{{开关非常影响打开大文件性能的插件
 if g:disable_laggy_plugins_for_large_file == 0
     " 侧栏显示git diff情况
     Plug 'mhinz/vim-signify'
@@ -606,14 +615,8 @@ if g:disable_laggy_plugins_for_large_file == 0
     nmap <silent> ge <Plug>(ale_next_wrap)
     nmap <silent> gE <Plug>(ale_previous_wrap)
 endif
-
-
-
-
-" ===============================
-" Git相关
-" ===============================
-
+"}}}
+"{{{ Git相关
 " 可视化merge NOTE: 恢复merge前的状态使用: git checkout --conflict=diff3 {file}
 Plug 'samoshkin/vim-mergetool', {'on': '<plug>(MergetoolToggle)'}
 "{{{
@@ -695,13 +698,8 @@ nnoremap ,gl :Flog<cr>
 " 选中多行查看历史
 vnoremap ,gl :Flog<cr>
 
-
-
-
-" ===============================
-" coc系列
-" ===============================
-
+"}}}
+"{{{coc生态系统, 补全框架
 " coc-lists
 nnoremap <leader>cl :CocList<cr>
 
@@ -820,12 +818,10 @@ endfunction
 "}}}
 " 跳转Placeholder的时候自动显示函数签名
 " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-" <C-o>       - 切换到正常模式。
-" <C-c>       - 停止后台任务。
-
+" <C-o>  切换到正常模式(q退出) <C-c>  - 关闭coclist
 
 " 层进式范围选择
-let g:coc_range_select_map_blacklist = ['vim']
+let g:coc_range_select_map_blacklist = ['vim', 'markdown']
 " 这样映射是为了在命令行按下<c-f>进入的buffer内，可以在normal模式按回车执行指令
 nmap <expr> <cr> index(g:coc_range_select_map_blacklist, &filetype) >=0 ? '<cr>' : '<Plug>(coc-range-select)'
 vmap <expr> <cr> index(g:coc_range_select_map_blacklist, &filetype) >=0 ? '<cr>' : '<Plug>(coc-range-select)'
@@ -863,13 +859,8 @@ vmap <silent> <c-m-v> <Plug>(coc-codeaction-selected)
 nmap <leader><leader>a call CocActionAsync('coc-action-codeLensAction')
 
 
-
-
-
-" ==============================
-" 编辑, 跳转功能增强
-" ==============================
-
+"}}}
+"{{{编辑, 跳转功能增强
 " 快速移动
 Plug 'easymotion/vim-easymotion', {'on': '<Plug>(easymotion-bd-f)'}
 map <silent> <leader>f <Plug>(easymotion-bd-f)
@@ -1014,12 +1005,8 @@ vmap <m-j> <Plug>MoveBlockDown
 vmap <m-k> <Plug>MoveBlockUp
 vmap <m-h> <Plug>MoveBlockLeft
 vmap <m-l> <Plug>MoveBlockRight
-
-
-" ============================
-" UI相关
-" ============================
-
+"}}}
+"{{{UI相关
 " 启动页面
 Plug 'mhinz/vim-startify'
 "{{{
@@ -1118,63 +1105,6 @@ tnoremap <m-n> <c-\><c-n>
 tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
 tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
 
-" Todo List 和 笔记，文档管理
-Plug 'vimwiki/vimwiki', {'on': ['VimwikiIndex']}
-"{{{
-" 使用markdown而不是vimwiki的语法
-"let g:vimwiki_list = [{'path': '~/vimwiki/',
-            \ 'syntax': 'markdown', 'ext': '.md'}]
-"}}}
-
-"　自动commit,push　vimwiki
-Plug 'michal-h21/vimwiki-sync', { 'for': 'vimwiki', 'on': ['VimwikiIndex'] }
-
-" Sink沉浸写作模式
-Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
-"{{{
-nnoremap <silent> ,sn :Goyo<cr>
-function! s:goyo_enter()
-  if executable('tmux') && strlen($TMUX)
-    silent !tmux set status off
-    silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
-  endif
-  set noshowmode
-  set noshowcmd
-  Limelight
-endfunction
-
-function! s:goyo_leave()
-  if executable('tmux') && strlen($TMUX)
-    silent !tmux set status on
-    silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
-  endif
-  set showmode
-  set showcmd
-  Limelight!
-  call s:Enable_normal_scheme()  " 恢复折叠和column的颜色
-endfunction
-"}}}
-augroup goyo_toggle_callback
-    autocmd!
-    autocmd! User GoyoEnter nested call <SID>goyo_enter()
-    autocmd! User GoyoLeave nested call <SID>goyo_leave()
-augroup end
-
-" 中文自动排版，不能连续重复使用除感叹号以外的标点 连续句号转换成省略号，中英文之间自动加标点，中文前后的半角符号转成全角
-" NOTE: 文档书写规范见https://github.com/sparanoid/chinese-copywriting-guidelines
-" TIP: 持久化禁用 在编辑的文档中任何位置注明 PANGU_DISABLE，则整个文档不自动规范化
-" :PanguDisable禁用自动排版，对于多个文件可以使用vi a.xx b.xx c.xx 然后:argdo Pangu | update
-Plug 'hotoo/pangu.vim', {'for': ['markdown','vimwiki', 'text','txt', 'wiki']}
-"{{{ 根据文件类型自动开启
-augroup auto_enable_pangu
-    autocmd!
-    autocmd BufWritePre *.markdown,*.md,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
-augroup end
-"}}}
-
-" 模糊非视觉中心的字符
-Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
-
 " 多语言debug支持 FIXME: 这个插件还在开发阶段，可能会有很多bug
 Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python', 'on': '<Plug>VimspectorContinue'}
 "{{{
@@ -1204,15 +1134,6 @@ nnoremap <leader>PI :PlugInstall<cr>
 nnoremap <leader>PC :PlugClean<cr>
 nnoremap <leader>PS :PlugStatus<cr>
 
-" MarkDown预览
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for':['markdown', 'vimwiki'] , 'on': '<Plug>MarkdownPreviewToggle'}
-let g:mkdp_command_for_global = 0  " 所有文件中可以使用预览markdown命令
-nmap <leader>mp <Plug>MarkdownPreviewToggle
-
-" 编辑嵌套的代码，可以有独立的缩进和补全，使用场景: JS, Css在Html里面，
-" Markdown内嵌代码，Vue组件，代码内嵌SQL
-Plug 'AndrewRadev/inline_edit.vim', {'on': 'InlineEdit'}
-
 " keymap提示
 Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 let g:which_key_display_names = { ' ': 'SPC', '<TAB>': 'TAB', }  " 定义快捷键的别名, key必须是大写字母
@@ -1231,15 +1152,8 @@ augroup settings_whichkey_for_t
     autocmd VimEnter * nnoremap <silent> t :WhichKey 't'<cr>
     autocmd VimEnter * vnoremap <silent> t :WhichKeyVisual 't'<cr>
 augroup end
-
-
-
-
-
-" ================================
-" Project增强
-" ================================
-
+"}}}
+"{{{Project增强
 " 切换到项目根目录
 Plug 'airblade/vim-rooter', {'on': 'Rooter'}
 "{{{
@@ -1343,7 +1257,18 @@ let g:far#source = 'rgnvim'  " 使用rg + nvim的异步API 作为搜索源 FIXME
 let g:far#enable_undo = 1  " 允许按u进行undo替换
 let g:far#auto_write_replaced_buffers = 1  " 自动写入
 let g:far#auto_delete_replaced_buffers = 1  " 自动关闭替换完成的buffer
-
+" 快捷键
+let g:far#mapping = { 　
+            \ 'replace_do': 'r',
+            \ 'expand_all': ['zm', 'zM'],
+            \ 'collapse_all': ['zr', 'zR'],
+            \ }
+let g:far#default_file_mask = '%'  " 命令行默认遮罩(搜索的范围)
+" 命令行补全资源
+let g:far#file_mask_favorites = ['%', '**/*.*', '**/*.html', '**/*.js', '**/*.css', '**/*.c', '**/*.cpp',
+            \'**/*.ts', '**/*.jsx', '**/*.tsx', '**/*.vue', '**/*.py', '**/*.java',
+            \'**/*.md'
+            \]
 " 自定义快捷键提示样式
 let g:far#prompt_mapping = {
     \ 'quit'           : { 'key' : '<esc>', 'prompt' : '<esc>' },
@@ -1355,17 +1280,6 @@ let g:far#prompt_mapping = {
 "}}}
 " 定义far buffer的映射, NOTE: 如果自己的vimrc里有对应非递归映射(比如nnoremap zo)，则这个插件的映射会失效, 此外由于 插件bug导致不能映射zo  到za
 " 快捷键r表示执行替换 q快速退出 x取消当前行 i激活当前行 t是toggle  他们的大写形式(X I T)表示全部行
-let g:far#mapping = {
-            \ 'replace_do': 'r',
-            \ 'expand_all': ['zm', 'zM'],
-            \ 'collapse_all': ['zr', 'zR'],
-            \ }
-let g:far#default_file_mask = '%'  " 命令行默认遮罩(搜索的范围)
-" 命令行补全资源
-let g:far#file_mask_favorites = ['%', '**/*.*', '**/*.html', '**/*.js', '**/*.css', '**/*.c', '**/*.cpp',
-            \'**/*.ts', '**/*.jsx', '**/*.tsx', '**/*.vue', '**/*.py', '**/*.java',
-            \'**/*.md'
-            \]
 " 其他用法: Farr交互式查找，并且可以转换成正则模式
 " TIP: 已经预先复制好了要替换的内容，可以在命令行用<m-p>粘贴
 " TIP: 可以用:3,10Far foo bar **/*.py 指定行和文件, 遮罩%表示本文件，*表示所有文件
@@ -1452,13 +1366,11 @@ augroup end
 "}}}
 nmap gq <plug>(asyncrun-qftoggle)
 nnoremap <leader>ma :AsyncRun -mode=term -pos=bottom -rows=10 python "$(VIM_FILEPATH)"
-
-
-
-
-" ===============================
-" 杂项, 优化使用体验
-" ===============================
+"}}}
+"{{{杂项, 优化使用体验
+" 编辑嵌套的代码，可以有独立的缩进和补全，使用场景: JS, Css在Html里面，
+" Markdown内嵌代码，Vue组件，代码内嵌SQL
+Plug 'AndrewRadev/inline_edit.vim', {'on': 'InlineEdit'}
 
 " sudo for neovim  (原来的tee trick只对vim有用，对neovim无效)
 Plug 'lambdalisue/suda.vim', {'on': ['W', 'E']}
@@ -1504,21 +1416,12 @@ let s:in_diff_hunk_status = 0
 vnoremap <leader>ds :Diffthis<cr>
 " diff close
 nnoremap <leader>dc :Diffoff<cr>
-"  单词级对比,　diff模式自动启动, 高亮组是DiffText
-Plug 'rickhowe/diffchar.vim', {'on': 'TDChar'}
-
-
-
-" ================== Layer ====================
-" =============================================
-" 前端 和 coc系列
-" =============================================
+"}}}
+" ---------------------------------------
+" Layer
+"{{{前端 Layer
 if g:enable_front_end_layer == 1
 
-    " coc-import-cost (仅用于JS和TS)
-    " coc-github
-    " coc-css-block-comments
-    " coc-sql (lint和format, format似乎要手动, 看ale能不能自动调用这个插件自带的sql-formatter把)
 
     " Node.js支持
     " Plug 'moll/vim-node', {'for': [ 'javascript', 'typescript', '*jsx', '*tsx' ]}
@@ -1540,26 +1443,83 @@ if g:enable_front_end_layer == 1
 "}}}
 
 endif
-
-
-
-" =======================================
-" 写作layer
+"}}}
+"{{{写作layer
 " NOTE:　目前影响markdown排版的有pangu, ale里设置的prettier, lint是用的coc-markdownlint (如果prettier能做到无报警，
 "        那就可以卸载coc-markdownlint了)
-" =======================================
+
+" Todo List 和 笔记，文档管理
+Plug 'vimwiki/vimwiki', {'on': ['VimwikiIndex']}
+"{{{
+" 使用markdown而不是vimwiki的语法
+"let g:vimwiki_list = [{'path': '~/vimwiki/',
+            \ 'syntax': 'markdown', 'ext': '.md'}]
+"}}}
+
+"　自动commit,push　vimwiki
+Plug 'michal-h21/vimwiki-sync', { 'for': 'vimwiki', 'on': ['VimwikiIndex'] }
+
+" Sink沉浸写作模式
+Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
+"{{{
+nnoremap <silent> ,sn :Goyo<cr>
+function! s:goyo_enter()
+  if executable('tmux') && strlen($TMUX)
+    silent !tmux set status off
+    silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
+  endif
+  set noshowmode
+  set noshowcmd
+  Limelight
+endfunction
+
+function! s:goyo_leave()
+  if executable('tmux') && strlen($TMUX)
+    silent !tmux set status on
+    silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
+  endif
+  set showmode
+  set showcmd
+  Limelight!
+  call s:Enable_normal_scheme()  " 恢复折叠和column的颜色
+endfunction
+"}}}
+augroup goyo_toggle_callback
+    autocmd!
+    autocmd! User GoyoEnter nested call <SID>goyo_enter()
+    autocmd! User GoyoLeave nested call <SID>goyo_leave()
+augroup end
+
+" 中文自动排版，不能连续重复使用除感叹号以外的标点 连续句号转换成省略号，中英文之间自动加标点，中文前后的半角符号转成全角
+" NOTE: 文档书写规范见https://github.com/sparanoid/chinese-copywriting-guidelines
+" TIP: 持久化禁用 在编辑的文档中任何位置注明 PANGU_DISABLE，则整个文档不自动规范化
+" :PanguDisable禁用自动排版，对于多个文件可以使用vi a.xx b.xx c.xx 然后:argdo Pangu | update
+Plug 'hotoo/pangu.vim', {'for': ['markdown','vimwiki', 'text','txt', 'wiki']}
+"{{{ 根据文件类型自动开启
+augroup auto_enable_pangu
+    autocmd!
+    autocmd BufWritePre *.markdown,*.md,*.text,*.txt,*.wiki,*.cnx call PanGuSpacing()
+augroup end
+"}}}
+
+" 模糊非视觉中心的字符
+Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
+
+" MarkDown预览
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for':['markdown', 'vimwiki'] , 'on': '<Plug>MarkdownPreviewToggle'}
+let g:mkdp_command_for_global = 0  " 所有文件中可以使用预览markdown命令
+nmap <leader>mp <Plug>MarkdownPreviewToggle
+"}}}
+" ---------------------------------------
+"{{{打算以后再体验的插件
 "
 
-
-
-
-
-
-
-
-" 打算以后再体验的插件
-
 " 多光标插件有bug 用不了
+
+" coc-import-cost (仅用于JS和TS)
+" coc-github
+" coc-css-block-comments
+" coc-sql (lint和format, format似乎要手动, 看ale能不能自动调用这个插件自带的sql-formatter把)
 
 " 似乎是vim唯一的test插件, 支持CI
 " Plug 'janko/vim-test'
@@ -1596,8 +1556,7 @@ endif
 
 " 最新的 Stylus 语法高亮，可能被polyglot替代了
 " Plug 'iloginow/vim-stylus'
-
-" }}}
+"}}}
 call plug#end()
 
 "==========================================
@@ -1606,13 +1565,15 @@ call plug#end()
 " 如果需要覆盖插件定义的映射，可用如下方式
 " autocmd VimEnter * noremap <leader>cc echo "my purpose"
 
-" ===================================
+" -----------------------------------
 " {{{重要的按键重定义
 inoremap kj <esc>
 cnoremap kj <c-c>
 nnoremap ? /
+" 去掉搜索高亮
+nnoremap <silent> <leader>? :nohls<cr>zz
 " 重复上次搜索
-nnoremap g? /<c-r>/
+nnoremap g? /<c-r>/<cr>
 noremap ; :
 nmap zo za
 noremap ,; ;
@@ -1776,9 +1737,9 @@ vnoremap y ygv<esc>
 noremap s "_s
 vnoremap s "_s
 "}}}
-" ===================================
+" -----------------------------------
 " 通过快捷键实现新功能
-" ===================================
+" -----------------------------------
 
 " 重复上次执行的寄存器的命令
 nnoremap <leader>r; @:
@@ -1795,8 +1756,6 @@ nnoremap <C-S-U> viw~gv<esc>a
 nnoremap gu viw~gv<esc>
 nnoremap gU viW~gv<esc>
 vnoremap gu ~gv<esc>
-" 去掉搜索高亮
-" nnoremap <silent> <leader>/ :nohls<cr>zz
 
 " 退出系列
 noremap <silent> <leader>q <esc>:q<cr>

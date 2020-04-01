@@ -17,7 +17,7 @@ export NNN_USE_EDITOR=1                                 # use the $EDITOR when o
 export EDITOR=nvim
 # 下面这条选项会让git的输出用nvim来打开
 export PAGER="nvim --cmd 'let g:vimManPager = 1' -c MANPAGER -"
-export MANPAGER="nvim --cmd 'let g:vimManPager = 1' -c MANPAGER -"
+# export MANPAGER="nvim"
 export BROWSER="chromium"
 export NNN_COLORS="2136"                        # use a different color for each context
 export NNN_TRASH=1     # trash (needs trash-cli) instead of delete
