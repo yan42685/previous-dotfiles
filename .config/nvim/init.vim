@@ -836,7 +836,7 @@ nmap <silent> gD <Plug>(coc-declaration)
 nmap <silent> gd <Plug>(coc-definition)zz
 nmap <silent> gm <Plug>(coc-implementation)zz
 nmap <silent> gr <Plug>(coc-references)zz
-nmap <silent> gf <Plug>(coc-refactor)
+nmap <silent> ,re <Plug>(coc-refactor)
 nmap <silent> gt <Plug>(coc-type-definition)
 " 函数文本对象
 omap if <Plug>(coc-funcobj-i)
@@ -1370,6 +1370,7 @@ nnoremap <silent> <leader>gb :Leaderf buffer<cr>
 nnoremap <silent> <leader>gr :Leaderf mru<cr>
 nnoremap <silent> <leader>gc :Leaderf cmdHistory<cr>
 nnoremap <silent> <leader>gs :Leaderf searchHistory<cr>
+nnoremap gf :Leaderf function<cr>
 " 项目下即时搜索
 nnoremap <silent> <leader>rg :<C-U>Leaderf rg<cr>
 " 项目下搜索词 -F是fix 即不是正则模式
@@ -1384,9 +1385,9 @@ nnoremap <silent> g/ :Leaderf rg --current-buffer<cr><up>
 xnoremap <silent> * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s", leaderf#Rg#visual())<CR><cr>
 " 仅测试用, 不知道用不用得上
 " 查看引用
-noremap <leader><leader>r :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
+nnoremap <leader><leader>r :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
 " 查看定义
-noremap <leader><leader>d :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
+nnoremap <leader><leader>d :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
 
 " Project/buffer内替换 (默认搜索隐藏文件)
 Plug 'brooth/far.vim'  " 因为奇怪的遮罩原因，不建议使用on来延迟加载
