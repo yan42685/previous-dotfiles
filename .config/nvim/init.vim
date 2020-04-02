@@ -1,5 +1,4 @@
-﻿
-" TODO: coc.nvim去掉特定tag版本(因为目前最新版本有bug，只能选择特定版本)
+﻿ " TODO: coc.nvim去掉特定tag版本(因为目前最新版本有bug，只能选择特定版本)
 " 只考虑NeoVim，不一定兼容Vim
 "
 " 一些经验:
@@ -533,7 +532,8 @@ let g:gen_tags#ctags_opts = ['--c++-kinds=+px', '--c-kinds=+px']
 let g:gen_tags#ctags_opts = ['-c', '--verbose']
 " FIXME: 当项目文件的路径包含非ASCII字符时，使用pygments会报UnicodeEncodeError
 let $GTAGSLABEL = 'native-pygments'
-let $GTAGSCONF = '/usr/share/gtags/gtags.conf'
+" let $GTAGSCONF = '/usr/local/share/gtags/gtags.conf'
+
 "}}}
 
 " 写作使用的，自动单词折行
@@ -761,7 +761,7 @@ let g:coc_global_extensions = [
   \ 'coc-python', 'coc-tabnine', 'coc-lists', 'coc-explorer', 'coc-yank',
   \ 'coc-markdownlint', 'coc-stylelint', 'coc-sh', 'coc-dictionary', 'coc-word', 'coc-emmet',
   \ 'coc-syntax', 'coc-marketplace', 'coc-todolist', 'coc-emoji',
-  \ 'coc-gitignore', 'coc-bookmark'
+  \ 'coc-gitignore', 'coc-bookmark', 'coc-java', 'coc-tag'
   \ ]
 
 
@@ -858,8 +858,7 @@ vmap <silent> <c-m-v> <Plug>(coc-codeaction-selected)
 " TODO: 测试效果 在代码片段跳转后显示函数签名。
 " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 " FIXME: 如果不想显示ref的虚拟文本，需要在coc-setting里关闭codelents
-nmap <leader><leader>a call CocActionAsync('coc-action-codeLensAction')
-
+nnoremap <leader>cc :CocCommand<cr>
 
 "}}}
 "{{{编辑, 跳转功能增强
@@ -1199,7 +1198,7 @@ let g:which_key_map_space.s = {
             \ 'name': '+buffer-substitute/split/select',
             \ 's': 'split-horizontal',
             \ 'v': 'split-vertical',
-            \ 'a': 'select-all',
+            \ 'o': 'select-all',
             \ 'u': 'buffer-substitute-cword',
             \ 'U': 'buffer-substitute-cWORD',
             \}
@@ -1353,9 +1352,7 @@ let g:Lf_ShowHidden = 1  " 搜索结果包含隐藏文件
 
 let g:Lf_WindowHeight = 0.4  " 非popup窗口的高度
 let g:Lf_HistoryNumber = 200  " default 100
-" let g:Lf_GtagsAutoGenerate = 1  " 有['.git', '.hg', '.svn']之中的文件时自动生成gtags
-let g:Lf_GtagsSource = 2  " 从指定地方找
-let g:Lf_GtagsfilesCmd = {'default': 'rg --no-messager --files ~/.cache/tags_dir' }
+let g:Lf_GtagsAutoGenerate = 1  " 有['.git', '.hg', '.svn']之中的文件时自动生成gtags
 let g:Lf_RecurseSubmodules = 1  " show the files in submodules of git repository
 let g:Lf_Gtagslabel =  "native-pygments"  " 如果不是gtags支持的文件类型，就用pygments
 let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2"  }  " 分隔符样式
@@ -1385,6 +1382,9 @@ nnoremap <silent> / :Leaderf rg --current-buffer<cr>
 nnoremap <silent> g/ :Leaderf rg --current-buffer<cr><up>
 " buffer内搜索词
 xnoremap <silent> * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s", leaderf#Rg#visual())<CR><cr>
+" 仅测试用
+noremap <leader><leader>j :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
+noremap <leader><leader>k :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
 
 " Project/buffer内替换 (默认搜索隐藏文件)
 Plug 'brooth/far.vim'  " 因为奇怪的遮罩原因，不建议使用on来延迟加载
@@ -1543,7 +1543,7 @@ let g:doge_mapping = ''
 let g:doge_filetype_aliases = {
 \  'javascript': ['vue']
 \}
-nnoremap <leader>cc :DogeGenerate<cr>
+nnoremap <leader>cm :DogeGenerate<cr>
 
 "  选择区域进行diff
 Plug 'rickhowe/spotdiff.vim', {'on': 'Diffthis'}
@@ -1646,6 +1646,13 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for':
 let g:mkdp_command_for_global = 0  " 所有文件中可以使用预览markdown命令
 nmap <leader>mp <Plug>MarkdownPreviewToggle
 "}}}
+" 其他语言 Layer
+
+" Java增强语法高亮
+Plug 'uiiaoo/java-syntax.vim', {'for': ['java']}
+"
+
+
 " ---------------------------------------
 "{{{打算以后再体验的插件
 "
@@ -1719,10 +1726,8 @@ nnoremap p ""p
 vnoremap v <esc>
 " 快速退出选择模式
 xnoremap v <esc>
-" 我喜欢使用分号作为插入模式的 leader 键，因为分号后面除了空格和换行之外
-" 几乎不会接任何其他字符
-" 快速在行末写分号并换行
-inoremap ;j <c-o>A;<cr>
+" 快速在行末写分号并换行, 如果左边一个字符是分号则直接换行
+inoremap <expr> ;j nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>j' : '<esc>A;<esc>o'
 inoremap ;; <c-o>A;<esc>jo
 " NOTE: 这里用imap是因为要借用auto-pairs插件提供的{}自动配对
 imap [[ <esc>A<space>{<cr>
@@ -1854,7 +1859,10 @@ endfor
 " 替换模式串 NOTE: 目前被Far.vim插件替代, 不过同一文件内小范围的替换用这个方式还是更方便一些
 nnoremap <leader>su :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cword>')<cr>//gc<left><left><left>
 nnoremap <leader>sU :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
+" 范围内替换
 xnoremap  <leader>su :s///gc<left><left><left><left>
+" 当前buffer替换选中文本
+xnoremap  <leader>Su :<c-u>s/<c-r>=My_get_current_visual_text()<cr>//gc<left><left><left>
 " 正则替换
 nnoremap <leader>rsu :let @0=expand('<cword>')<cr>:%s/\v<c-r>=expand('<cword>')<cr>//gc<left><left><left>
 nnoremap <leader>rsU :let @0=expand('<cword>')<cr>:%s/\v<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
@@ -1885,7 +1893,7 @@ nnoremap R @q
 xnoremap <expr> R ":norm! @q<CR>"
 
 " 选择全部
-nnoremap <leader>sa ggVG
+nnoremap <leader>so ggVG
 " 切换大小写
 inoremap <C-S-U> <esc>viw~gv<esc>a
 nnoremap <C-S-U> viw~gv<esc>a
@@ -1965,7 +1973,7 @@ set wildignorecase  " files or directoies auto completion is case insensitive
 set completeopt-=menu  " 让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
 set completeopt+=longest,menuone
 "}}}
-" {{{  文件类型设置 FileType Settings
+" {{{  对不同文件类型的设置 FileType Settings
 
 " 具体编辑文件类型的一般设置，比如不要 tab 等
 augroup tab_indent_settings_by_filetype
@@ -1982,7 +1990,9 @@ augroup tab_indent_settings_by_filetype
     " NOTE: 如果js之类的大文件高亮渲染不同步 可以开启这两个可能影响性能的选项
     " autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
     " autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear"
-
+    " 在右边窗口打开help,man, q快速退出
+    autocmd filetype man,help wincmd L | nnoremap <buffer> q :q!<cr>
+    autocmd filetype fugitiveblame nnoremap <silent> <buffer> q :q!<cr>
 augroup end
 "}}}
 " {{{ 展示/排版等界面格式设置 Display Settings
@@ -2064,8 +2074,6 @@ augroup auto_actions_for_better_experience
     autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exec "normal! g'\" \| zz" | endif
     " 进入新窗口始终让viewport居中
     autocmd BufWinEnter * exec 'normal! zz'
-    " 在右边窗口打开help,man
-    autocmd filetype man,help wincmd L
     "{{{ <c-j><c-k>移动quickfix
     function List_is_opened(type) abort
         if a:type == "quickfix"
@@ -2082,11 +2090,12 @@ augroup auto_actions_for_better_experience
         else
             nnoremap <c-j> :call ScrollAnotherWindow(2)<CR>
             nnoremap <c-k> :call ScrollAnotherWindow(1)<CR>
-            nmap q q
         endif
     endfunction
     "}}}
     autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
+    " 关闭quickfix时恢复快捷键q
+    autocmd UILeave * nmap q q
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会不会有性能问题
     autocmd User MyEnterDiffMode if (&filetype != '' && &diff) | windo setlocal syntax=off | windo setlocal wrap | setlocal scrolloff=100
     " FIXME: 这里的set syntax=on可能会影响某些特殊的文件类型的高亮渲染, 所以必要时应该排除在外

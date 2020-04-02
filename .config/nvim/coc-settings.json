@@ -47,5 +47,6 @@
         }
       }
     }
-  }
+  },
+  "java.format.settings.url": "/home/yy/.config/coc/extensions/node_modules/redhat.java/eclipse-formatter.xml"
 }
