@@ -87,9 +87,13 @@ let g:maplocalleader = ','
 
 " =========================================
 " 插件管理
-" 主要插件介绍
-"
 " =========================================
+" {{{主要插件简介
+" 1. ALE     = 去除多余空格空行，lint, formatter
+" 2. LeaderF = 模糊查找
+" 3. coc     = 补全框架, 重构，跳转定义，其他插件生态系统
+" 4. Far     = 可视化替换
+"}}}
 " {{{ vim-plug 自动安装
 if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
   silent !curl --insecure -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
@@ -144,6 +148,10 @@ if g:disable_laggy_plugins_for_large_file == 0
         autocmd CursorHold * if  My_should_enable_spelunker() | silent! call spelunker#check_displayed_words() | endif
     augroup end
     "}}}
+    " 从词典选择相似词
+    nmap zl <Plug>(spelunker-correct-from-list)
+
+
 endif
 " ==================================
 " ==================================
@@ -247,7 +255,7 @@ hi link illuminatedWord Visual
 " 选择不高亮的文件类型
 let g:Illuminate_ftblacklist = [
             \ 'vim', 'text', 'markdown', 'css', 'help',
-            \ 'coc-explorer', 'vista', 'qf', 'vimwiki'
+            \ 'coc-explorer', 'vista', 'qf', 'vimwiki', 'zsh',
             \ ]
 "}}}
 
@@ -827,10 +835,10 @@ endfunction
 
 " 层进式范围选择
 let g:coc_range_select_map_blacklist = ['vim', 'markdown']
-" 这样映射是为了在命令行按下<c-f>进入的buffer内，可以在normal模式按回车执行指令
-nmap <expr> <cr> index(g:coc_range_select_map_blacklist, &filetype) >=0 ? '<cr>' : '<Plug>(coc-range-select)'
-vmap <expr> <cr> index(g:coc_range_select_map_blacklist, &filetype) >=0 ? '<cr>' : '<Plug>(coc-range-select)'
-vmap <backspace> <Plug>(coc-range-select-backward)
+" NOTE: 暂时打算用回车映射到％　这样映射是为了在命令行按下<c-f>进入的buffer内，可以在normal模式按回车执行指令
+" nmap <expr> <cr> index(g:coc_range_select_map_blacklist, &filetype) >=0 ? '<cr>' : '<Plug>(coc-range-select)'
+" vmap <expr> <cr> index(g:coc_range_select_map_blacklist, &filetype) >=0 ? '<cr>' : '<Plug>(coc-range-select)'
+" vmap <backspace> <Plug>(coc-range-select-backward)
 " 触发鼠标悬浮事件
 nnoremap <silent> gh :call CocActionAsync('doHover')<cr>
 " 跳转到声明
@@ -1651,12 +1659,11 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for':
 let g:mkdp_command_for_global = 0  " 所有文件中可以使用预览markdown命令
 nmap <leader>mp <Plug>MarkdownPreviewToggle
 "}}}
-" 其他语言 Layer
+" {{{其他语言 Layer
 
 " Java增强语法高亮
 Plug 'uiiaoo/java-syntax.vim', {'for': ['java']}
-"
-
+"}}}
 
 " ---------------------------------------
 "{{{打算以后再体验的插件
@@ -1743,6 +1750,7 @@ imap [[ <esc>A<space>{<cr>
 nnoremap tj J
 " 废弃ZZ退出
 noremap ZZ <nop>
+map <cr> %
 "}}}
 "{{{ 更便捷的移动以及视角居中
 " set scrolloff=100  " FIXME: 尝试用scroll让视角居中，替换很多命令后面的zz，不过可能出现性能问题?
@@ -1834,11 +1842,11 @@ nnoremap <silent> <leader>wf <c-w><c-r>
 " 窗口最大化 leaving only the help window open/maximized
 nnoremap <leader>wo <c-w>ozz
 nnoremap <leader>ss <c-w>s<c-w>w
-noremap <silent> <leader>sv :wincmd v<cr>:wincmd w<cr>
-noremap <silent> <leader>j :wincmd j<cr>
-noremap <silent> <leader>k :wincmd k<cr>
-noremap <silent> <leader>h :wincmd h<cr>
-noremap <silent> <leader>l :wincmd l<cr>
+noremap <silent> <leader>sv :wincmd v<cr>:wincmd w<cr>zz
+noremap <silent> <leader>j :wincmd j<cr>zz
+noremap <silent> <leader>k :wincmd k<cr>zz
+noremap <silent> <leader>h :wincmd h<cr>zz
+noremap <silent> <leader>l :wincmd l<cr>zz
 
 " Tab操作
 nnoremap <leader><leader>h gT
@@ -1903,6 +1911,8 @@ vnoremap s "_s
 "}}}
 " {{{通过快捷键实现新功能
 
+" TIP: g<c-g> 可以统计字数,行，字节，字符 会将汉字、标点、空格、英文字母都看做一个字, 还可以选择模式使用, 具体信息查看:h g^g
+" TIP: 待映射快捷键: v? q? T? z?
 " 重复上次执行的寄存器的命令
 nnoremap <leader>r; @:
 " 执行宏 q
@@ -1913,14 +1923,12 @@ xnoremap <expr> R ":norm! @q<CR>"
 " 选择全部
 nnoremap <leader>so ggVG
 " 切换大小写
-inoremap <C-S-U> <esc>viw~gv<esc>a
-nnoremap <C-S-U> viw~gv<esc>a
 nnoremap gu viw~gv<esc>
 nnoremap gU viW~gv<esc>
 vnoremap gu ~gv<esc>
 
 " 退出系列
-noremap <silent> <leader>q <esc>:q<cr>
+noremap <silent> <leader>q <esc>:q<cr>zz
 "{{{ 退出Vim并自动保存会话
 function s:auto_save_session() abort
     let session_name = fnamemodify(v:this_session,':t')
@@ -1935,9 +1943,24 @@ noremap <silent> Q <esc>:call <SID>auto_save_session()<cr>
 for i in range(10)
     execute 'nnoremap <leader>o' . i . ' :setlocal foldlevel=' . i . '<cr>zz'
 endfor
-" toggle foldlevel=0 / foldlevel=1
-nnoremap <expr> <leader>oo &foldlevel == 0 ? ':setlocal foldlevel=1<cr>' : ':setlocal foldlevel=0<cr>'
 
+" toggle foldlevel=0 / foldlevel=1
+" {{{function
+let g:My_toggle_foldlevel_mode = 0
+fun My_toggle_foldlevel()
+    if g:My_toggle_foldlevel_mode == 0
+        setlocal foldlevel=0
+        let g:My_toggle_foldlevel_mode = 1
+    else
+        setlocal foldlevel=1
+        let g:My_toggle_foldlevel_mode = 0
+    endif
+endf
+"}}}
+nnoremap <leader>oo :call My_toggle_foldlevel()<cr>
+
+" HACK: 新发现，解锁v键映射
+nnoremap va ggVG
 "}}}
 "==========================================
 " 设置 Settings
@@ -1984,7 +2007,9 @@ set nocompatible  " 去掉有关vi一致性模式，避免以前版本的bug和�
 set wildmenu  " 增强模式中的命令行自动完成操作
 set wildmode=longest,full
 set showbreak=⤷▶  " wrap line指示器
+" set showbreak=↪
 set backupcopy=yes  " Does not break hard/symbolic links on file save
+set virtualedit+=block  " 块选择模式可以把光标移动到没有字符的位置
 
 "}}}
 " 设置wildmenu忽略的文件{{{
@@ -2386,7 +2411,7 @@ function! Alternative()
 endfunction
 "}}}
 noremap <silent> <leader>ea :<C-U><C-R>=printf("Leaderf file --input %s", Alternative())<CR><CR>
-
+nnoremap <leader>ew :VimwikiIndex<cr>
 nnoremap <leader>es :CocCommand snippets.editSnippets<cr>
 " 快速编辑同目录下的文件
 nnoremap ,e :e <c-r>=expand('%:p:h')<cr>/
@@ -2540,5 +2565,3 @@ endfunction
 nnoremap <leader>nm :call Copy_to_registers(expand('%:t'))<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
 nnoremap <leader>ap :call Copy_to_registers(expand('%:p'))<cr>:echo printf('absolute path yanked: %s', expand('%:p'))<cr>
 nnoremap <leader>dr :call Copy_to_registers(expand('%:p:h'))<cr>:echo printf('absolute dir yanked: %s', expand('%:p:h'))<cr>
-
-" TIP: g<c-g> 可以统计字数,行，字节，字符 会将汉字、标点、空格、英文字母都看做一个字, 还可以选择模式使用, 具体信息查看:h g^g
