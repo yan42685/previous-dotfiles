@@ -1,4 +1,4 @@
-﻿ " TODO: coc.nvim去掉特定tag版本(因为目前最新版本有bug，只能选择特定版本)
+﻿" TODO: coc.nvim去掉特定tag版本(因为目前最新版本有bug，只能选择特定版本)
 " 只考虑NeoVim，不一定兼容Vim
 "
 " 一些经验:
@@ -69,8 +69,7 @@
 "}}}
 
 " ==========================================
-" 可自行调整的全局配置
-" ==========================================
+"{{{可自行调整的全局配置
 let g:enable_front_end_layer = 1  " 前端Layer, 启动所有前端相关插件
 let g:enable_file_autosave = 1  " 是否自动保存
 let g:disable_laggy_plugins_for_large_file = 0  " 在启动参数里设置为1就可以加快打开速度
@@ -83,9 +82,13 @@ let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night', 'fores
 let mapleader='<space>'  " 此条命令的位置应在插件之前
 let g:mapleader = "\<Space>"
 let g:maplocalleader = ','
+"}}}
+" ==========================================
 
 " =========================================
 " 插件管理
+" 主要插件介绍
+"
 " =========================================
 " {{{ vim-plug 自动安装
 if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
@@ -1181,8 +1184,9 @@ let g:which_key_map_space.n = {
             \ 'm': 'filename-copy',
             \}
 let g:which_key_map_space.o = {
-            \ 'name': '+outline',
+            \ 'name': '+outline/fold-level',
             \ 't': 'outline-open',
+            \ 'o': 'toggle-fold-level-0/１'
             \}
 let g:which_key_map_space.p = {
             \ 'name': '+project(session)',
@@ -1317,31 +1321,33 @@ let g:Lf_WildIgnore = {
             \}
 
 " popup的normal模式是否自动预览 FIXME: 如果觉得上下移动很慢的话就得关闭preview
+"                               TIP: 不要按着j或<c-j>不动而是连续按j的话就不会显得很慢
 let g:Lf_PreviewResult = {
-        \ 'File': 0,
-        \ 'Buffer': 0,
-        \ 'Mru': 0,
-        \ 'Tag': 0,
-        \ 'BufTag': 0,
-        \ 'Function': 0,
-        \ 'Line': 0,
-        \ 'Colorscheme': 0,
-        \ 'Rg': 0,
-        \ 'Gtags': 0
+        \ 'File': 1,
+        \ 'Buffer': 1,
+        \ 'Mru': 1,
+        \ 'Tag': 1,
+        \ 'BufTag': 1,
+        \ 'Function': 1,
+        \ 'Line': 1,
+        \ 'Colorscheme': 1,
+        \ 'Rg': 1,
+        \ 'Gtags': 1
         \}
 
-let g:Lf_WindowPosition = 'popup'
+let g:Lf_WindowPosition = 'popup'  " 使用popup
 let g:Lf_PopupWidth = 0.66
-let g:Lf_PopupHeight = 0.3
+let g:Lf_PopupHeight = 0.4
 let g:Lf_PreviewInPopup = 1  " <c-p>预览弹出窗口
 let g:Lf_CursorBlink = 0  " 取消光标闪烁
 let g:Lf_ShowHidden = 1  " 搜索结果包含隐藏文件
 let g:Lf_IgnoreCurrentBufferName = 1  " 搜索文件时忽略当前buffer FIXME: 不确定这条选项会不会导致搜索不到文件
-let g:Lf_WindowHeight = 0.4  " 非popup窗口的高度
+" let g:Lf_WindowHeight = 0.4  " 非popup窗口的高度
 let g:Lf_HistoryNumber = 200  " default 100
 let g:Lf_GtagsAutoGenerate = 1  " 有['.git', '.hg', '.svn']之中的文件时自动生成gtags
 let g:Lf_RecurseSubmodules = 1  " show the files in submodules of git repository
-let g:Lf_Gtagslabel =  "native-pygments"  " 如果不是gtags支持的文件类型，就用pygments
+let g:Lf_RgStorePattern = '+'  "　使用leaderf rg -e ... 搜索时会保存同含义的vim regex形式的正则表达式到+寄存器
+let g:Lf_Gtagslabel =  "native-pygments"  " 如果不是gtags支持的文件类型，就用pygments作为补充
 let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2"  }  " 分隔符样式
 " let g:Lf_FollowLinks = 1  " 是否解析本为link的目录
 let g:Lf_WorkingDirectoryMode = 'a'  " the nearest ancestor of current directory that contains one of directories
@@ -1350,13 +1356,17 @@ let g:Lf_WorkingDirectoryMode = 'a'  " the nearest ancestor of current directory
 let g:Lf_ShortcutF = ''  " 这两项是为了覆盖默认设置的键位
 let g:Lf_ShortcutB = ''
 "}}}
-let g:Lf_CommandMap = {'<C-]>':['<C-l>']}  " 搜索后<c-l>在右侧窗口打开文件
+nnoremap <silent> <c-p> :Leaderf command<cr>
+let g:Lf_CommandMap = {
+            \ '<C-]>':['<C-l>'],
+            \ '<c-p>': ['<c-p>'],
+            \}  " 搜索后<c-l>在右侧窗口打开文件
 nnoremap <silent> <leader>gf :Leaderf file<cr>
 nnoremap <silent> <leader>gb :Leaderf buffer<cr>
 nnoremap <silent> <leader>gr :Leaderf mru<cr>
 nnoremap <silent> <leader>gc :Leaderf cmdHistory<cr>
 nnoremap <silent> <leader>gs :Leaderf searchHistory<cr>
-nnoremap gf :Leaderf function<cr>
+nnoremap <silent> gf :Leaderf function<cr>
 " 项目下即时搜索
 nnoremap <silent> <leader>rg :<C-U>Leaderf rg<cr>
 " 项目下搜索词 -F是fix 即不是正则模式
@@ -1373,10 +1383,10 @@ nnoremap <silent> gW :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s", ex
 xnoremap <silent> gw :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s", leaderf#Rg#visual())<CR><cr>
 xnoremap <silent> * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s", leaderf#Rg#visual())<CR><cr>
 " 仅测试用, 不知道用不用得上
-" 查看引用
-nnoremap <leader><leader>r :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
-" 查看定义
-nnoremap <leader><leader>d :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
+" 查看tag引用
+nnoremap <leader>tr :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
+" 查看tag定义
+nnoremap <leader>td :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
 
 " Project/buffer内替换 (默认搜索隐藏文件)
 Plug 'brooth/far.vim'  " 因为奇怪的遮罩原因，不建议使用on来延迟加载
@@ -1542,6 +1552,7 @@ nnoremap <leader>cm :DogeGenerate<cr>
 "  选择区域进行diff
 Plug 'rickhowe/spotdiff.vim', {'on': 'Diffthis'}
 let s:in_diff_hunk_status = 0
+nnoremap <leader>ds :Diffthis<cr>
 " diff selsct
 vnoremap <leader>ds :Diffthis<cr>
 " diff close
@@ -1715,6 +1726,7 @@ nnoremap <silent> <leader>? :nohls<cr>zz
 nnoremap g? /<c-r>/<cr>
 noremap ; :
 nmap zo za
+nmap zO zA
 noremap ,; ;
 nnoremap ,w :w<cr>
 " 解决通过命令let @" = {text}设置的@" 不能被p正确粘贴的问题
@@ -1852,20 +1864,30 @@ for s:count_num in [1,2,3,4,5,6,7,8,9]
     exec 'nnoremap <leader>' . s:count_num . ' ' . s:count_num . 'gt'
 endfor
 "}}}
-" 当前buffer（正则）替换{{{
-" 替换模式串 NOTE: 目前被Far.vim插件替代, 不过同一文件内小范围的替换用这个方式还是更方便一些
+" 当前buffer/当前选中范围替换{{{
+" NOTE: 目前被Far.vim插件替代, 不过同一文件内小范围的替换用这个方式还是更方便一些
+" 当前buffer替换
 nnoremap <leader>su :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cword>')<cr>//gc<left><left><left>
 nnoremap <leader>sU :let @0=expand('<cword>')<cr>:%s/<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
+xnoremap  <leader>su :<c-u>%s/<c-r>=My_get_current_visual_text()<cr>//gc<left><left><left>
+nnoremap <leader>rsu :%s/\v//gc<left><left><left><left>
+
 " 范围内替换
-xnoremap  <leader>su :s///gc<left><left><left><left>
-" 当前buffer替换选中文本
-xnoremap  <leader>Su :<c-u>s/<c-r>=My_get_current_visual_text()<cr>//gc<left><left><left>
-" 正则替换
-nnoremap <leader>rsu :let @0=expand('<cword>')<cr>:%s/\v<c-r>=expand('<cword>')<cr>//gc<left><left><left>
-nnoremap <leader>rsU :let @0=expand('<cword>')<cr>:%s/\v<c-r>=expand('<cWORD>')<cr>//gc<left><left><left>
-xnoremap <leader>rsu :s/\v//gc<left><left><left><left>
+xnoremap  <leader>Su :s///gc<left><left><left><left>
+" 范围内正则替换
+xnoremap <leader>rSu :s/\v//gc<left><left><left><left>
 "}}}
 "{{{修改默认快捷键到更令人舒适的行为
+
+"{{{ 更方便的跳转标记
+let s:alphabet =['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+            \'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            \'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+            \'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',]
+for single_char in s:alphabet
+    exec "nnoremap '" . single_char . ' `' . single_char . 'zvzz'
+endfor
+"}}}
 " 调整缩进后自动选中，方便再次操作
 vnoremap < <gv
 vnoremap > >gv
@@ -1877,10 +1899,9 @@ vnoremap y ygv<esc>
 " 同时visual模式s表示删除，x表示剪切
 noremap s "_s
 vnoremap s "_s
+
 "}}}
-" -----------------------------------
-" 通过快捷键实现新功能
-" -----------------------------------
+" {{{通过快捷键实现新功能
 
 " 重复上次执行的寄存器的命令
 nnoremap <leader>r; @:
@@ -1910,6 +1931,14 @@ endfunction
 "}}}
 noremap <silent> Q <esc>:call <SID>auto_save_session()<cr>
 
+" 快速调整折叠层级
+for i in range(10)
+    execute 'nnoremap <leader>o' . i . ' :setlocal foldlevel=' . i . '<cr>zz'
+endfor
+" toggle foldlevel=0 / foldlevel=1
+nnoremap <expr> <leader>oo &foldlevel == 0 ? ':setlocal foldlevel=1<cr>' : ':setlocal foldlevel=0<cr>'
+
+"}}}
 "==========================================
 " 设置 Settings
 "==========================================
@@ -1954,7 +1983,7 @@ set lazyredraw  " redraw only when we need to.
 set nocompatible  " 去掉有关vi一致性模式，避免以前版本的bug和局限
 set wildmenu  " 增强模式中的命令行自动完成操作
 set wildmode=longest,full
-set showbreak=⤷▶  " 显示wrapline
+set showbreak=⤷▶  " wrap line指示器
 set backupcopy=yes  " Does not break hard/symbolic links on file save
 
 "}}}
@@ -2285,15 +2314,6 @@ if g:enable_file_autosave
     augroup END
 endif
 "}}}
-"{{{ 更方便的跳转标记
-let s:alphabet =['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
-            \'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-            \'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-            \'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',]
-for single_char in s:alphabet
-    exec "nnoremap '" . single_char . ' `' . single_char . 'zvzz'
-endfor
-"}}}
 " ------------------------------------
 
 " ------------------------------------
@@ -2355,8 +2375,20 @@ augroup auto_mark_C
 augroup end
 nnoremap <leader>ec :execute "normal 'C"<cr>
 " 编辑该文件类型的snippets
+
+" 搜索并alternative文件(比如在c和头文件之间替换, 用于c/cpp和h文件不在同一目录的情况),　具体的可以自己定义字典
+"{{{ function
+function! Alternative()
+    let name = expand("%:t:r")
+    let extension = expand("%:e")
+    let mapping = {"h": "c", "cpp": "h", 'c': 'h'}
+    return name . '.' . get(mapping, extension, "")
+endfunction
+"}}}
+noremap <silent> <leader>ea :<C-U><C-R>=printf("Leaderf file --input %s", Alternative())<CR><CR>
+
 nnoremap <leader>es :CocCommand snippets.editSnippets<cr>
-" 编辑同目录下的文件
+" 快速编辑同目录下的文件
 nnoremap ,e :e <c-r>=expand('%:p:h')<cr>/
 nnoremap ,n :!mkdir <c-r>=expand('%:p:h')<cr>/
 "}}}
