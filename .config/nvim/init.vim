@@ -1302,18 +1302,6 @@ nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', FindRootDirectory())
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式, visual模式 '*' 查找函数依赖这个插件，所以不要延迟加载
 Plug 'Yggdroot/LeaderF', {'do': './install.sh'}
 "{{{
-let g:Lf_PreviewResult = {
-      \ 'File': 0,
-      \ 'Buffer': 0,
-      \ 'Mru': 0,
-      \ 'Tag': 0,
-      \ 'BufTag': 0,
-      \ 'Function': 0,
-      \ 'Line': 0,
-      \ 'Colorscheme': 0,
-      \ 'Rg': 0,
-      \ 'Gtags': 0
-      \}
 let g:Lf_RgConfig = [
       \ '--glob=!\.git/*',
       \ '--glob=!\.vscode/*',
@@ -1328,18 +1316,18 @@ let g:Lf_WildIgnore = {
             \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]']
             \}
 
-" popup的normal模式是否自动预览
+" popup的normal模式是否自动预览 FIXME: 如果觉得上下移动很慢的话就得关闭preview
 let g:Lf_PreviewResult = {
-        \ 'File': 1,
-        \ 'Buffer': 1,
+        \ 'File': 0,
+        \ 'Buffer': 0,
         \ 'Mru': 0,
-        \ 'Tag': 1,
-        \ 'BufTag': 1,
-        \ 'Function': 1,
-        \ 'Line': 1,
+        \ 'Tag': 0,
+        \ 'BufTag': 0,
+        \ 'Function': 0,
+        \ 'Line': 0,
         \ 'Colorscheme': 0,
-        \ 'Rg': 1,
-        \ 'Gtags': 1
+        \ 'Rg': 0,
+        \ 'Gtags': 0
         \}
 
 let g:Lf_WindowPosition = 'popup'
@@ -1348,7 +1336,7 @@ let g:Lf_PopupHeight = 0.3
 let g:Lf_PreviewInPopup = 1  " <c-p>预览弹出窗口
 let g:Lf_CursorBlink = 0  " 取消光标闪烁
 let g:Lf_ShowHidden = 1  " 搜索结果包含隐藏文件
-
+let g:Lf_IgnoreCurrentBufferName = 1  " 搜索文件时忽略当前buffer FIXME: 不确定这条选项会不会导致搜索不到文件
 let g:Lf_WindowHeight = 0.4  " 非popup窗口的高度
 let g:Lf_HistoryNumber = 200  " default 100
 let g:Lf_GtagsAutoGenerate = 1  " 有['.git', '.hg', '.svn']之中的文件时自动生成gtags
@@ -1363,7 +1351,6 @@ let g:Lf_ShortcutF = ''  " 这两项是为了覆盖默认设置的键位
 let g:Lf_ShortcutB = ''
 "}}}
 let g:Lf_CommandMap = {'<C-]>':['<C-l>']}  " 搜索后<c-l>在右侧窗口打开文件
-nnoremap <silent> <c-p> :Leaderf command<cr>
 nnoremap <silent> <leader>gf :Leaderf file<cr>
 nnoremap <silent> <leader>gb :Leaderf buffer<cr>
 nnoremap <silent> <leader>gr :Leaderf mru<cr>
@@ -1378,9 +1365,12 @@ nnoremap <silent> <Leader>gW :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", 
 xnoremap <silent> <leader>gw :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", leaderf#Rg#visual())<CR><cr>
 " buffer内即时搜索
 nnoremap <silent> / :Leaderf rg --current-buffer<cr>
-" 重复上次搜索
-nnoremap <silent> g/ :Leaderf rg --current-buffer<cr><up>
+" 重复上次搜索, 会直接调用上次搜索结果的缓存
+nnoremap <silent> g/ :Leaderf rg --recall<cr>
 " buffer内搜索词
+nnoremap <silent> gw :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s", expand("<cword>"))<CR><cr>
+nnoremap <silent> gW :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s", expand("<cWORD>"))<CR><cr>
+xnoremap <silent> gw :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s", leaderf#Rg#visual())<CR><cr>
 xnoremap <silent> * :<C-U><C-R>=printf("Leaderf! rg -F --current-buffer %s", leaderf#Rg#visual())<CR><cr>
 " 仅测试用, 不知道用不用得上
 " 查看引用
@@ -1509,6 +1499,8 @@ nmap gq <plug>(asyncrun-qftoggle)
 " 编辑嵌套的代码，可以有独立的缩进和补全，使用场景: JS, Css在Html里面，
 " Markdown内嵌代码，Vue组件，代码内嵌SQL
 Plug 'AndrewRadev/inline_edit.vim', {'on': 'InlineEdit'}
+nnoremap <leader>ei :InlineEdit<cr>a
+xnoremap <leader>ei :InlineEdit<cr>a
 
 " sudo for neovim  (原来的tee trick只对vim有用，对neovim无效)
 Plug 'lambdalisue/suda.vim', {'on': ['W', 'E']}
@@ -1731,8 +1723,8 @@ vnoremap v <esc>
 " 快速退出选择模式
 xnoremap v <esc>
 " 快速在行末写分号并换行, 如果左边一个字符是分号则直接换行
-inoremap <expr> ;j nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>j' : '<esc>A;<esc>o'
-inoremap ;; <c-o>A;<esc>jo
+inoremap <expr> ;j nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<esc>A;<esc>o'
+inoremap <expr> ;; nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<c-o>A;<esc>jo'
 " NOTE: 这里用imap是因为要借用auto-pairs插件提供的{}自动配对
 imap [[ <esc>A<space>{<cr>
 " 连接下一行
