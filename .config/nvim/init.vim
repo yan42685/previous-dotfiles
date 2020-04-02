@@ -1136,7 +1136,6 @@ nnoremap <leader>PS :PlugStatus<cr>
 
 " keymap提示
 Plug 'liuchengxu/vim-which-key'
-" Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 "{{{
 autocmd VimEnter * call which_key#register('<Space>', "g:which_key_map_space")
 autocmd VimEnter * call which_key#register(',', "g:which_key_map_comma")
@@ -1530,10 +1529,10 @@ augroup end
 
 " 显示搜索的的数量以及当前位置
 Plug 'osyo-manga/vim-anzu'
-nmap n <Plug>(anzu-n-with-echo)zz
-nmap N <Plug>(anzu-N-with-echo)zz
-nmap * <Plug>(anzu-star-with-echo)zz
-nmap # <Plug>(anzu-sharp-with-echo)zz
+nmap n <Plug>(anzu-n-with-echo)zvzz
+nmap N <Plug>(anzu-N-with-echo)zvzz
+nmap * <Plug>(anzu-star-with-echo)zvzz
+nmap # <Plug>(anzu-sharp-with-echo)zvzz
 
 " 优化bd体验，关闭buffer但是不关闭窗口
 Plug 'mhinz/vim-sayonara', {'on': [ 'Sayonara','Sayonara!' ]}
@@ -1683,6 +1682,8 @@ Plug 'uiiaoo/java-syntax.vim', {'for': ['java']}
 
 " Github支持
 "Plug 'junegunn/vim-github-dashboard'
+" Gist　支持
+" Plug 'mattn/vim-gist'
 
 " 为不同的文件类型设置不同的tab expand 编码 EOF
 "Plug 'editorconfig/editorconfig-vim'
@@ -1753,18 +1754,19 @@ noremap J <C-f>zz
 noremap K <C-b>zz
 nmap gb %zz
 " 去上次修改的地方
-nnoremap gi gi<esc>zzi
+nnoremap gi gi<esc>zvzzi
 " goto previous/next change positon
-nnoremap g; g;zz
-nnoremap g, g,zz
+nnoremap g; g;zvzz
+nnoremap g, g,zvzz
 nnoremap gv gvzz
-nnoremap '' ``zz
-nnoremap '. `.zz
-nnoremap <c-o> <c-o>zz
-nnoremap <c-i> <c-i>zz
-nnoremap u uzz
-nnoremap <c-r> <c-r>zz
-nnoremap G Gzz
+nnoremap '' ``zvzz
+nnoremap '. `.zvzz
+" HACK: zv可以自动展开折叠
+nnoremap <c-o> <c-o>zvzz
+nnoremap <c-i> <c-i>zvzz
+nnoremap u uzvzz
+nnoremap <c-r> <c-r>zvzz
+nnoremap G Gzvzz
 " 交换 ' `, 使得可以快速使用'跳到marked相同的位置
 noremap ' `
 noremap ` '
@@ -1994,7 +1996,7 @@ augroup tab_indent_settings_by_filetype
     " autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
     " autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear"
     " 在右边窗口打开help,man, q快速退出
-    autocmd filetype man,help wincmd L | nnoremap <buffer> q :q!<cr>
+    autocmd filetype man,help wincmd L | nnoremap <silent> <buffer> q :q!<cr>
     autocmd filetype fugitiveblame nnoremap <silent> <buffer> q :q!<cr>
 augroup end
 "}}}
@@ -2297,7 +2299,7 @@ let s:alphabet =['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
             \'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
             \'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',]
 for single_char in s:alphabet
-    exec "nnoremap '" . single_char . ' `' . single_char . 'zz'
+    exec "nnoremap '" . single_char . ' `' . single_char . 'zvzz'
 endfor
 "}}}
 " ------------------------------------
@@ -2440,6 +2442,7 @@ function Faster_mode_for_large_file()
     execute 'normal ZT'
     " 这个一般由于向VCS仓库中新增了大文件而导致的大面积column实时重绘, 所以需要关闭
     execute 'SignifyToggle'
+    execute 'ALEToggleBuffer'
 endfunction
 "}}}
 nnoremap <F4> :call Faster_mode_for_large_file()<cr>
