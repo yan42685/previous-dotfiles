@@ -234,7 +234,6 @@ fi
 # }}}
 
 
-
 alias fzfh="rg --hidden -l --glob='!node_modules/' --glob='!.git/' '' | fzf"  # fzf搜索隐藏文件
 alias hdfs=/usr/local/hadoop/bin/hdfs
 alias hadoop=/usr/local/hadoop/bin/hadoop
@@ -723,3 +722,4 @@ export PATH="$PATH:/root/.local/bin"
 export PATH=~/.pyenv/bin:$PATH
 export PYENV_ROOT=~/.pyenv
 eval "$(pyenv init -)"
+

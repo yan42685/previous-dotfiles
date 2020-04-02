@@ -18,7 +18,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - snap
 - zsh
 - zgen
-- neovim-remote(命令为 nvr) `pip3 install neovim-remote`
+- neovim-remote（命令为 nvr) `pip3 install neovim-remote`
 - nvim
 - lua
 - node, npm
@@ -26,19 +26,20 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - ccls （from snap)
 - universal ctags
 - global
-- NerdFont 终端字体: SauceCodePro NF
-  (regular+bold+italic+bold italic) + DroidSansMono NF
+- NerdFont 终端字体：SauceCodePro NF
+  (regular+bold+italic+bold italic) 或 DroidSansMono NF
 - eslint prettier pylint autopep8 cppcheck clang-format
 - rg
 - fzf
-- tmux (tmux-finger 插件依赖 gawk 包, `sudo apt install gawk`)
+- tmux (tmux-finger 插件依赖 gawk 包，`sudo apt install gawk`)
 
 可有可无的软件
 
 - nnn
-- bat
-- 无道词典
+- bat 无道词典
 - gdb-dashboard
+- 如果是用的 gnome-terminal, 可以考虑从`https://github.com/Mayccoll/Gogh`安装比较好看
+  的主题（暂时用 gruv-dark)
 
 ## 如何在远程机器上使用本地 zsh
 
