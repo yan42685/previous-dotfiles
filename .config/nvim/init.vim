@@ -1308,6 +1308,8 @@ let g:neoterm_size = 10  " 调整terminal的大小
 " tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
 " nnoremap <silent> <m-j> :botright Topen<cr>
 " inoremap <silent> <m-j> <esc>:botright Topen<cr>
+" tnoremap <m-j> <c-\><c-n><c-w>j
+" tnoremap <m-k> <c-\><c-n><c-w>k<esc>
 
 " 浮动终端
 Plug 'voldikss/vim-floaterm'  " NOTE: 作者不推荐延迟加载
@@ -1371,9 +1373,6 @@ nnoremap <silent> ts :FloatermSend!<cr>
 vnoremap <silent> ts :FloatermSend!<cr>
 tnoremap <m-h> <c-\><c-n><c-w>h
 tnoremap <m-l> <c-\><c-n><c-w>l
-" <m-j> <m-k>用来切换terminal比较方便
-" tnoremap <m-j> <c-\><c-n><c-w>j
-" tnoremap <m-k> <c-\><c-n><c-w>k<esc>
 " " 粘贴寄存器0的内容到终端
 tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
 
