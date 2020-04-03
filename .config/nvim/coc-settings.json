@@ -31,7 +31,7 @@
   "yank.enableCompletion": false,
   // "yank.highlight.enable": false,
   "suggest.noselect": false, // 补全启动时自动选择第一项
-  "suggest.minTriggerInputLength": 1, // 补全触发的最少字数
+  "suggest.minTriggerInputLength": 2, // 补全触发的最少字数
   "explorer.icon.enableNerdfont": true,
   "python.jediEnabled": false,
   // 只显示ale的lint信息, 不显示Coc的

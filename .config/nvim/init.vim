@@ -89,10 +89,11 @@ let g:maplocalleader = ','
 " 插件管理
 " =========================================
 " {{{主要插件简介
-" 1. ALE     = 去除多余空格空行，lint, formatter
-" 2. LeaderF = 模糊查找
-" 3. coc     = 补全框架, 重构，跳转定义，其他插件生态系统
-" 4. Far     = 可视化替换
+" 1. ALE         去除多余空格空行，lint, formatter
+" 2. LeaderF     模糊查找
+" 3. coc         补全框架, 重构，跳转定义，其他插件生态系统
+" 4. Far         可视化替换
+" 5. Spelunker   拼写检查
 "}}}
 " {{{ vim-plug 自动安装
 if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
@@ -532,7 +533,7 @@ Plug 'tmhedberg/SimpylFold', {'for': [ 'python' ]}
 "{{{
 let g:SimpylFold_docstring_preview = 1
 "}}}
-"
+
 " 异步自动生成tags
 Plug 'jsfaint/gen_tags.vim'
 "{{{
@@ -625,8 +626,6 @@ if g:disable_laggy_plugins_for_large_file == 0
     \   }
     \ }
     "}}}
-    nmap <silent> ge <Plug>(ale_next_wrap)
-    nmap <silent> gE <Plug>(ale_previous_wrap)
 endif
 "}}}
 "{{{ Git相关
@@ -785,10 +784,15 @@ set shortmess+=c  " Don't pass messages to ins-completion-menu.
 set signcolumn=yes  " Always show the signcolumn, otherwise it would shift the text each time
 
 " Make <tab> used for trigger completion, completion confirm, snippet expand and jump like VSCode.
+" inoremap <silent> <expr> <TAB>
+"       \ pumvisible() ? coc#_select_confirm() :
+"       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
 inoremap <silent> <expr> <TAB>
       \ pumvisible() ? coc#_select_confirm() :
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
+      \ <SID>check_back_space() ? (strwidth(getline('.')) == 0 ? '<esc>cc' : '<tab>') :
       \ coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
@@ -834,8 +838,8 @@ endfunction
 " <C-o>  切换到正常模式(q退出) <C-c>  - 关闭coclist
 
 " 层进式范围选择
-let g:coc_range_select_map_blacklist = ['vim', 'markdown']
 " NOTE: 暂时打算用回车映射到％　这样映射是为了在命令行按下<c-f>进入的buffer内，可以在normal模式按回车执行指令
+" let g:coc_range_select_map_blacklist = ['vim', 'markdown']
 " nmap <expr> <cr> index(g:coc_range_select_map_blacklist, &filetype) >=0 ? '<cr>' : '<Plug>(coc-range-select)'
 " vmap <expr> <cr> index(g:coc_range_select_map_blacklist, &filetype) >=0 ? '<cr>' : '<Plug>(coc-range-select)'
 " vmap <backspace> <Plug>(coc-range-select-backward)
@@ -905,6 +909,22 @@ let s:key_mappings_of_surround = [
             \ ]
 for keymap in s:key_mappings_of_surround
     silent! call repeat#set(keymap, v:count)
+endfor
+"}}}
+" {{{让cs修改的surround不包括空格
+fun My_get_inverse_bracket(x)  "
+    if a:x == '(' | return ')'
+    elseif a:x == '[' | return ']'
+    elseif a:x == '{' | return '}'
+    elseif a:x == '<' | return '>'
+    elseif  a:x == '>' | return '<'
+    endif
+endf
+"
+for x in ['(','[', '{', '<', "'", '"']
+    for y in ['(', '[', '{', '<', '>']
+        execute 'nmap cs' . x . y . ' cs' . x . My_get_inverse_bracket(y)
+    endfor
 endfor
 "}}}
 nmap ysw ysiw
@@ -1145,7 +1165,7 @@ nnoremap <leader>PI :PlugInstall<cr>
 nnoremap <leader>PC :PlugClean<cr>
 nnoremap <leader>PS :PlugStatus<cr>
 
-" keymap提示
+" keymap提示 NOTE: 不能延迟加载
 Plug 'liuchengxu/vim-which-key'
 "{{{
 autocmd VimEnter * call which_key#register('<Space>', "g:which_key_map_space")
@@ -1265,8 +1285,6 @@ let g:which_key_map_g['/'] = 'last-buffer-grep'
 let g:which_key_map_g['?'] = 'last-buffer-search'
 let g:which_key_map_g.b = 'next-braket'
 let g:which_key_map_g.c = 'line-commit-message'
-let g:which_key_map_g.e = 'next-lint-error'
-let g:which_key_map_g.E = 'last-lint-error'
 let g:which_key_map_g.i = 'last-edit-positon-insert-mode'
 let g:which_key_map_g.q = 'toggle-quickfix-window'
 let g:which_key_map_g.u = 'toggle-upper-case-<cword>'
@@ -1298,6 +1316,23 @@ augroup settings_whichkey_for_t  " 因为有插件映射了t所以这里要用au
     autocmd VimEnter * nnoremap <silent> t :WhichKey 't'<cr>
     autocmd VimEnter * vnoremap <silent> t :WhichKeyVisual 't'<cr>
 augroup end
+
+" 浮动终端
+Plug 'voldikss/vim-floaterm'
+let g:floaterm_position = 'center'
+" 从终端打开文件的方式 Available: 'edit', 'split', 'vsplit', 'tabe', 'drop'. Default: 'edit'
+let g:floaterm_open_command = 'tabe'
+" 快捷键
+let g:floaterm_keymap_toggle = '<F10>'
+" 使用git commit时触发
+let g:floaterm_gitcommit = 'split'  " split vsplit tabe可选
+augroup fix_bug_in_floaterm_and_startify
+
+    autocmd!
+    autocmd User Startified setlocal buflisted
+augroup end
+nnoremap <leader>tm :FloatermToggle<cr>
+
 
 "}}}
 "{{{Project增强
@@ -1512,6 +1547,7 @@ augroup auto_open_quickfix
 augroup end
 "}}}
 nmap gq <plug>(asyncrun-qftoggle)
+" nnoremap : :AsyncRun<space>
 "}}}
 "{{{杂项, 优化使用体验
 " 编辑嵌套的代码，可以有独立的缩进和补全，使用场景: JS, Css在Html里面，
@@ -1744,13 +1780,17 @@ xnoremap v <esc>
 " 快速在行末写分号并换行, 如果左边一个字符是分号则直接换行
 inoremap <expr> ;j nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<esc>A;<esc>o'
 inoremap <expr> ;; nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<c-o>A;<esc>jo'
+" 快速创建折叠marker, 避免受autopair的影响
+inoremap <expr> ;a &foldmethod == 'marker' ? '{{{' : ';a'
+inoremap <expr> ;b &foldmethod == 'marker' ? '}}}' : ';b'
 " NOTE: 这里用imap是因为要借用auto-pairs插件提供的{}自动配对
 imap [[ <esc>A<space>{<cr>
 " 连接下一行
 nnoremap tj J
 " 废弃ZZ退出
 noremap ZZ <nop>
-map <cr> %
+" 这里判断&buftype是否为nofile是为了在命令模式按<c-f>之后进入的buffer内可以回车执行命令
+map <expr> <cr> &buftype == 'nofile' ? '<cr>' : '%'
 "}}}
 "{{{ 更便捷的移动以及视角居中
 " set scrolloff=100  " FIXME: 尝试用scroll让视角居中，替换很多命令后面的zz，不过可能出现性能问题?
@@ -2034,7 +2074,8 @@ augroup tab_indent_settings_by_filetype
     autocmd BufRead,BufNewFile *.part set filetype=html
     autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
     autocmd BufWinEnter *.php set mps-=<:>  " disable showmatch when use > in php
-    autocmd FileType make setlocal noexpandtab shiftwidth=4 softtabstop=0
+    " makefile 必须用tab来进行缩进
+    autocmd FileType make setlocal noexpandtab shiftwidth=4 softtabstop=0 list listchars=tab:▸\ ,extends:❯,precedes:❮
     " 下两行是coc-tsserver这么要求的
     autocmd BufRead,BufNewFile *.jsx set filetype=javascript.jsx
     autocmd BufRead,BufNewFile *.tsx set filetype=typescript.tsx
@@ -2044,6 +2085,7 @@ augroup tab_indent_settings_by_filetype
     " 在右边窗口打开help,man, q快速退出
     autocmd filetype man,help wincmd L | nnoremap <silent> <buffer> q :q!<cr>
     autocmd filetype fugitiveblame nnoremap <silent> <buffer> q :q!<cr>
+
 augroup end
 "}}}
 " {{{ 展示/排版等界面格式设置 Display Settings
@@ -2088,7 +2130,7 @@ set smartindent  " Smart indent
 set autoindent  " never add copyindent, case error   " copy the previous indentation on autoindenting
 
 " tab相关变更
-set tabstop=4  " 设置Tab键的宽度        [等同的空格个数]
+set tabstop=4  " 设置Tab键的宽度 (等同的空格个数)
 set shiftwidth=4  " 每一次缩进对应的空格数
 set softtabstop=4  " 按退格键时可以一次删掉 4 个空格
 set smarttab  " insert tabs on the start of a line according to shiftwidth, not tabstop 按退格键时可以一次删掉 4 个空格
@@ -2152,6 +2194,9 @@ augroup auto_actions_for_better_experience
     " FIXME: 这里的set syntax=on可能会影响某些特殊的文件类型的高亮渲染, 所以必要时应该排除在外
     autocmd WinEnter,WinLeave * if (&filetype != '' && &syntax != 'on' && !&diff && &filetype != 'far')
                 \ | set syntax=on | endif
+    " 只在当前窗口显示corsorline
+    autocmd WinLeave * setlocal nocursorline
+    autocmd WinEnter * setlocal cursorline
 augroup end
 "}}}
 "{{{ 自定义高亮 Highlighting, ColorScheme
@@ -2264,6 +2309,11 @@ highlight! WhichKeyDesc    gui=None  guifg=#5686dd
 " 让弹窗背景自适应主题的背景色
 highlight! WhichKeyFloating gui=None
 "}}}
+" {{{浮动终端配色
+hi! FloatermNF guibg=None
+hi! FloatermBorderNF guibg=None guifg=#828282
+"}}}
+
 endfunction
 
 call s:Enable_normal_scheme()

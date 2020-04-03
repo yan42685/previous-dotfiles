@@ -52,7 +52,7 @@
     # commit - amend the tip of the current branch, and do not edit the message.
     cane = commit --amend --no-edit
     # commit with a message
-    cm = commit --message
+    cm = commit -a
     ca = commit --all --message
 
     ### checkout ###
