@@ -1329,8 +1329,11 @@ augroup fix_bug_in_floaterm_and_startify
     autocmd User Startified setlocal buflisted
 augroup end
 "}}}
-" 进入终端前复制当前buffer所在目录
+" 进入终端前复制当前buffer所在目录, 以便于快速进入该buffer的目录
 nnoremap <silent> <m-n> :call Copy_to_registers(expand('%:p:h'))<cr>:FloatermNew<cr>
+tnoremap <silent> <m-n> <c-\><c-n>:FloatermNew<cr>
+" 进入普通模式
+tnoremap <c-m-n> <c-\><c-n>
 " 可以作为从编辑器回到浮动窗口的快捷键
 nnoremap <silent> <m-m> :call Copy_to_registers(expand('%:p:h'))<cr>:FloatermToggle<cr>
 "{{{ function My_toggle_full_screen_floterm
@@ -1371,7 +1374,6 @@ tnoremap <m-l> <c-\><c-n><c-w>l
 " <m-j> <m-k>用来切换terminal比较方便
 " tnoremap <m-j> <c-\><c-n><c-w>j
 " tnoremap <m-k> <c-\><c-n><c-w>k<esc>
-tnoremap <m-n> <c-\><c-n>
 " " 粘贴寄存器0的内容到终端
 tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
 
