@@ -1849,8 +1849,8 @@ nnoremap dh d0
 nnoremap dl d$
 nnoremap ch c0
 nnoremap cl c$
-"}}}
-" 命令行和插入模式增强{{{
+
+" 命令行和插入模式增强
 " 上下相比于<c-n> <c-p>更智能的地方:  可以根据已输入的字符补全历史命令
 cnoremap ' ''<left>
 cnoremap " ""<left>
@@ -2059,7 +2059,6 @@ set tm=500
 set backspace=eol,start,indent  " Configure backspace so it acts as it should act
 set whichwrap+=<,>,h,l
 set synmaxcol=200  " 对于很长的行语法高亮很拖慢速度
-
 set viminfo+=!  " 保存viminfo全局信息
 set lazyredraw  " redraw only when we need to.
 set nocompatible  " 去掉有关vi一致性模式，避免以前版本的bug和局限
@@ -2070,6 +2069,19 @@ set showbreak=⤷▶  " wrap line指示器
 set backupcopy=yes  " Does not break hard/symbolic links on file save
 set virtualedit+=block  " 块选择模式可以把光标移动到没有字符的位置
 
+
+
+
+
+" {{{ 文件编码,格式 FileEncode Settings
+
+set fencs=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1
+set encoding=utf-8  " 设置新文件的编码为 UTF-8
+set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1  " 自动判断编码时，依次尝试以下编码：
+set helplang=cn
+set termencoding=utf-8  " 下面这句只影响普通模式 (非图形界面) 下的 Vim
+set formatoptions+=m  " 如遇Unicode值大于255的文本，不必等到空格再折行
+set formatoptions+=B  " 合并两行中文时，不在中间加空格
 "}}}
 " 设置wildmenu忽略的文件{{{
 set wildignore+=*.o,*.out,*.obj,.git,*.rbc,*.rbo,*.class,.svn,*.gem  " Disable output and VCS files
@@ -2082,6 +2094,44 @@ set wildignore+=*.swp,*~,._*  " Disable temp and backup files
 set wildignorecase  " files or directoies auto completion is case insensitive
 set completeopt-=menu  " 让Vim的补全菜单行为与一般IDE一致(参考VimTip1228)
 set completeopt+=longest,menuone
+"}}}
+" {{{ 展示/排版等界面格式设置 Display Settings
+set ruler  " 显示当前的行号列号
+set showmode  " 左下角显示当前vim模式
+set number  " 显示行号
+set textwidth=0  " 打字超过一定长度也不会自动换行
+set relativenumber number  " 相对行号: 行号变成相对，可以用 nj/nk 进行跳转
+" set statusline=%<%f\ %h%m%r%=%k[%{(&fenc==\"\")?&enc:&fenc}%{(&bomb?\",BOM\":\"\")}]\ %-14.(%l,%c%V%)\ %P
+" " 命令行（在状态行下）的高度，默认为1，这里是2
+set laststatus=2  " Always show the status line - use 2 lines for the status bar
+set showmatch  " 括号配对情况, 跳转并高亮一下匹配的括号
+set matchtime=2  " How many tenths of a second to blink when matching brackets
+set hlsearch  " 高亮search命中的文本
+set incsearch  " 打开增量搜索模式,随着键入即时搜索
+set ignorecase  " 搜索时忽略大小写
+set smartcase  " 有一个或以上大写字母时变成大小写敏感
+set foldenable  " 代码折叠 zM全部折叠 zR全部打开 zo开关一个折叠
+set smartindent  " Smart indent
+set autoindent  " never add copyindent, case error   " copy the previous indentation on autoindenting
+" tab相关变更
+set tabstop=4  " 设置Tab键的宽度 (等同的空格个数)
+set shiftwidth=4  " 每一次缩进对应的空格数
+set softtabstop=4  " 按退格键时可以一次删掉 4 个空格
+set smarttab  " insert tabs on the start of a line according to shiftwidth, not tabstop 按退格键时可以一次删掉 4 个空格
+set expandtab  " 将Tab自动转化成空格[需要输入真正的Tab键时，使用 Ctrl+V + Tab]
+set shiftround  " 缩进时，取整 use multiple of shiftwidth when indenting with '<' and '>'
+
+" 防止tmux下vim的背景色显示异常
+" Refer: http://sunaku.github.io/vim-256color-bce.html
+if &term =~ '256color'
+  " disable Background Color Erase (BCE) so that color schemes
+  " render properly when inside 256-color tmux and GNU screen.
+  " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
+  set t_ut=
+endif
+
+syntax on  " NOTE: 这条语句放在不同的地方会有不同的效果，经测试,放在这里是比较合适的
+"}}}
 "}}}
 " {{{  对不同文件类型的设置 FileType Settings
 
@@ -2106,76 +2156,6 @@ augroup tab_indent_settings_by_filetype
     autocmd filetype fugitiveblame,fugitive nnoremap <silent> <buffer> q :q!<cr>
 
 augroup end
-"}}}
-" {{{ 展示/排版等界面格式设置 Display Settings
-set ruler  " 显示当前的行号列号
-set showmode  " 左下角显示当前vim模式
-set number  " 显示行号
-set textwidth=0  " 打字超过一定长度也不会自动换行
-set relativenumber number  " 相对行号: 行号变成相对，可以用 nj/nk 进行跳转
-" set statusline=%<%f\ %h%m%r%=%k[%{(&fenc==\"\")?&enc:&fenc}%{(&bomb?\",BOM\":\"\")}]\ %-14.(%l,%c%V%)\ %P
-" " 命令行（在状态行下）的高度，默认为1，这里是2
-set laststatus=2  " Always show the status line - use 2 lines for the status bar
-set showmatch  " 括号配对情况, 跳转并高亮一下匹配的括号
-set matchtime=2  " How many tenths of a second to blink when matching brackets
-set hlsearch  " 高亮search命中的文本
-set incsearch  " 打开增量搜索模式,随着键入即时搜索
-set ignorecase  " 搜索时忽略大小写
-set smartcase  " 有一个或以上大写字母时变成大小写敏感
-set foldenable  " 代码折叠 zM全部折叠 zR全部打开 zo开关一个折叠
-
-function Change_fold_method_by_filetype()
-    set foldlevel=99  " 第一次进入时不折叠
-    let s:marker_fold_list = ['vim', 'txt', 'zsh', 'tmux']  " 根据文件类型选择不同的折叠模式
-    let s:indent_fold_list = ['python']
-    let s:expression_fold_list = ['markdown', 'rust']
-    if index(s:marker_fold_list, &filetype) >= 0
-        set foldmethod=marker  " marker    使用标记进行折叠, 默认标记是 { { { 和 } } }
-        set foldlevel=0  " 第一次进入时全部自动折叠
-    elseif index(s:indent_fold_list, &filetype) >= 0
-        set foldmethod=indent
-    elseif index(s:expression_fold_list, &filetype) >= 0
-        set foldmethod=expr
-    else
-        set foldmethod=syntax
-    endif
-endfunction
-
-augroup auto_change_fold_method
-   autocmd!
-   autocmd BufWinEnter * call Change_fold_method_by_filetype()
-augroup end
-set smartindent  " Smart indent
-set autoindent  " never add copyindent, case error   " copy the previous indentation on autoindenting
-
-" tab相关变更
-set tabstop=4  " 设置Tab键的宽度 (等同的空格个数)
-set shiftwidth=4  " 每一次缩进对应的空格数
-set softtabstop=4  " 按退格键时可以一次删掉 4 个空格
-set smarttab  " insert tabs on the start of a line according to shiftwidth, not tabstop 按退格键时可以一次删掉 4 个空格
-set expandtab  " 将Tab自动转化成空格[需要输入真正的Tab键时，使用 Ctrl+V + Tab]
-set shiftround  " 缩进时，取整 use multiple of shiftwidth when indenting with '<' and '>'
-
-" 防止tmux下vim的背景色显示异常
-" Refer: http://sunaku.github.io/vim-256color-bce.html
-if &term =~ '256color'
-  " disable Background Color Erase (BCE) so that color schemes
-  " render properly when inside 256-color tmux and GNU screen.
-  " see also http://snk.tuxfamily.org/log/vim-256color-bce.html
-  set t_ut=
-endif
-
-syntax on  " NOTE: 这条语句放在不同的地方会有不同的效果，经测试,放在这里是比较合适的
-"}}}
-" {{{ 文件编码,格式 FileEncode Settings
-
-set fencs=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1
-set encoding=utf-8  " 设置新文件的编码为 UTF-8
-set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1  " 自动判断编码时，依次尝试以下编码：
-set helplang=cn
-set termencoding=utf-8  " 下面这句只影响普通模式 (非图形界面) 下的 Vim
-set formatoptions+=m  " 如遇Unicode值大于255的文本，不必等到空格再折行
-set formatoptions+=B  " 合并两行中文时，不在中间加空格
 "}}}
 "{{{ 自动命令设置 Autocmds Settings
 augroup auto_actions_for_better_experience
@@ -2378,7 +2358,7 @@ command! FixSyntax :syntax sync fromstart  " fix syntax highlighting
 "==========================================
 " 新增功能
 "==========================================
-" ---------- 自动生效的功能 ----------
+" --------- 自动生效的功能 -----------
 " {{{自动保存
 function! s:Autosave(timed)
     if &readonly || mode() == 'c' || pumvisible()
@@ -2408,9 +2388,32 @@ if g:enable_file_autosave
     augroup END
 endif
 "}}}
+"{{{ 自动根据文件类型选择折叠方法
+function Change_fold_method_by_filetype()
+    set foldlevel=99  " 第一次进入时不折叠
+    let s:marker_fold_list = ['vim', 'txt', 'zsh', 'tmux']  " 根据文件类型选择不同的折叠模式
+    let s:indent_fold_list = ['python']
+    let s:expression_fold_list = ['markdown', 'rust']
+    if index(s:marker_fold_list, &filetype) >= 0
+        set foldmethod=marker  " marker    使用标记进行折叠, 默认标记是 { { { 和 } } }
+        set foldlevel=0  " 第一次进入时全部自动折叠
+    elseif index(s:indent_fold_list, &filetype) >= 0
+        set foldmethod=indent
+    elseif index(s:expression_fold_list, &filetype) >= 0
+        set foldmethod=expr
+    else
+        set foldmethod=syntax
+    endif
+endfunction
+
+augroup auto_change_fold_method
+   autocmd!
+   autocmd BufWinEnter * call Change_fold_method_by_filetype()
+augroup end
+"}}}
 " ------------------------------------
 
-" ------------------------------------
+" --------需要主动了解的功能----------
 " {{{对vim作为git difftoll的增强, <leader><leader>q 强制退出difftool
 " 当把vim作为git的difftool时，设置 git config --global difftool.trustExitCode true && git config --global mergetool.trustExitCode true
 " 在git difftool或git mergetool之后  可以用:cq进行强制退出diff/merge模式，而不会不停地recall another diff/merge file
