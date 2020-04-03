@@ -771,7 +771,7 @@ let g:coc_global_extensions = [
   \ 'coc-python', 'coc-tabnine', 'coc-lists', 'coc-explorer', 'coc-yank',
   \ 'coc-markdownlint', 'coc-stylelint', 'coc-sh', 'coc-dictionary', 'coc-word', 'coc-emmet',
   \ 'coc-syntax', 'coc-marketplace', 'coc-todolist', 'coc-emoji',
-  \ 'coc-gitignore', 'coc-bookmark', 'coc-java', 'coc-tag'
+  \ 'coc-gitignore', 'coc-bookmark', 'coc-java', 'coc-tag', 'coc-floaterm'
   \ ]
 
 
@@ -1114,8 +1114,8 @@ let g:winresizer_vert_resize = 3  " 每次移动的步幅
 nnoremap <leader>wr :WinResizerStartResize<cr>
 nnoremap <leader>wm :WinResizerStartResize<cr>m
 
-" 为内置终端提供方便接口
-Plug 'kassio/neoterm'
+" 为内置终端提供方便接口 NOTE:暂时被floaterm替代，以后唯一可能用的地方就是REPL吧
+" Plug 'kassio/neoterm'
 "{{{
 let g:neoterm_autojump = 1  " 自动进入终端
 let g:neoterm_autoinsert = 1  " 进入终端默认插入模式
@@ -1123,18 +1123,10 @@ let g:neoterm_use_relative_path = 1
 let g:neoterm_autoscroll = 1
 let g:neoterm_size = 10  " 调整terminal的大小
 "}}}
-nnoremap <silent> <m-m> :botright Ttoggle<cr>
-nnoremap <silent> <m-j> :botright Topen<cr>
-inoremap <silent> <m-j> <esc>:botright Topen<cr>
-" 内置终端
-tnoremap <m-h> <c-\><c-n><c-w>h
-tnoremap <m-l> <c-\><c-n><c-w>l
-tnoremap <m-j> <c-\><c-n><c-w>j
-tnoremap <m-k> <c-\><c-n><c-w>k<esc>
-tnoremap <m-n> <c-\><c-n>
-" 粘贴寄存器0的内容到终端
-tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
-tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
+" nnoremap <silent> <m-m> :botright Ttoggle<cr>
+" tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
+" nnoremap <silent> <m-j> :botright Topen<cr>
+" inoremap <silent> <m-j> <esc>:botright Topen<cr>
 
 " 多语言debug支持 FIXME: 这个插件还在开发阶段，可能会有很多bug
 Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python', 'on': '<Plug>VimspectorContinue'}
@@ -1319,19 +1311,45 @@ augroup end
 
 " 浮动终端
 Plug 'voldikss/vim-floaterm'
-let g:floaterm_position = 'center'
+"{{{
+let g:floaterm_type = 'floating'   "　终端出现形式, 可选normal
+let g:floaterm_winblend = 35  " 背景透明度百分比
+let g:floaterm_position = 'center'  " 浮动窗口位置
 " 从终端打开文件的方式 Available: 'edit', 'split', 'vsplit', 'tabe', 'drop'. Default: 'edit'
 let g:floaterm_open_command = 'tabe'
-" 快捷键
-let g:floaterm_keymap_toggle = '<F10>'
 " 使用git commit时触发
 let g:floaterm_gitcommit = 'split'  " split vsplit tabe可选
 augroup fix_bug_in_floaterm_and_startify
-
     autocmd!
     autocmd User Startified setlocal buflisted
 augroup end
-nnoremap <leader>tm :FloatermToggle<cr>
+"}}}
+nnoremap <leader>tn :FloatermNew<cr>
+" 可以作为从编辑器回到浮动窗口的快捷键
+nnoremap <silent> <m-m> :FloatermToggle<cr>
+tnoremap <silent> <m-m> <c-\><c-n>:FloatermToggle<cr>
+nnoremap <silent> <m-j> :FloatermNext<cr>
+tnoremap <silent> <m-j> <c-\><c-n>:FloatermNext<cr>
+nnoremap <silent> <m-k> :FloatermPrev<cr>
+tnoremap <silent> <m-k> <c-\><c-n>:FloatermPrev<cr>
+" 在浮动终端执行命令 -A表示自动预览
+nnoremap <leader>ct :CocList -A floaterm <cr>
+" 向终端送去命令去除空白但保持缩进 NOTE: 不适用于浮动窗口，只能当 g:floaterm_type = 'normal'时才能用
+nnoremap ts :FloatermSend!<cr>
+vnoremap ts :FloatermSend!<cr>
+tnoremap <m-h> <c-\><c-n><c-w>h
+tnoremap <m-l> <c-\><c-n><c-w>l
+tnoremap <m-j> <c-\><c-n><c-w>j
+tnoremap <m-k> <c-\><c-n><c-w>k<esc>
+tnoremap <m-n> <c-\><c-n>
+" " 粘贴寄存器0的内容到终端
+tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
+
+" function My_floaterm_settings()
+"     tnoremap <silent> <buffer> <m-l> <c-\><c-n>:wincmd L<cr>
+" endfunction
+" autocmd FileType floaterm call My_floaterm_settings()
+"
 
 
 "}}}
@@ -1497,7 +1515,8 @@ Plug 'skywind3000/asynctasks.vim', {'on': 'AsyncTask'}
 "{{{
 let g:asyncrun_open = 6
 let g:asyncrun_rootmarks = ['.git', '.svn', '.root', '.project', '.hg']
-let g:asynctasks_term_pos = 'bottom' " tab
+let g:asynctasks_term_pos = 'floaterm' " 使用浮动终端
+" let g:asynctasks_term_pos = 'bottom' " 可选tab
 let g:asynctasks_term_rows = 10
 let g:asynctasks_term_reuse = 1  " 如果用tab模式打开终端，则会复用
 let g:asynctasks_config_name = '.git/tasks.ini'
@@ -1547,7 +1566,6 @@ augroup auto_open_quickfix
 augroup end
 "}}}
 nmap gq <plug>(asyncrun-qftoggle)
-" nnoremap : :AsyncRun<space>
 "}}}
 "{{{杂项, 优化使用体验
 " 编辑嵌套的代码，可以有独立的缩进和补全，使用场景: JS, Css在Html里面，
@@ -1947,6 +1965,8 @@ vnoremap y ygv<esc>
 " 同时visual模式s表示删除，x表示剪切
 noremap s "_s
 vnoremap s "_s
+" 创建折叠的同时也执行折叠
+vnoremap zf zfzc
 
 "}}}
 " {{{通过快捷键实现新功能
@@ -2516,6 +2536,10 @@ fun My_change_colorscheme(mode) abort
     call s:Enable_normal_scheme()  " 恢复折叠和column的颜色
 endf
 "}}}
+" 直接选择主题
+for i in range(1, len(g:all_colorschemes))
+    execute 'nnoremap <silent> <leader>c' . i . ' :call My_change_colorscheme(' . (i-1) . ')<cr>'
+endfor
 nnoremap <silent> <leader>cj :call My_change_colorscheme('next')<cr>
 nnoremap <silent> <leader>ck :call My_change_colorscheme('previous')<cr>
 "}}}
