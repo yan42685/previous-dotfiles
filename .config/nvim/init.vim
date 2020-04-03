@@ -253,8 +253,6 @@ endif
 " 高亮与光标下单词相同的单词
 Plug 'RRethy/vim-illuminate'
 "{{{
-" 让高亮与visual显色一致
-hi link illuminatedWord Visual
 " 选择不高亮的文件类型
 let g:Illuminate_ftblacklist = [
             \ 'vim', 'text', 'markdown', 'css', 'help',
@@ -2194,8 +2192,8 @@ augroup auto_actions_for_better_experience
     autocmd WinEnter,WinLeave * if (&filetype != '' && &syntax != 'on' && !&diff && &filetype != 'far')
                 \ | set syntax=on | endif
     " 只在当前窗口显示corsorline
-    autocmd WinLeave * setlocal nocursorline
-    autocmd WinEnter * setlocal cursorline
+    autocmd WinLeave * if t:is_transparent == 0 | setlocal nocursorline
+    autocmd WinEnter * if t:is_transparent == 0 | setlocal cursorline
 augroup end
 "}}}
 "{{{ 自定义高亮 Highlighting, ColorScheme
@@ -2312,7 +2310,9 @@ highlight! WhichKeyFloating gui=None
 hi! FloatermNF guibg=None
 hi! FloatermBorderNF guibg=None guifg=#828282
 "}}}
-
+" {{{ Illuminate相同单词高亮
+hi link illuminatedWord Visual
+"}}}
 endfunction
 
 call s:Enable_normal_scheme()
@@ -2592,20 +2592,29 @@ function s:Enable_transparent_scheme() abort
     call s:HL('OrangeSign', s:palette.orange, s:palette.none)
     call s:HL('PurpleSign', s:palette.purple, s:palette.none)
     call s:HL('BlueSign', s:palette.none, s:palette.none)
+    call s:HL('VertSplit', s:palette.none, s:palette.none)  " vsplit分隔线
 endfunction
 
 let t:is_transparent = 0
 function! Toggle_transparent_background()
   if t:is_transparent == 1
-    windo set cursorline
-    syn off | syn on
-    call s:Enable_normal_scheme()
     let t:is_transparent = 0
+    set laststatus=2
+    setlocal cursorline
+    syn off | syn on
+    " illuminate插件
+    silent! IlluminationEnable
+    silent! DoMatchParen
+    " matchup插件
+    call s:Enable_normal_scheme()
   else
-    windo set nocursorline
-    hi Normal guibg=NONE ctermbg=NONE
-    call s:Enable_transparent_scheme()
     let t:is_transparent = 1
+    set laststatus=0
+    setlocal nocursorline
+    hi Normal guibg=NONE ctermbg=NONE
+    silent! IlluminationDisable
+    silent! NoMatchParen
+    call s:Enable_transparent_scheme()
   endif
 endfunction
 "}}}
