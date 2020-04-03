@@ -1114,20 +1114,6 @@ let g:winresizer_vert_resize = 3  " 每次移动的步幅
 nnoremap <leader>wr :WinResizerStartResize<cr>
 nnoremap <leader>wm :WinResizerStartResize<cr>m
 
-" 为内置终端提供方便接口 NOTE:暂时被floaterm替代，以后唯一可能用的地方就是REPL吧
-" Plug 'kassio/neoterm'
-"{{{
-let g:neoterm_autojump = 1  " 自动进入终端
-let g:neoterm_autoinsert = 1  " 进入终端默认插入模式
-let g:neoterm_use_relative_path = 1
-let g:neoterm_autoscroll = 1
-let g:neoterm_size = 10  " 调整terminal的大小
-"}}}
-" nnoremap <silent> <m-m> :botright Ttoggle<cr>
-" tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
-" nnoremap <silent> <m-j> :botright Topen<cr>
-" inoremap <silent> <m-j> <esc>:botright Topen<cr>
-
 " 多语言debug支持 FIXME: 这个插件还在开发阶段，可能会有很多bug
 Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python', 'on': '<Plug>VimspectorContinue'}
 "{{{
@@ -1309,24 +1295,67 @@ augroup settings_whichkey_for_t  " 因为有插件映射了t所以这里要用au
     autocmd VimEnter * vnoremap <silent> t :WhichKeyVisual 't'<cr>
 augroup end
 
+" 为内置终端提供方便接口 NOTE:暂时被floaterm替代，以后唯一可能用的地方就是REPL吧
+" Plug 'kassio/neoterm'
+"{{{
+let g:neoterm_autojump = 1  " 自动进入终端
+let g:neoterm_autoinsert = 1  " 进入终端默认插入模式
+let g:neoterm_use_relative_path = 1
+let g:neoterm_autoscroll = 1
+let g:neoterm_size = 10  " 调整terminal的大小
+"}}}
+" nnoremap <silent> <m-m> :botright Ttoggle<cr>
+" tnoremap <silent> <m-m> <c-\><c-n>:Ttoggle<cr>
+" nnoremap <silent> <m-j> :botright Topen<cr>
+" inoremap <silent> <m-j> <esc>:botright Topen<cr>
+
 " 浮动终端
 Plug 'voldikss/vim-floaterm'  " NOTE: 作者不推荐延迟加载
 "{{{
-let g:floaterm_type = 'floating'   "　终端出现形式, 可选normal
-let g:floaterm_winblend = 35  " 背景透明度百分比
-let g:floaterm_position = 'center'  " 浮动窗口位置
-" 从终端打开文件的方式 Available: 'edit', 'split', 'vsplit', 'tabe', 'drop'. Default: 'edit'
-let g:floaterm_open_command = 'tabe'
-" 使用git commit时触发
-let g:floaterm_gitcommit = 'split'  " split vsplit tabe可选
+fun My_reset_floaterm_config()
+    let g:floaterm_type = 'floating'   "　终端出现形式, 可选normal
+    " let g:floaterm_type = 'normal'   "　终端出现形式, 可选normal
+    let g:floaterm_winblend = 35  " 背景透明度百分比
+    let g:floaterm_position = 'center'  " 浮动窗口位置
+    " 从终端打开文件的方式 Available: 'edit', 'split', 'vsplit', 'tabe', 'drop'. Default: 'edit'
+    let g:floaterm_open_command = 'tabe'
+    " 使用git commit时触发
+    let g:floaterm_gitcommit = 'split'  " split vsplit tabe可选
+endf
+call My_reset_floaterm_config()
+
 augroup fix_bug_in_floaterm_and_startify
     autocmd!
     autocmd User Startified setlocal buflisted
 augroup end
 "}}}
-nnoremap <silent> <leader>tn :FloatermNew<cr>
+" 进入终端前复制当前buffer所在目录
+nnoremap <silent> <m-n> :call Copy_to_registers(expand('%:p:h'))<cr>:FloatermNew<cr>
 " 可以作为从编辑器回到浮动窗口的快捷键
-nnoremap <silent> <m-m> :FloatermToggle<cr>
+nnoremap <silent> <m-m> :call Copy_to_registers(expand('%:p:h'))<cr>:FloatermToggle<cr>
+"{{{ function My_toggle_full_screen_floterm
+let g:My_full_screen_floterm_status = 0
+function My_toggle_full_screen_floterm()
+    if &buftype != 'terminal'
+        echo "not in a float terminal"
+    endif
+    if g:My_full_screen_floterm_status == 0
+        let g:My_full_screen_floterm_status = 1
+        setlocal laststatus=0  " 不显示状态栏
+        1000wincmd |  " 延长水平窗口
+        1000wincmd _
+        startinsert  " 进入插入模式
+    else
+        let g:My_full_screen_floterm_status = 0
+        FloatermToggle
+        FloatermToggle
+        setlocal laststatus=2
+    endif
+endf
+"}}}
+" 浮动终端开关全屏模式
+tnoremap <silent> <m-o> <c-\><c-n>:call My_toggle_full_screen_floterm()<cr>
+nnoremap <silent> <m-o> <c-\><c-n>:call My_toggle_full_screen_floterm()<cr>
 tnoremap <silent> <m-m> <c-\><c-n>:FloatermToggle<cr>
 nnoremap <silent> <m-j> :FloatermNext<cr>
 tnoremap <silent> <m-j> <c-\><c-n>:FloatermNext<cr>
@@ -1339,18 +1368,12 @@ nnoremap <silent> ts :FloatermSend!<cr>
 vnoremap <silent> ts :FloatermSend!<cr>
 tnoremap <m-h> <c-\><c-n><c-w>h
 tnoremap <m-l> <c-\><c-n><c-w>l
-tnoremap <m-j> <c-\><c-n><c-w>j
-tnoremap <m-k> <c-\><c-n><c-w>k<esc>
+" <m-j> <m-k>用来切换terminal比较方便
+" tnoremap <m-j> <c-\><c-n><c-w>j
+" tnoremap <m-k> <c-\><c-n><c-w>k<esc>
 tnoremap <m-n> <c-\><c-n>
 " " 粘贴寄存器0的内容到终端
 tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
-
-" function My_floaterm_settings()
-"     tnoremap <silent> <buffer> <m-l> <c-\><c-n>:wincmd L<cr>
-" endfunction
-" autocmd FileType floaterm call My_floaterm_settings()
-"
-
 
 "}}}
 "{{{ Project 增强
@@ -1893,6 +1916,7 @@ nnoremap <silent> <leader>wj :wincmd J<cr>
 nnoremap <silent> <leader>wk :wincmd K<cr>
 nnoremap <silent> <leader>wl :wincmd L<cr>
 nnoremap <silent> <leader>wf <c-w><c-r>
+nnoremap <leader>w= <c-w>=
 " 窗口最大化 leaving only the help window open/maximized
 nnoremap <leader>wo <c-w>ozz
 nnoremap <leader>ss <c-w>s<c-w>w
@@ -2195,6 +2219,8 @@ augroup auto_actions_for_better_experience
     " 只在当前窗口显示corsorline
     autocmd WinLeave * if g:in_transparent_mode == 0 | setlocal nocursorline
     autocmd WinEnter * if g:in_transparent_mode == 0 | setlocal cursorline
+    " 每次隐藏浮动窗口重置全屏状态
+    autocmd WinLeave * if &filetype == 'floaterm' | let g:My_full_screen_floterm_status = 0 | setlocal laststatus=2 | endif
 augroup end
 "}}}
 "{{{ 自定义高亮 Highlighting, ColorScheme

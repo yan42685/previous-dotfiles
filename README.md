@@ -32,7 +32,6 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - rg
 - fzf
 - tmux (tmux-finger 插件依赖 gawk 包，`sudo apt install gawk`)
-- asynctask (`mkdir ~/github && cd ~/github && git clone --depth 1 https://github.com/skywind3000/asynctasks.vim && ln -s ~/github/asynctasks.vim/bin/asynctask ~/.local/bin`)
 
 可有可无的软件
 
@@ -41,6 +40,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - gdb-dashboard
 - 如果是用的 gnome-terminal, 可以考虑从`https://github.com/Mayccoll/Gogh`安装比较好看
   的主题（暂时用 material )
+- asynctask (`mkdir ~/github && cd ~/github && git clone --depth 1 https://github.com/skywind3000/asynctasks.vim && ln -s ~/github/asynctasks.vim/bin/asynctask ~/.local/bin`)
 
 ## 如何在远程机器上使用本地 zsh
 
