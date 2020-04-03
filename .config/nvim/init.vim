@@ -2139,7 +2139,7 @@ augroup tab_indent_settings_by_filetype
     autocmd FileType python,ruby,javascript,html,css,xml,sass,scss set tabstop=4 shiftwidth=4 softtabstop=4 expandtab ai
     autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown set filetype=markdown
     autocmd BufRead,BufNewFile *.part set filetype=html
-    autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
+    " autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
     autocmd BufWinEnter *.php set mps-=<:>  " disable showmatch when use > in php
     " makefile 必须用tab来进行缩进
     autocmd FileType make setlocal noexpandtab shiftwidth=4 softtabstop=0 list listchars=tab:▸\ ,extends:❯,precedes:❮
