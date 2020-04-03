@@ -246,9 +246,8 @@ alias mv='nocorrect mv -i'
 alias cp='nocorrect cp -ip'
 alias mkdir='nocorrect mkdir'
 alias md='nocorrect mkdir'
-
 alias vi='nvim'
-# floaterm插件提供的功能，以本vim实例进行编辑
+# floaterm 插件提供的功能，以本vim实例进行编辑
 alias vii='floaterm'
 alias vinp='nvim --noplugin'
 # 检查性能，进入nvim后，输入:profile stop命令(或<leader>cp)再退出，然后查看profile.log文件 翻到最底部查看函数耗时统计

@@ -36,7 +36,8 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 可有可无的软件
 
 - nnn
-- bat 无道词典
+- bat
+- 无道词典
 - gdb-dashboard
 - 如果是用的 gnome-terminal, 可以考虑从`https://github.com/Mayccoll/Gogh`安装比较好看
   的主题（暂时用 material )

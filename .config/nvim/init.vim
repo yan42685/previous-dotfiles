@@ -1930,7 +1930,7 @@ noremap <silent> <leader>l :wincmd l<cr>zz
 nnoremap <leader><leader>h gT
 nnoremap <leader><leader>l gt
 nnoremap gxo :tabonly<cr>
-nnoremap <c-t> :tab split<cr>
+nnoremap <silent> <c-t> :tab split<cr>
 " {{{Quit tab, even if it's just one
 function! s:my_quit_tab()
   for bufnr in tabpagebuflist()
@@ -1944,7 +1944,7 @@ endfunction
 "}}}
 " nnoremap <c-w> :call <SID>my_quit_tab()<cr>
 nnoremap <silent> <c-w> :tabclose<cr>
-inoremap <c-t> <esc>:tab split<cr>
+inoremap <silent> <c-t> <esc>:tab split<cr>
 " normal模式下切换到确切的tab
 for s:count_num in [1,2,3,4,5,6,7,8,9]
     exec 'nnoremap <leader>' . s:count_num . ' ' . s:count_num . 'gt'
