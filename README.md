@@ -14,14 +14,12 @@ xz-utils tk-dev libffi-dev liblzma-dev python-openssl git
 git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 ```
 
-- python3
-- pip3
+- python3, pip3
 - snap
 - zsh
 - zgen
-- neovim-remote（命令为 nvr) `pip3 install neovim-remote`
 - nvim
-- neovim-remote `pip3 install neovim-remote`
+- neovim-remote（命令为 nvr) `pip3 install neovim-remote`
 - lua
 - node, npm
 - trash
@@ -34,6 +32,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - rg
 - fzf
 - tmux (tmux-finger 插件依赖 gawk 包，`sudo apt install gawk`)
+- asynctask (`mkdir ~/github && cd ~/github && git clone --depth 1 https://github.com/skywind3000/asynctasks.vim && ln -s ~/github/asynctasks.vim/bin/asynctask ~/.local/bin`)
 
 可有可无的软件
 

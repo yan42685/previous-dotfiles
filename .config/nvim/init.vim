@@ -630,7 +630,7 @@ if g:disable_laggy_plugins_for_large_file == 0
     "}}}
 endif
 "}}}
-"{{{ Git相关
+"{{{ Git 相关
 " 可视化merge NOTE: 恢复merge前的状态使用: git checkout --conflict=diff3 {file}
 Plug 'samoshkin/vim-mergetool', {'on': '<plug>(MergetoolToggle)'}
 "{{{
@@ -713,7 +713,7 @@ nnoremap ,gl :Flog<cr>
 vnoremap ,gl :Flog<cr>
 
 "}}}
-"{{{coc生态系统, 补全框架
+"{{{coc 生态系统, 补全框架
 " coc-lists
 nnoremap <leader>cl :CocList<cr>
 
@@ -1039,7 +1039,7 @@ vmap <m-k> <Plug>MoveBlockUp
 vmap <m-h> <Plug>MoveBlockLeft
 vmap <m-l> <Plug>MoveBlockRight
 "}}}
-"{{{UI相关
+"{{{ UI 相关
 " 启动页面
 Plug 'mhinz/vim-startify'
 "{{{
@@ -1179,7 +1179,7 @@ let g:which_key_map_space.b = {
     \ 'd': 'buffer-close',
     \ }
 let g:which_key_map_space.c = {
-            \ 'name': '+comment/colors-scheme',
+            \ 'name': '+comment/colors-scheme/coc-list',
             \ }
 let g:which_key_map_space.d = {
             \ 'name': '+diff/directory',
@@ -1312,7 +1312,7 @@ augroup settings_whichkey_for_t  " 因为有插件映射了t所以这里要用au
 augroup end
 
 " 浮动终端
-Plug 'voldikss/vim-floaterm'
+Plug 'voldikss/vim-floaterm'  " NOTE: 作者不推荐延迟加载
 "{{{
 let g:floaterm_type = 'floating'   "　终端出现形式, 可选normal
 let g:floaterm_winblend = 35  " 背景透明度百分比
@@ -1326,7 +1326,7 @@ augroup fix_bug_in_floaterm_and_startify
     autocmd User Startified setlocal buflisted
 augroup end
 "}}}
-nnoremap <leader>tn :FloatermNew<cr>
+nnoremap <silent> <leader>tn :FloatermNew<cr>
 " 可以作为从编辑器回到浮动窗口的快捷键
 nnoremap <silent> <m-m> :FloatermToggle<cr>
 tnoremap <silent> <m-m> <c-\><c-n>:FloatermToggle<cr>
@@ -1335,10 +1335,10 @@ tnoremap <silent> <m-j> <c-\><c-n>:FloatermNext<cr>
 nnoremap <silent> <m-k> :FloatermPrev<cr>
 tnoremap <silent> <m-k> <c-\><c-n>:FloatermPrev<cr>
 " 在浮动终端执行命令 -A表示自动预览
-nnoremap <leader>ct :CocList -A floaterm <cr>
+nnoremap <silent> <leader>ct :CocList -A floaterm <cr>
 " 向终端送去命令去除空白但保持缩进 NOTE: 不适用于浮动窗口，只能当 g:floaterm_type = 'normal'时才能用
-nnoremap ts :FloatermSend!<cr>
-vnoremap ts :FloatermSend!<cr>
+nnoremap <silent> ts :FloatermSend!<cr>
+vnoremap <silent> ts :FloatermSend!<cr>
 tnoremap <m-h> <c-\><c-n><c-w>h
 tnoremap <m-l> <c-\><c-n><c-w>l
 tnoremap <m-j> <c-\><c-n><c-w>j
@@ -1355,7 +1355,7 @@ tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
 
 
 "}}}
-"{{{Project增强
+"{{{ Project 增强
 " 切换到项目根目录
 Plug 'airblade/vim-rooter', {'on': 'Rooter'}
 "{{{
@@ -1594,7 +1594,7 @@ augroup temporar_change_manpager_mapping
 augroup end
 
 " 显示搜索的的数量以及当前位置
-Plug 'osyo-manga/vim-anzu'
+Plug 'osyo-manga/vim-anzu', {'on': ['<Plug>(anzu-star-with-echo)', '<Plug>(anzu-sharp-with-echo)']}
 nmap n <Plug>(anzu-n-with-echo)zvzz
 nmap N <Plug>(anzu-N-with-echo)zvzz
 nmap * <Plug>(anzu-star-with-echo)zvzz
@@ -1649,7 +1649,7 @@ if g:enable_front_end_layer == 1
 
 endif
 "}}}
-"{{{写作layer
+"{{{写作 Layer
 " NOTE:　目前影响markdown排版的有pangu, ale里设置的prettier, lint是用的coc-markdownlint (如果prettier能做到无报警，
 "        那就可以卸载coc-markdownlint了)
 

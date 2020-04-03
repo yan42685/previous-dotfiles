@@ -258,6 +258,7 @@ alias vifast="nvim -c 'let g:disable_laggy_plugins_for_large_file = 1'"
 # alias vim='nvim'
 # alias vimm='\vim'   # 用转义符防止递归映射
 alias dot='/usr/bin/git --git-dir=/home/yy/.dotfiles/ --work-tree=/home/yy'   # 用于存放dotfiles
+alias task='asynctask -f'
 alias rm='trash'
 alias nnn='PAGER= nnn'
 alias zz='z ~'
