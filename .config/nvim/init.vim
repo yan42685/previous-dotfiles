@@ -2192,8 +2192,8 @@ augroup auto_actions_for_better_experience
     autocmd WinEnter,WinLeave * if (&filetype != '' && &syntax != 'on' && !&diff && &filetype != 'far')
                 \ | set syntax=on | endif
     " 只在当前窗口显示corsorline
-    autocmd WinLeave * if t:is_transparent == 0 | setlocal nocursorline
-    autocmd WinEnter * if t:is_transparent == 0 | setlocal cursorline
+    autocmd WinLeave * if g:in_transparent_mode == 0 | setlocal nocursorline
+    autocmd WinEnter * if g:in_transparent_mode == 0 | setlocal cursorline
 augroup end
 "}}}
 "{{{ 自定义高亮 Highlighting, ColorScheme
@@ -2595,10 +2595,10 @@ function s:Enable_transparent_scheme() abort
     call s:HL('VertSplit', s:palette.none, s:palette.none)  " vsplit分隔线
 endfunction
 
-let t:is_transparent = 0
+let g:in_transparent_mode = 0
 function! Toggle_transparent_background()
-  if t:is_transparent == 1
-    let t:is_transparent = 0
+  if g:in_transparent_mode == 1
+    let g:in_transparent_mode = 0
     set laststatus=2
     setlocal cursorline
     syn off | syn on
@@ -2608,7 +2608,7 @@ function! Toggle_transparent_background()
     " matchup插件
     call s:Enable_normal_scheme()
   else
-    let t:is_transparent = 1
+    let g:in_transparent_mode = 1
     set laststatus=0
     setlocal nocursorline
     hi Normal guibg=NONE ctermbg=NONE
