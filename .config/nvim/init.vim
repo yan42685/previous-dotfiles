@@ -14,7 +14,7 @@
 "      手指移动距离和次数
 "
 "  不建议用appimge安装，因为这样的话将nvim作为manpager会出现奇怪的权限问题
-"==========================================
+" =========================================
 " 【依赖说明】{{{
 "  coc.nvim补全插件需要安装node.js和npm LeaderF依赖Python3, vista依赖global-ctags
 "  leaderF和far依赖rg
@@ -65,10 +65,13 @@
 "       {'on': 'Rooter'}这种
 "   6. 因为一行过长导致VimL语法不被成功解析，应该用\ 拆成多行
 "   7. 如果调用了插件的函数，最好使用silent! 因为在使用--noplugin打开时，如果
-"   找不到该函数且不是silent! call的话，就会一直报错，导致vim没法使用
+"      找不到该函数且不是silent! call的话，就会一直报错，导致vim没法使用
+"   8. 如果需要覆盖插件定义的映射，可用如下方式
+"      autocmd VimEnter * noremap <leader>cc echo "my purpose"
+
 "}}}
 
-" ==========================================
+" =========================================
 "{{{可自行调整的全局配置
 let g:enable_front_end_layer = 1  " 前端Layer, 启动所有前端相关插件
 let g:enable_file_autosave = 1  " 是否自动保存
@@ -83,7 +86,6 @@ let mapleader='<space>'  " 此条命令的位置应在插件之前
 let g:mapleader = "\<Space>"
 let g:maplocalleader = ','
 "}}}
-" ==========================================
 
 " =========================================
 " 插件管理
@@ -1773,10 +1775,6 @@ call plug#end()
 "==========================================
 " HotKey Settings  自定义快捷键设置
 "==========================================
-" 如果需要覆盖插件定义的映射，可用如下方式
-" autocmd VimEnter * noremap <leader>cc echo "my purpose"
-
-" -----------------------------------
 " {{{重要的按键重定义
 inoremap kj <esc>
 cnoremap kj <c-c>
@@ -1836,7 +1834,7 @@ nnoremap <c-o> <c-o>zvzz
 nnoremap <c-i> <c-i>zvzz
 nnoremap u uzvzz
 nnoremap <c-r> <c-r>zvzz
-nnoremap G Gzvzz
+nnoremap G Gzz
 " 交换 ' `, 使得可以快速使用'跳到marked相同的位置
 noremap ' `
 noremap ` '
@@ -2022,6 +2020,7 @@ nnoremap <leader>oo :call My_toggle_foldlevel()<cr>
 " HACK: 新发现，解锁v键映射
 nnoremap va ggVG
 "}}}
+
 "==========================================
 " 设置 Settings
 "==========================================
@@ -2104,7 +2103,7 @@ augroup tab_indent_settings_by_filetype
     " autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear"
     " 在右边窗口打开help,man, q快速退出
     autocmd filetype man,help wincmd L | nnoremap <silent> <buffer> q :q!<cr>
-    autocmd filetype fugitiveblame nnoremap <silent> <buffer> q :q!<cr>
+    autocmd filetype fugitiveblame,fugitive nnoremap <silent> <buffer> q :q!<cr>
 
 augroup end
 "}}}
@@ -2376,10 +2375,10 @@ endfunction
 command! Chmodx :!chmod a+x %  " make current buffer executable
 command! FixSyntax :syntax sync fromstart  " fix syntax highlighting
 
-"==============================================
+"==========================================
 " 新增功能
-"==============================================
-" ---------- 自动生效的功能 -----------
+"==========================================
+" ---------- 自动生效的功能 ----------
 " {{{自动保存
 function! s:Autosave(timed)
     if &readonly || mode() == 'c' || pumvisible()
@@ -2626,9 +2625,7 @@ endf
 "}}}
 nnoremap <leader>cp :call Check_performance()<cr>
 "}}}
-" ------------------------------------
-
-" 复制当前文件的名字，绝对路径，目录绝对路径
+"{{{ 复制当前文件的名字，绝对路径，目录绝对路径
 function Copy_to_registers(text) abort  "{{{
     let @" = a:text
     let @0 = a:text
@@ -2639,3 +2636,4 @@ endfunction
 nnoremap <leader>nm :call Copy_to_registers(expand('%:t'))<cr>:echo printf('filename yanked: %s', expand('%:t'))<cr>
 nnoremap <leader>ap :call Copy_to_registers(expand('%:p'))<cr>:echo printf('absolute path yanked: %s', expand('%:p'))<cr>
 nnoremap <leader>dr :call Copy_to_registers(expand('%:p:h'))<cr>:echo printf('absolute dir yanked: %s', expand('%:p:h'))<cr>
+"}}}
