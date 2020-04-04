@@ -1,5 +1,6 @@
 ﻿" TODO: coc.nvim去掉特定tag版本(因为目前最新版本有bug，只能选择特定版本)
 " 只考虑NeoVim，不一定兼容Vim
+" 如果遇到了一些问题, 可以试着在本文件搜索FIXME, NOTE
 "
 " 一些经验:
 "   1. 抓住主要问题, 用相对简单和有意义的按键映射出现频率高的操作, 而非常冷门的操作
@@ -782,7 +783,7 @@ let g:coc_global_extensions = [
 
 
 set hidden  " 隐藏buff非关闭它, TextEdit might fail if hidden is not set.
-set cmdheight=2  " NOTE: 如果不设置为2，每次进入新buffer都需要回车确认...
+set cmdheight=2  " 如果不设置为2，每次进入新buffer都需要回车确认...
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
 set shortmess+=c  " Don't pass messages to ins-completion-menu.
@@ -795,6 +796,7 @@ set signcolumn=yes  " Always show the signcolumn, otherwise it would shift the t
 "       \ <SID>check_back_space() ? "\<TAB>" :
 "       \ coc#refresh()
 " 用于在空白行第一列按tab一步缩进到位
+" FIXME: 没有添加到下面列表里的文件类型如果cc不能缩进，则tab也不能缩进了, 那么就需要在下面的list新增文件类型
 let g:My_quick_tab_blacklist = ['markdown', 'text', 'vim', 'vimwiki', 'gitcommit', 'snippets']
 inoremap <silent> <expr> <TAB>
       \ pumvisible() ? coc#_select_confirm() :
