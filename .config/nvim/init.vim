@@ -1829,7 +1829,6 @@ augroup My_markdown_run
     autocmd FileType markdown nnoremap <buffer> <Leader>Rf :MarkdownRunnerInsert<CR>
 augroup end
 
-
 "}}}
 " {{{其他语言 Layer
 
@@ -2344,8 +2343,6 @@ augroup auto_actions_for_better_experience
     " HACK: 解决markdonw不能正常高亮的问题, 方法是试出来的，原因不明确, 不过影响也不大
     autocmd User StartifyBufferOpened if &ft == 'markdown' | set syntax=on | endif
     autocmd BufWinEnter,WinEnter,BufEnter * if &ft == 'markdown' | set syntax=on | endif
-
-    " autocmd filetype markdown silent! call My_change_colorscheme(2)
 augroup end
 "}}}
 "{{{ 自定义高亮 Highlighting, ColorScheme
@@ -2512,6 +2509,7 @@ endfunction
 "}}}
 command! Chmodx :!chmod a+x %  " make current buffer executable
 command! FixSyntax :syntax sync fromstart  " fix syntax highlighting
+command! RefreshSyntax :set syntax=off | set syntax=on
 
 "==========================================
 " 新增功能
@@ -2692,6 +2690,7 @@ fun My_change_colorscheme(mode) abort
     call lightline#colorscheme()
     call lightline#update()
     call s:Enable_normal_scheme()  " 恢复折叠和column的颜色
+    set syntax=on  " 用于刷新syntax解决markdown奇奇怪怪的渲染
 endf
 "}}}
 " 直接选择主题
