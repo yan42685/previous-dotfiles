@@ -82,8 +82,8 @@ let g:enable_file_autosave = 1  " 是否自动保存
 let g:disable_laggy_plugins_for_large_file = 0  " 在启动参数里设置为1就可以加快打开速度
 set updatetime=400  " 检测CursorHold事件的时间间隔,影响性能的主要因素
 let g:default_colorscheme_mode = 0
-let g:all_colorschemes = ['quantum', 'gruvbox-material', 'forest-night', 'pencil', 'deus']
-let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night', 'forest_night', 'gruvbox_material']
+let g:all_colorschemes = ['quantum', 'gruvbox-material', 'forest-night', 'pencil', 'deus', 'dracula']
+let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night', 'forest_night', 'gruvbox_material', 'dracula']
 
 
 let mapleader='<space>'  " 此条命令的位置应在插件之前
@@ -130,6 +130,7 @@ Plug 'ajmwagar/vim-deus'
 "{{{
 let g:deus_termcolors=256
 "}}}
+Plug 'dracula/vim'
 
 " =================================
 " 在大文件下会影响性能
@@ -1820,6 +1821,15 @@ let g:mkdp_command_for_global = 1  " 所有文件中可以使用预览markdown�
 "}}}
 nmap <leader>mp <Plug>MarkdownPreviewToggle
 
+" 运行markdown内代码
+Plug 'dbridges/vim-markdown-runner', { 'on': ['MarkdownRunner', 'MarkdownRunnerInsert'] }
+augroup My_markdown_run
+    autocmd!
+    autocmd FileType markdown nnoremap <buffer> <Leader>rf :MarkdownRunner<CR>
+    autocmd FileType markdown nnoremap <buffer> <Leader>Rf :MarkdownRunnerInsert<CR>
+augroup end
+
+
 "}}}
 " {{{其他语言 Layer
 
@@ -2331,6 +2341,11 @@ augroup auto_actions_for_better_experience
     autocmd WinEnter * if g:in_transparent_mode == 0 | setlocal cursorline
     " 每次隐藏浮动窗口重置全屏状态
     autocmd WinLeave * if &filetype == 'floaterm' | let g:My_full_screen_floterm_status = 0 | setlocal laststatus=2 | endif
+    " HACK: 解决markdonw不能正常高亮的问题, 方法是试出来的，原因不明确, 不过影响也不大
+    autocmd User StartifyBufferOpened if &ft == 'markdown' | set syntax=on | endif
+    autocmd BufWinEnter,WinEnter,BufEnter * if &ft == 'markdown' | set syntax=on | endif
+
+    " autocmd filetype markdown silent! call My_change_colorscheme(2)
 augroup end
 "}}}
 "{{{ 自定义高亮 Highlighting, ColorScheme
@@ -2645,7 +2660,7 @@ endfunction
 nnoremap ]<space> :<c-u>call <sid>BlankDown(v:count1)<cr>
 nnoremap [<space> :<c-u>call <sid>BlankUp(v:count1)<cr>
 "}}}
-" {{{ 实时改变colorscheme <leader>cj/k
+" {{{ 切换colorscheme <leader>cj/k
 "{{{ function
 let g:current_coloscheme_mode = g:default_colorscheme_mode
 fun My_change_colorscheme(mode) abort
