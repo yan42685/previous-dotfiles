@@ -57,6 +57,8 @@
 "            FIXME: 如果在Leaderf里调用rg出现~/.config文件夹permission deny的情况 就需要 sudo chown -R $USER:$GROUP ~/.config
 "  6. 使用vim-signify显示diff，必须要注册好git账户，比如git config --global user.name "username" && git config --global user.email "useremail@qq.com"
 "  7. 安装zeal: sudo add-apt-repository ppa:zeal-developers/ppa && sudo apt-get update && sudo apt-get install zeal
+"       NOTE: 注意要在zeal GUI 设置 Minimize to system tray instead of taskbar
+"       和　Hide to system tran on window close 这样才会每次都能快速唤出窗口
 "}}}
 " 【配置过程中遇到的坑】{{{
 "   1. 映射<Plug>(...)时必须用递归映射
@@ -1655,9 +1657,20 @@ vnoremap <leader>ds :Diffthis<cr>
 " diff close
 nnoremap <leader>dc :Diffoff<cr>
 
-" 查看各种离线文档
+" 查看各种离线文档, 使用:Docset 参数<cr>可以指定当前buffer的文档(docset), 重置当前buffer文档
+" 类型, 使用:Docset<cr>重置当前buffer为默认文档类型
 Plug 'KabbAmine/zeavim.vim', {'on': ['<Plug>Zeavim', '<Plug>ZVVisSelection',
-            \ '<Plug>ZVOperator', '<Plug>ZVKeyDocset']}
+            \ '<Plug>ZVOperator', '<Plug>ZVKeyDocset', 'Docset']}
+"{{{
+" let g:zv_keep_focus = 0  " 打开zeal后是否focus vim, 默认是1
+" 根据文件类型查找文档
+let g:zv_file_types = {
+            \   'help'                : 'vim',
+            \   'javascript'          : 'javascript,nodejs',
+            \   'python'              : 'python_3',
+            \   '\v^(G|g)ulpfile\.js' : 'gulp,javascript,nodejs',
+            \ }
+"}}}
 " 自动选择<cword>和文件类型
 nmap <leader>z <Plug>Zeavim
 vmap <leader>z <Plug>ZVVisSelection

@@ -334,6 +334,15 @@ bindkey '^[x' insert-last-command-output  # insert last command result
 # Change ls colours
 LS_COLORS="ow=01;36;40" && export LS_COLORS
 # }}}
+# {{{
+# 解决zeal不能显示mdn文档的问题
+zeal-docs-fix() {
+    pushd "$HOME/.local/share/Zeal/Zeal/docsets" >/dev/null || return
+    find . -iname 'react-main*.js' -exec rm '{}' \;
+    popd >/dev/null || exit
+}
+zeal-docs-fix
+#}}}
 # {{{ 命令行浏览Reddit的工具: rtv
 export RTV_EDITOR="vim"
 export RTV_BROWSER="w3m"
