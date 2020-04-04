@@ -2482,6 +2482,9 @@ hi link illuminatedWord Visual
 hi! snipLeadingSpaces guibg=None
 hi! link snipSippetFooterKeyword snipSnippetHeaderKeyword
 "}}}
+" {{{ matchup的匹配高亮
+hi! MatchParen guibg=#425762  guifg=#98b9c5 gui=None
+" }}}
 endfunction
 
 call s:Enable_normal_scheme()
@@ -2707,7 +2710,7 @@ fun My_change_colorscheme(mode) abort
     set syntax=on  " 用于刷新syntax解决markdown奇奇怪怪的渲染
 endf
 "}}}
-" 直接选择主题
+" 可以直接<leader>c1~9 选择特定主题
 for i in range(1, len(g:all_colorschemes))
     execute 'nnoremap <silent> <leader>c' . i . ' :call My_change_colorscheme(' . (i-1) . ')<cr>'
 endfor
