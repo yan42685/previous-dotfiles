@@ -910,7 +910,7 @@ imap <c-_> <esc><plug>NERDCommenterToggle
 " Vim-Surround快捷操作
 Plug 'tpope/vim-surround'
 "{{{
- " 让surround的快捷键可以用 `.` 重复
+" 让surround的快捷键可以用 `.` 重复
 let s:key_mappings_of_surround = [
             \ "<leader>'", '<leader>"', '<leader>*', '<leader><leader>*', '<leader>)', '<leader>(',
             \ '<leader>[', '<leader>{', '<leader><', '<leader>>', '<leader>\|', '<leader>`',
@@ -930,7 +930,8 @@ fun My_get_inverse_bracket(x)  "
     elseif  a:x == '>' | return '<'
     endif
 endf
-"
+
+
 for x in ['(','[', '{', '<', "'", '"']
     for y in ['(', '[', '{', '<', '>']
         execute 'nmap cs' . x . y . ' cs' . x . My_get_inverse_bracket(y)
@@ -1699,7 +1700,7 @@ endif
 "        那就可以卸载coc-markdownlint了)
 
 " Todo List 和 笔记，文档管理
-Plug 'vimwiki/vimwiki', {'on': 'VimwikiIndex'}  " NOTE: 使用延迟加载的话可能在session中有bug
+Plug 'vimwiki/vimwiki', {'on': 'VimwikiIndex'}
 " {{{
 " 使用markdown而不是vimwiki的语法
 "let g:vimwiki_list = [{'path': '~/vimwiki/',
@@ -1749,12 +1750,13 @@ function! s:goyo_leave()
   Limelight!
   call s:Enable_normal_scheme()  " 恢复折叠和column的颜色
 endfunction
-"}}}
+
 augroup goyo_toggle_callback
     autocmd!
     autocmd! User GoyoEnter nested call <SID>goyo_enter()
     autocmd! User GoyoLeave nested call <SID>goyo_leave()
 augroup end
+"}}}
 
 " 中文自动排版，不能连续重复使用除感叹号以外的标点 连续句号转换成省略号，中英文之间自动加标点，中文前后的半角符号转成全角
 " NOTE: 文档书写规范见https://github.com/sparanoid/chinese-copywriting-guidelines
@@ -2224,7 +2226,7 @@ augroup tab_indent_settings_by_filetype
     " autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear"
     " 在右边窗口打开help,man, q快速退出
     autocmd filetype man,help wincmd L | nnoremap <silent> <buffer> q :q!<cr>
-    autocmd filetype fugitiveblame,fugitive nnoremap <silent> <buffer> q :q!<cr>
+    autocmd filetype fugitiveblame,fugitive,git nnoremap <silent> <buffer> q :q!<cr>
 
 augroup end
 "}}}
