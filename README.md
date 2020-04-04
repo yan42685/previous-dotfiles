@@ -15,13 +15,13 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 ```
 
 - python3, pip3
+- node, npm
 - snap
 - zsh
 - zgen
 - nvim
 - neovim-remote `pip3 install neovim-remote`
 - lua
-- node, npm
 - trash
 - ccls （from snap)
 - universal ctags

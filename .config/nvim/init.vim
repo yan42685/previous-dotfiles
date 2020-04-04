@@ -1700,6 +1700,8 @@ nmap gz <Plug>ZVOperator
 " 手动选择文档包名
 nmap <leader><leader>z <Plug>ZVKeyDocset
 
+" normal模式fcitx输入法自动切换到英文输入
+Plug 'lilydjwg/fcitx.vim'
 "}}}
 " ---------------------------------------
 " Layer
@@ -1807,8 +1809,9 @@ augroup end
 " 模糊非视觉中心的字符
 Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
 
-" MarkDown预览
+" MarkDown预览, 目前似乎只支持本地图片, 不支持在线的图片
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'on': '<Plug>MarkdownPreviewToggle'}
+let g:mkdp_open_to_the_world = 1  " 可以让别人浏览
 let g:mkdp_command_for_global = 1  " 所有文件中可以使用预览markdown命令
 nmap <leader>mp <Plug>MarkdownPreviewToggle
 "}}}
