@@ -402,10 +402,12 @@ function! LightlineFileformat()
 endfunction
 
 function LightLineFiletype()
-    let l:result = &ft != "" ? &ft : "no ft"
+    if !exists('*WebDevIconsGetFileTypeSymbol')  " 判断是否启用devicon插件
+        let l:result = &ft != "" ? &ft : "no ft"
+    else
+        let l:result = &ft != "" ? &ft . ' ' . WebDevIconsGetFileTypeSymbol() : "no ft"
     return winwidth(0) > 70 ? l:result : ''
 endfunction
-
 
 function! NearestMethodOrFunction() abort
   return winwidth(0) > 70 ? get(b:, 'vista_nearest_method_or_function', '') : ''
@@ -433,6 +435,7 @@ function If_in_merge_or_diff_mode() abort
   endif
   return ''
 endfunc
+
 "}}}
 
 let g:lightline = {}
@@ -1040,6 +1043,7 @@ vmap <m-h> <Plug>MoveBlockLeft
 vmap <m-l> <Plug>MoveBlockRight
 "}}}
 "{{{ UI 相关
+
 " 启动页面
 Plug 'mhinz/vim-startify'
 "{{{
@@ -1754,7 +1758,7 @@ Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
 
 " MarkDown预览
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'on': '<Plug>MarkdownPreviewToggle'}
-let g:mkdp_command_for_global = 0  " 所有文件中可以使用预览markdown命令
+let g:mkdp_command_for_global = 1  " 所有文件中可以使用预览markdown命令
 nmap <leader>mp <Plug>MarkdownPreviewToggle
 "}}}
 " {{{其他语言 Layer
@@ -1811,6 +1815,11 @@ Plug 'uiiaoo/java-syntax.vim', {'for': ['java']}
 
 " 最新的 Stylus 语法高亮，可能被polyglot替代了
 " Plug 'iloginow/vim-stylus'
+
+" 添加文件图标 NOTE: 需要放在startify之后才能在startify中生效
+Plug 'ryanoasis/vim-devicons'
+let g:webdevicons_enable_startify = 1
+
 "}}}
 call plug#end()
 
