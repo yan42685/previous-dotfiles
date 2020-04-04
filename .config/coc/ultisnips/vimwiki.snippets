@@ -23,6 +23,47 @@
 #		endsnippet
 #
 # Online reference: https://github.com/SirVer/ultisnips/blob/master/doc/UltiSnips.txt
+snippet *
+    * [ ] ${1}
+endsnippet
+
+snippet #
+    # [ ] ${1}
+endsnippet
+
+snippet -
+    - [ ] ${1}
+endsnippet
+
+snippet task
+    ${1:title}${2: DETAIL=[[detail/`strftime("%Y%m%d_%H%M%S")`]]} LEVEL=${3:3} START=${4:`strftime("%Y-%m-%d")`} EXPIRE=${5:`strftime("%Y-%m-%d")`}
+endsnippet
+
+snippet detail
+    DETAIL=[[${1:detail/`strftime("%Y%m%d_%H%M%S")`}]]
+endsnippet
+
+snippet tpl
+    = Inbox =
+
+    = Action =
+
+    = Project =
+
+    = Wait =
+
+    = Someday =
+
+    = SelfImprove =
+
+    = Home =
+
+    = Backup =
+    <!--{{{-->
+    <!--}}}-->
+    <!-- vim: set fdm=marker:-->
+endsnippet
+
 global !p
 import datetime, calendar
 lastFriday = datetime.date.today()
@@ -97,7 +138,7 @@ endsnippet
 
 snippet coder "代码块" b
 {{{
-
+${0}
 }}}
 endsnippet
 

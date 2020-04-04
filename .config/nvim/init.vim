@@ -1679,11 +1679,13 @@ endif
 
 " Todo List 和 笔记，文档管理
 " NOTE: 这里要使用dev分支来禁用vimwiki的tab快捷键，否则会和coc.nvim有冲突
-Plug 'vimwiki/vimwiki', {'on': ['VimwikiIndex'], 'branch': 'dev'}
+" Plug 'vimwiki/vimwiki', {'on': ['VimwikiIndex'], 'branch': 'dev'}
+Plug 'vimwiki/vimwiki', {'branch': 'dev'}  " NOTE: 使用延迟加载的话可能在session中有bug
 "{{{
 " 使用markdown而不是vimwiki的语法
 "let g:vimwiki_list = [{'path': '~/vimwiki/',
             " \ 'syntax': 'markdown', 'ext': '.md'}]
+let g:vimwiki_folding='expr'
 " 禁用table_mappings在insert mode 对<tab>的映射
 let g:vimwiki_key_mappings =
 \ {
@@ -1751,7 +1753,7 @@ augroup end
 Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
 
 " MarkDown预览
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } , 'for':['markdown', 'vimwiki'] , 'on': '<Plug>MarkdownPreviewToggle'}
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'on': '<Plug>MarkdownPreviewToggle'}
 let g:mkdp_command_for_global = 0  " 所有文件中可以使用预览markdown命令
 nmap <leader>mp <Plug>MarkdownPreviewToggle
 "}}}
@@ -1914,6 +1916,9 @@ nnoremap <m-p> "0p
 " Buffer操作
 nnoremap <silent> <m-l> :bp<cr>
 nnoremap <silent> <m-h> :bn<cr>
+inoremap <silent> <m-l> <esc>:bp<cr>
+inoremap <silent> <m-h> <esc>:bn<cr>
+
 "{{{删除隐藏的buffer
 function! DeleteHiddenBuffers()
     let tpbl=[]
@@ -2361,6 +2366,7 @@ hi link illuminatedWord Visual
 "}}}
 "{{{取消snippets文件前导空格高亮
 hi! snipLeadingSpaces guibg=None
+hi! link snipSippetFooterKeyword snipSnippetHeaderKeyword
 "}}}
 endfunction
 
@@ -2442,7 +2448,7 @@ function Change_fold_method_by_filetype()
     set foldlevel=99  " 第一次进入时不折叠
     let s:marker_fold_list = ['vim', 'text', 'zsh', 'tmux']  " 根据文件类型选择不同的折叠模式
     let s:indent_fold_list = ['python']
-    let s:expression_fold_list = ['markdown', 'rust']
+    let s:expression_fold_list = ['markdown', 'rust', 'vimwiki']
     if index(s:marker_fold_list, &filetype) >= 0
         set foldmethod=marker  " marker    使用标记进行折叠, 默认标记是 { { { 和 } } }
         set foldlevel=0  " 第一次进入时全部自动折叠
