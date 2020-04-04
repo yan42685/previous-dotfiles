@@ -789,10 +789,12 @@ set signcolumn=yes  " Always show the signcolumn, otherwise it would shift the t
 "       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
 "       \ <SID>check_back_space() ? "\<TAB>" :
 "       \ coc#refresh()
+" 用于在空白行第一列按tab一步缩进到位
+let g:My_quick_tab_blacklist = ['markdown', 'text', 'vim', 'vimwiki', 'gitcommit']
 inoremap <silent> <expr> <TAB>
       \ pumvisible() ? coc#_select_confirm() :
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? (strwidth(getline('.')) == 0 ? '<esc>cc' : '<tab>') :
+      \ <SID>check_back_space() ? (strwidth(getline('.')) == 0 && index(g:My_quick_tab_blacklist, &filetype) < 0 ? '<esc>cc' : '<tab>') :
       \ coc#refresh()
 
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
@@ -1737,7 +1739,7 @@ augroup end
 " NOTE: 文档书写规范见https://github.com/sparanoid/chinese-copywriting-guidelines
 " TIP: 持久化禁用 在编辑的文档中任何位置注明 PANGU_DISABLE，则整个文档不自动规范化
 " :PanguDisable禁用自动排版，对于多个文件可以使用vi a.xx b.xx c.xx 然后:argdo Pangu | update
-Plug 'hotoo/pangu.vim', {'for': ['markdown','vimwiki', 'text','txt', 'wiki']}
+Plug 'hotoo/pangu.vim', {'for': ['markdown','vimwiki', 'text', 'wiki']}
 "{{{ 根据文件类型自动开启
 augroup auto_enable_pangu
     autocmd!
@@ -2177,7 +2179,7 @@ syntax on  " NOTE: 这条语句放在不同的地方会有不同的效果，经�
 " 具体编辑文件类型的一般设置，比如不要 tab 等
 augroup tab_indent_settings_by_filetype
     autocmd!
-    autocmd filetype python,ruby setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab ai
+    autocmd filetype python,ruby,snippets setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab ai
     autocmd filetype javascript,html,css,xml,sass,scss setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
     autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown setlocal filetype=markdown
     autocmd BufRead,BufNewFile *.part setlocal filetype=html
@@ -2357,6 +2359,9 @@ hi! FloatermBorderNF guibg=None guifg=#828282
 " {{{ Illuminate相同单词高亮
 hi link illuminatedWord Visual
 "}}}
+"{{{取消snippets文件前导空格高亮
+hi! snipLeadingSpaces guibg=None
+"}}}
 endfunction
 
 call s:Enable_normal_scheme()
@@ -2435,7 +2440,7 @@ endif
 "{{{ 自动根据文件类型选择折叠方法
 function Change_fold_method_by_filetype()
     set foldlevel=99  " 第一次进入时不折叠
-    let s:marker_fold_list = ['vim', 'txt', 'zsh', 'tmux']  " 根据文件类型选择不同的折叠模式
+    let s:marker_fold_list = ['vim', 'text', 'zsh', 'tmux']  " 根据文件类型选择不同的折叠模式
     let s:indent_fold_list = ['python']
     let s:expression_fold_list = ['markdown', 'rust']
     if index(s:marker_fold_list, &filetype) >= 0
