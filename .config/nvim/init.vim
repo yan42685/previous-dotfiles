@@ -858,9 +858,9 @@ nnoremap <silent> gh :call CocActionAsync('doHover')<cr>
 " 跳转到声明
 nmap <silent> gD <Plug>(coc-declaration)
 " 跳转到定义
-nmap <silent> gd <Plug>(coc-definition)zz
-nmap <silent> gm <Plug>(coc-implementation)zz
-nmap <silent> gr <Plug>(coc-references)zz
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gm <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
 nmap <silent> ,re <Plug>(coc-refactor)
 nmap <silent> gt <Plug>(coc-type-definition)
 " 函数文本对象
@@ -873,7 +873,7 @@ nmap <leader>do <Plug>(coc-codeaction)
 nnoremap <silent> <leader>ml :CocList --normal --number-select marks<cr>
 nnoremap <silent> <leader>sl :CocList sessions<cr>
 " 查看文档,并跳转
-nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>zz
+nnoremap <silent> <m-q> :call <SID>show_documentation()<CR>
 " 打开鼠标位置下的链接
 nmap <silent> <leader>re <Plug>(coc-rename)
 " 重构
@@ -1390,7 +1390,7 @@ tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
 "}}}
 "{{{ Project 增强
 " 切换到项目根目录
-Plug 'airblade/vim-rooter', {'on': 'Rooter'}
+Plug 'airblade/vim-rooter'
 "{{{
 " let g:rooter_manual_only = 1  " 停止自动Rooter
 let g:rooter_resolve_links = 1  " resolve软硬链接
@@ -1628,10 +1628,10 @@ augroup end
 
 " 显示搜索的的数量以及当前位置
 Plug 'osyo-manga/vim-anzu', {'on': ['<Plug>(anzu-star-with-echo)', '<Plug>(anzu-sharp-with-echo)']}
-nmap n <Plug>(anzu-n-with-echo)zvzz
-nmap N <Plug>(anzu-N-with-echo)zvzz
-nmap * <Plug>(anzu-star-with-echo)zvzz
-nmap # <Plug>(anzu-sharp-with-echo)zvzz
+nmap n <Plug>(anzu-n-with-echo)zv
+nmap N <Plug>(anzu-N-with-echo)zv
+nmap * <Plug>(anzu-star-with-echo)zv
+nmap # <Plug>(anzu-sharp-with-echo)zv
 
 " 优化bd体验，关闭buffer但是不关闭窗口
 Plug 'mhinz/vim-sayonara', {'on': [ 'Sayonara','Sayonara!' ]}
@@ -1846,7 +1846,7 @@ inoremap kj <esc>
 cnoremap kj <c-c>
 nnoremap ? /
 " 去掉搜索高亮
-nnoremap <silent> <leader>? :nohls<cr>zz
+nnoremap <silent> <leader>? :nohls<cr>
 " 重复上次搜索
 nnoremap g? /<c-r>/<cr>
 noremap ; :
@@ -1875,32 +1875,27 @@ noremap ZZ <nop>
 map <expr> <cr> &buftype == 'nofile' ? '<cr>' : '%'
 "}}}
 "{{{ 更便捷的移动以及视角居中
-" set scrolloff=100  " FIXME: 尝试用scroll让视角居中，替换很多命令后面的zz，不过可能出现性能问题?
 "set wrap之后，在折行之间也可以跳
-noremap j gjzz
-noremap k gkzz
-nnoremap zj zjzz
-nnoremap zk zkzz
+noremap j gj
+noremap k gk
 " 在同一个折叠的首位跳转
-nnoremap zzj ]zzz
-nnoremap zzk [zzz
-noremap J <C-f>zz
-noremap K <C-b>zz
-nmap gb %zz
+nnoremap zzj ]z
+nnoremap zzk [z
+noremap J <C-f>
+noremap K <C-b>
+nmap gb %
 " 去上次修改的地方
 nnoremap gi gi<esc>zvzzi
 " goto previous/next change positon
-nnoremap g; g;zvzz
-nnoremap g, g,zvzz
-nnoremap gv gvzz
-nnoremap '' ``zvzz
-nnoremap '. `.zvzz
+nnoremap g; g;zv
+nnoremap g, g,zv
+nnoremap '' ``zv
+nnoremap '. `.zv
 " HACK: zv可以自动展开折叠
-nnoremap <c-o> <c-o>zvzz
-nnoremap <c-i> <c-i>zvzz
-nnoremap u uzvzz
-nnoremap <c-r> <c-r>zvzz
-nnoremap G Gzz
+nnoremap <c-o> <c-o>zv
+nnoremap <c-i> <c-i>zv
+nnoremap u uzv
+nnoremap <c-r> <c-r>zv
 " 交换 ' `, 使得可以快速使用'跳到marked相同的位置
 noremap ' `
 noremap ` '
@@ -1966,13 +1961,13 @@ nnoremap <silent> <leader>wl :wincmd L<cr>
 nnoremap <silent> <leader>wf <c-w><c-r>
 nnoremap <leader>w= <c-w>=
 " 窗口最大化 leaving only the help window open/maximized
-nnoremap <leader>wo <c-w>ozz
+nnoremap <leader>wo <c-w>o
 nnoremap <leader>ss <c-w>s<c-w>w
-noremap <silent> <leader>sv :wincmd v<cr>:wincmd w<cr>zz
-noremap <silent> <leader>j :wincmd j<cr>zz
-noremap <silent> <leader>k :wincmd k<cr>zz
-noremap <silent> <leader>h :wincmd h<cr>zz
-noremap <silent> <leader>l :wincmd l<cr>zz
+noremap <silent> <leader>sv :wincmd v<cr>:wincmd w<cr>
+noremap <silent> <leader>j :wincmd j<cr>
+noremap <silent> <leader>k :wincmd k<cr>
+noremap <silent> <leader>h :wincmd h<cr>
+noremap <silent> <leader>l :wincmd l<cr>
 
 " Tab操作
 nnoremap <leader><leader>h gT
@@ -2019,7 +2014,7 @@ let s:alphabet =['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
             \'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
             \'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',]
 for single_char in s:alphabet
-    exec "nnoremap '" . single_char . ' `' . single_char . 'zvzz'
+    exec "nnoremap '" . single_char . ' `' . single_char . 'zv'
 endfor
 "}}}
 " 调整缩进后自动选中，方便再次操作
@@ -2056,7 +2051,7 @@ nnoremap gU viW~gv<esc>
 vnoremap gu ~gv<esc>
 
 " 退出系列
-noremap <silent> <leader>q <esc>:q<cr>zz
+noremap <silent> <leader>q <esc>:q<cr>
 "{{{ 退出Vim并自动保存会话
 function s:auto_save_session() abort
     let session_name = fnamemodify(v:this_session,':t')
@@ -2095,6 +2090,7 @@ nnoremap va ggVG
 " 设置 Settings
 "==========================================
 " {{{ 基础设置 Basic Settings
+set scrolloff=100  " 让视角始终居中，在vim中好像有性能问题,但是在neovim中不清楚
 set termguicolors  " 使用真色彩  NOTE: 此条设置应在colorscheme命令之前
 exec 'colorscheme ' . g:all_colorschemes[g:default_colorscheme_mode]
 set background=dark
@@ -2516,17 +2512,17 @@ function! ScrollAnotherWindow(mode)
     endif
     noautocmd silent! wincmd p
     if a:mode == 1
-        exec "normal! kzz"
+        exec "normal! k"
     elseif a:mode == 2
-        exec "normal! jzz"
+        exec "normal! j"
     elseif a:mode == 3
-        exec "normal! \<c-b>zz"
+        exec "normal! \<c-b>"
     elseif a:mode == 4
-        exec "normal! \<c-f>zz"
+        exec "normal! \<c-f>"
     elseif a:mode == 5
         exec "normal! gg"
     elseif a:mode == 6
-        exec "normal! Gzz"
+        exec "normal! G"
     endif
     noautocmd silent! wincmd p
 endfunc
