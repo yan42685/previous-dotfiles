@@ -128,7 +128,7 @@ let g:pencil_terminal_italics = 0  " 注释不用斜体
 " =================================
 if g:disable_laggy_plugins_for_large_file == 0
     " 为spelunker提供弹窗支持, 设置的Pmenu，PmenuSel只支持cterm的
-    Plug 'kamykn/popup-menu.nvim'
+    Plug 'kamykn/popup-menu.nvim'  " 无法延迟加载
     " 拼写检查 zl出现list选择修复，zf自动使用list第一个，zg添加到词典里，zw设置为错误单词
     Plug 'kamykn/spelunker.vim'
     "{{{
@@ -239,7 +239,9 @@ let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.xml,*.jsx,*.tsx'
 
 " markdown代码内高亮
 Plug 'plasticboy/vim-markdown', {'for': ['markdown', 'vimwiki']}
+"{{{
 let g:vim_markdown_fenced_languages = ['c++=cpp', 'viml=vim', 'bash=sh', 'ini=dosini', 'csharp=cs']
+"}}}
 
 " 与tmux整合的插件
 "{{{
@@ -1682,15 +1684,13 @@ endif
 "        那就可以卸载coc-markdownlint了)
 
 " Todo List 和 笔记，文档管理
-" NOTE: 这里要使用dev分支来禁用vimwiki的tab快捷键，否则会和coc.nvim有冲突
-" Plug 'vimwiki/vimwiki', {'on': ['VimwikiIndex'], 'branch': 'dev'}
-Plug 'vimwiki/vimwiki', {'branch': 'dev'}  " NOTE: 使用延迟加载的话可能在session中有bug
-"{{{
+Plug 'vimwiki/vimwiki', {'on': 'VimwikiIndex'}  " NOTE: 使用延迟加载的话可能在session中有bug
+" {{{
 " 使用markdown而不是vimwiki的语法
 "let g:vimwiki_list = [{'path': '~/vimwiki/',
             " \ 'syntax': 'markdown', 'ext': '.md'}]
-let g:vimwiki_folding='expr'
-" 禁用table_mappings在insert mode 对<tab>的映射
+" let g:vimwiki_folding='expr'
+" 禁用table_mappings在insert mode 对<tab>的映射, 避免和coc的补全快捷键冲突
 let g:vimwiki_key_mappings =
 \ {
 \   'all_maps': 1,
