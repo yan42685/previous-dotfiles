@@ -675,32 +675,32 @@ Plug 'tpope/vim-fugitive'
 " Gread就是清空暂存区 即checkkout %
 " 还有diffget和diffput可以使用
 nnoremap ,ga :G add %:p<CR><CR>
+nnoremap ,gb :Git branch<Space>
 nnoremap ,gc :G commit --all<cr>
 " 定义进入diff的事件，然后当前窗口关闭syntax
 autocmd User MyEnterDiffMode normal zz
 " 在新tab中打开,对比目前与暂存区
-nnoremap ,gd :G difftool -y<cr>:doautocmd User MyEnterDiffMode<cr>
+nnoremap ,gd :G difftool % -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " 在新tab中打开,对比暂存区与HEAD
-nnoremap ,gD :G difftool --cached -y<cr>:doautocmd User MyEnterDiffMode<cr>
-nnoremap <silent> ,gs :vert Git<cr>
-" nnoremap ,gl :Glog<cr>  " 由Flog插件替代
-nnoremap ,ps :G push<cr>
-nnoremap ,pl :G pull<cr>
-nnoremap ,gf :G fetch<cr>
-nnoremap ,gg :Ggrep<space>
-nnoremap ,gm :GMove<Space>
-nnoremap ,gb :Git branch<Space>
-nnoremap .go :Git checkout<Space>
+nnoremap ,gD :G difftool --cached % -y<cr>:doautocmd User MyEnterDiffMode<cr>
+" 查看所有仓库文件的暂存区与HEAD之间的diff
+nnoremap ,GD :G difftool --cached % -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " 编辑其他分支的文件 Gedit branchname:path/to/file,  branchname:%表示当前buffer的文件
 nnoremap ,ge :Gedit<space>
+" nnoremap ,gl :Glog<cr>  " 由Flog插件替代
+nnoremap ,gf :G fetch<cr>
+" git status
+nnoremap <silent> ,gs :vert Git<cr>
+nnoremap ,gg :Ggrep<space>
 " 重命名git项目下的文件
 " This will:
-    " Rename your file on disk.
-    " Rename the file in git repo.
-    " Reload the file into the current buffer.
-    " Preserve undo history.
-nnoremap ,gr :Gwrite<cr>:Gmove <c-r>=expand('%:p:h')<cr>/
-nnoremap ,gw :Gwrite<CR><CR>
+    " Rename your file on disk.  Rename the file in git repo.
+    " Reload the file into the current buffer.  Preserve undo history.
+nnoremap ,gm :G commit --amend %<cr>
+nnoremap .go :Git checkout<Space>
+nnoremap ,gr :G add %<cr>:Gmove <c-r>=expand('%:p:h')<cr>/
+nnoremap ,ps :G push<cr>
+nnoremap ,pl :G pull<cr>
 
 " 更方便的查看commit g?查看键位 enter查看详细信息 <c-n> <c-p> 跳到上下commit
 Plug 'rbong/vim-flog', {'on': ['Flog']}
@@ -2095,7 +2095,7 @@ fun My_toggle_foldlevel()
     endif
 endf
 "}}}
-nnoremap <leader>oo :call My_toggle_foldlevel()<cr>
+nnoremap <silent> <leader>oo :call My_toggle_foldlevel()<cr>
 
 " HACK: 新发现，解锁v键映射
 nnoremap va ggVG
