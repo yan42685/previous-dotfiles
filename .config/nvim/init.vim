@@ -83,7 +83,7 @@ let g:disable_laggy_plugins_for_large_file = 0  " 在启动参数里设置为1�
 set updatetime=400  " 检测CursorHold事件的时间间隔,影响性能的主要因素
 let g:default_colorscheme_mode = 0
 let g:all_colorschemes = ['quantum', 'gruvbox-material', 'forest-night', 'pencil', 'deus']
-let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night', 'forest_night', 'quantum']
+let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night', 'forest_night', 'gruvbox_material']
 
 
 let mapleader='<space>'  " 此条命令的位置应在插件之前
@@ -299,8 +299,8 @@ xmap ix <Plug>(textobj-xmlattr-attr-i)
 xmap ax <Plug>(textobj-xmlattr-attr-a)
 augroup textobj_sentence
   autocmd!
-  autocmd FileType markdown call textobj#sentence#init()
-  autocmd FileType textile,text call textobj#sentence#init()
+  autocmd FileType markdown silent! call textobj#sentence#init()
+  autocmd FileType textile,text silent! call textobj#sentence#init()
 augroup end
 "}}}
 
@@ -780,11 +780,11 @@ Plug 'neoclide/coc.nvim', {'branch': 'release', 'tag': 'v0.0.77'}
 let g:coc_global_extensions = [
   \ 'coc-snippets', 'coc-json', 'coc-html', 'coc-css', 'coc-tsserver',
   \ 'coc-python', 'coc-tabnine', 'coc-lists', 'coc-explorer', 'coc-yank',
-  \ 'coc-markdownlint', 'coc-stylelint', 'coc-sh', 'coc-dictionary', 'coc-word', 'coc-emmet',
+  \ 'coc-stylelint', 'coc-sh', 'coc-dictionary', 'coc-word', 'coc-emmet',
   \ 'coc-syntax', 'coc-marketplace', 'coc-todolist', 'coc-emoji',
-  \ 'coc-gitignore', 'coc-bookmark', 'coc-java', 'coc-tag', 'coc-floaterm'
+  \ 'coc-gitignore', 'coc-bookmark', 'coc-java', 'coc-tag', 'coc-floaterm',
+  \ 'coc-markdownlint',
   \ ]
-
 
 
 set hidden  " 隐藏buff非关闭它, TextEdit might fail if hidden is not set.
