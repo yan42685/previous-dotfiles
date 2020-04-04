@@ -1,7 +1,7 @@
 ﻿" TODO: coc.nvim去掉特定tag版本(因为目前最新版本有bug，只能选择特定版本)
 " 只考虑NeoVim，不一定兼容Vim
 " 如果遇到了一些问题, 可以试着在本文件搜索FIXME, NOTE
-"
+
 " 一些经验:
 "   1. 抓住主要问题, 用相对简单和有意义的按键映射出现频率高的操作, 而非常冷门的操作
 "      设置较长的快捷键，或者设置成command
@@ -1948,8 +1948,8 @@ inoremap ;e <esc>Ea
 inoremap ;b <esc>Bi
 
 " 快速创建折叠marker, 避免受autopair的影响
-inoremap <expr> ;q &foldmethod == 'marker' ? '{{{' : ';a'
-inoremap <expr> ;w &foldmethod == 'marker' ? '}}}' : ';b'
+inoremap <expr> ;z &foldmethod == 'marker' ? '{{{' : ';z'
+inoremap <expr> ;x &foldmethod == 'marker' ? '}}}' : ';x'
 " NOTE: 这里用imap是因为要借用auto-pairs插件提供的{}自动配对
 imap [[ <esc>A<space>{<cr>
 " 连接下一行
@@ -2407,21 +2407,21 @@ endfunction
 " 切换colorscheme时需要调用这个函数覆盖默认的设置
 function s:Enable_normal_scheme() abort
     "{{{ TODO: FIXME: BUG: NOTE: HACK: 自定义标记配色
-        highlight! MyTodo cterm=bold ctermbg=180 ctermfg=black gui=bold guifg=#ff8700
-        highlight! MyNote cterm=bold ctermbg=75 ctermfg=black gui=bold guifg=#19dd9d
-        highlight! MyFixme cterm=bold ctermbg=189 ctermfg=black gui=bold guifg=#e697e6
-        highlight! MyBug cterm=bold ctermbg=168 ctermfg=black gui=bold guifg=#dd698c
-        highlight! MyHack cterm=bold ctermbg=240 ctermfg=black gui=bold guifg=#f4da9a
+        highlight! MyTodo cterm=bold ctermbg=None  gui=bold guifg=#ff8700
+        highlight! MyNote cterm=bold ctermbg=None  gui=bold guifg=#19dd9d
+        highlight! MyFixme cterm=bold ctermbg=None  gui=bold guifg=#e697e6
+        highlight! MyBug cterm=bold ctermbg=None  gui=bold guifg=#dd698c
+        highlight! MyHack cterm=bold ctermbg=None  gui=bold guifg=#f4da9a
         highlight! link MyTip MyHack
 
     augroup highlight_my_keywords
         autocmd!
         autocmd Syntax * call matchadd('MyTodo',  '\W\zs\(TODO\|CHANGED\|XXX\|DONE\):')
         autocmd Syntax * call matchadd('MyNote',  '\W\zsNOTE:')
-        autocmd Syntax * call matchadd('MyFixme',  '\W\zsFIXME:')
-        autocmd Syntax * call matchadd('MyBug',  '\W\zsBUG:')
+        autocmd Syntax * call matchadd('MyFixme', '\W\zsFIXME:')
+        autocmd Syntax * call matchadd('MyBug',   '\W\zsBUG:')
         autocmd Syntax * call matchadd('MyHack',  '\W\zsHACK:')
-        autocmd Syntax * call matchadd('MyTip',  '\W\zsTIP:')
+        autocmd Syntax * call matchadd('MyTip',   '\W\zsTIP:')
     augroup end
     "}}}
     " {{{折叠，侧栏，Signature的mark标记
