@@ -82,8 +82,8 @@ let g:enable_file_autosave = 1  " 是否自动保存
 let g:disable_laggy_plugins_for_large_file = 0  " 在启动参数里设置为1就可以加快打开速度
 set updatetime=400  " 检测CursorHold事件的时间间隔,影响性能的主要因素
 let g:default_colorscheme_mode = 0
-let g:all_colorschemes = ['quantum', 'gruvbox-material', 'forest-night', 'pencil']
-let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night', 'forest_night']
+let g:all_colorschemes = ['quantum', 'gruvbox-material', 'forest-night', 'pencil', 'deus']
+let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night', 'forest_night', 'quantum']
 
 
 let mapleader='<space>'  " 此条命令的位置应在插件之前
@@ -126,6 +126,10 @@ Plug 'reedes/vim-colors-pencil'
 let g:pencil_gutter_color = 0  " 灰色的signify指示图标
 let g:pencil_terminal_italics = 0  " 注释不用斜体
 "}}}
+Plug 'ajmwagar/vim-deus'
+"{{{
+let g:deus_termcolors=256
+"}}}
 
 " =================================
 " 在大文件下会影响性能
@@ -155,10 +159,8 @@ if g:disable_laggy_plugins_for_large_file == 0
         autocmd CursorHold * if  My_should_enable_spelunker() | silent! call spelunker#check_displayed_words() | endif
     augroup end
     "}}}
-    " 从词典选择相似词
+    " 从词典选择相似词, 这个功能似乎有bug　会调用leaderf, 真是奇怪
     nmap zl <Plug>(spelunker-correct-from-list)
-
-
 endif
 " ==================================
 " ==================================
@@ -1733,6 +1735,7 @@ endif
 "{{{写作 Layer
 " NOTE:　目前影响markdown排版的有pangu, ale里设置的prettier, lint是用的coc-markdownlint (如果prettier能做到无报警，
 "        那就可以卸载coc-markdownlint了)
+" TIP: 尝试过语法检查插件, 不怎么好用，最好在vim里写完了再去专门的网站检查
 
 " Todo List 和 笔记，文档管理
 Plug 'vimwiki/vimwiki', {'on': 'VimwikiIndex'}  " NOTE: 使用延迟加载的话可能在session中有bug
@@ -1811,9 +1814,12 @@ Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
 
 " MarkDown预览, 目前似乎只支持本地图片, 不支持在线的图片
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'on': '<Plug>MarkdownPreviewToggle'}
+"{{{
 let g:mkdp_open_to_the_world = 1  " 可以让别人浏览
 let g:mkdp_command_for_global = 1  " 所有文件中可以使用预览markdown命令
+"}}}
 nmap <leader>mp <Plug>MarkdownPreviewToggle
+
 "}}}
 " {{{其他语言 Layer
 
@@ -1856,6 +1862,8 @@ Plug 'uiiaoo/java-syntax.vim', {'for': ['java']}
 
 " 快速创建表格
 "Plug 'dhruvasagar/vim-table-mode'
+" 生成Markdonw TOC
+"Plug 'mzlogin/vim-markdown-toc'
 
 " 自动生成作者、时间等信息
 " Plug 'alpertuna/vim-header'
@@ -1914,6 +1922,8 @@ xnoremap v <esc>
 " 快速在行末写分号并换行, 如果左边一个字符是分号则直接换行
 inoremap <expr> ;j nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<esc>A;<esc>o'
 inoremap <expr> ;; nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<c-o>A;<esc>jo'
+" 开关大小写
+inoremap ;u <esc>viW~A
 " 快速创建折叠marker, 避免受autopair的影响
 inoremap <expr> ;a &foldmethod == 'marker' ? '{{{' : ';a'
 inoremap <expr> ;b &foldmethod == 'marker' ? '}}}' : ';b'
@@ -2078,7 +2088,7 @@ nnoremap > >>
 vnoremap y ygv<esc>
 " 让normal模式的s不要污染无名寄存器, 因为一个字母没有必要覆盖之前的寄存器内容
 " 同时visual模式s表示删除，x表示剪切
-noremap s "_s
+nnoremap s "_s
 vnoremap s "_s
 " 创建折叠的同时也执行折叠
 vnoremap zf zfzc
@@ -2133,9 +2143,13 @@ fun My_toggle_foldlevel()
 endf
 "}}}
 nnoremap <silent> <leader>oo :call My_toggle_foldlevel()<cr>
+" 在markdown中调整conceallevel (visible)
+nnoremap <expr> <silent> <leader>vi &conceallevel == 3 ? ':set conceallevel=0<cr>' : ':set conceallevel=3<cr>'
 
 " HACK: 新发现，解锁v键映射
 nnoremap va ggVG
+
+
 "}}}
 
 "==========================================
@@ -2405,7 +2419,7 @@ function s:Enable_normal_scheme() abort
     highlight! StartifyFile cterm=None ctermfg=75 gui=None guifg=#d8b98a
     highlight! StartifyNumber cterm=None ctermfg=75 gui=None guifg=#7daea3
 "}}}
-"{{{ Spelunker 拼写检查
+" {{{ Spelunker 拼写检查
     " spelunker的popup menue配色(只支持cterm, 但又要兼顾coc的gui补全配色)
     hi! Pmenu ctermfg=188 ctermbg=240 cterm=NONE guifg=#aebbc5 guibg=#425762 gui=NONE
     hi! PmenuSel ctermfg=237 ctermbg=246 cterm=NONE guifg=#2c3a41 guibg=#69c5ce gui=NONE
@@ -2442,7 +2456,6 @@ hi link illuminatedWord Visual
 hi! snipLeadingSpaces guibg=None
 hi! link snipSippetFooterKeyword snipSnippetHeaderKeyword
 "}}}
-
 endfunction
 
 call s:Enable_normal_scheme()
