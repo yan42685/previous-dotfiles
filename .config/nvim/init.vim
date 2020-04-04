@@ -578,10 +578,6 @@ Plug 'rickhowe/diffchar.vim', {'on': 'TDChar'}
 if g:disable_laggy_plugins_for_large_file == 0
     " 侧栏显示git diff情况
     Plug 'mhinz/vim-signify'
-    " 定义进入diff的事件，然后当前窗口关闭syntax
-    autocmd User MyEnterDiffMode echo ''
-    nnoremap ,gd :SignifyDiff<cr>:doautocmd User MyEnterDiffMode<cr>
-
     nnoremap gp :SignifyHunkDiff<cr>
     nnoremap ,gu :SignifyHunkUndo<cr>
     nmap gk <plug>(signify-prev-hunk)
@@ -674,12 +670,19 @@ nmap gc <Plug>(git-messenger)
 
 " git
 Plug 'tpope/vim-fugitive'
+" test
+
+
 " Gread就是清空暂存区 即checkkout %
 " 还有diffget和diffput可以使用
 nnoremap ,ga :G add %:p<CR><CR>
 nnoremap ,gc :G commit --all<cr>
-" 在新tab中打开diff 不能单独在tab中打开不如signify好用
-" nnoremap ,gd :Gdiffsplit<cr>:doautocmd User MyEnterDiffMode<cr>
+" 定义进入diff的事件，然后当前窗口关闭syntax
+autocmd User MyEnterDiffMode normal zz
+" 在新tab中打开,对比目前与暂存区
+nnoremap ,gd :G difftool -y<cr>:doautocmd User MyEnterDiffMode<cr>
+" 在新tab中打开,对比暂存区与HEAD
+nnoremap ,gD :G difftool --staged -y<cr>:doautocmd User MyEnterDiffMode<cr>
 nnoremap <silent> ,gs :vert Git<cr>
 " nnoremap ,gl :Glog<cr>  " 由Flog插件替代
 nnoremap ,ps :G push<cr>
@@ -2258,7 +2261,7 @@ augroup auto_actions_for_better_experience
     " 关闭quickfix时恢复快捷键q
     autocmd UILeave * nmap q q
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会不会有性能问题
-    autocmd User MyEnterDiffMode if (&filetype != '' && &diff) | windo setlocal syntax=off | windo setlocal wrap | setlocal scrolloff=100
+    autocmd User MyEnterDiffMode if (&filetype != '' && &diff) | windo setlocal syntax=off | windo setlocal wrap
     " FIXME: 这里的set syntax=on可能会影响某些特殊的文件类型的高亮渲染, 所以必要时应该排除在外
     autocmd WinEnter,WinLeave * if (&filetype != '' && &syntax != 'on' && !&diff && &filetype != 'far')
                 \ | set syntax=on | endif
@@ -2495,8 +2498,6 @@ augroup end
 " 当把vim作为git的difftool时，设置 git config --global difftool.trustExitCode true && git config --global mergetool.trustExitCode true
 " 在git difftool或git mergetool之后  可以用:cq进行强制退出diff/merge模式，而不会不停地recall another diff/merge file
 if &diff
-    " 让viewport视角在最中心
-    set scrolloff=100  " FIXME: 这个设置可能有会出现性能问题
     syn off  " 自动关闭语法高亮
     " 强制退出difftool, 不再自动唤起difftool
     noremap <leader><leader>q <esc>:cq<cr>
