@@ -684,7 +684,7 @@ nnoremap ,gd :G difftool % -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " 在新tab中打开,对比暂存区与HEAD
 nnoremap ,gD :G difftool --cached % -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " 查看所有仓库文件的暂存区与HEAD之间的diff
-nnoremap ,GD :G difftool --cached % -y<cr>:doautocmd User MyEnterDiffMode<cr>
+nnoremap ,GD :G difftool --cached -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " 编辑其他分支的文件 Gedit branchname:path/to/file,  branchname:%表示当前buffer的文件
 nnoremap ,ge :Gedit<space>
 " nnoremap ,gl :Glog<cr>  " 由Flog插件替代
@@ -1406,12 +1406,23 @@ Plug 'Yggdroot/LeaderF', {'do': './install.sh'}
 "{{{
 let g:Lf_RgConfig = [
       \ '--glob=!\.git/*',
-      \ '--glob=!\.vscode/*',
       \ '--glob=!\.svn/*',
       \ '--glob=!\.hg/*',
+      \ '--glob=!\.vscode/*',
+      \ '--glob=!.ccls',
+      \ '--glob=!.ccls-cache',
+      \ '--glob=!**/.repo/*',
+      \ '--glob=!**/.ccache/*',
+      \ '--glob=!**/GTAGS',
+      \ '--glob=!**/GRTAGS',
+      \ '--glob=!**/GPATH',
+      \ '--glob=!**/tags',
+      \ '--glob=!**/prj_tags',
+      \ '--iglob=!**/obj/*',
+      \ '--iglob=!**/out/*',
       \ '--multiline',
       \ '--hidden',
-      \ "-g '!.git'"
+      \ "-g '!.git'",
       \ ]
 let g:Lf_WildIgnore = {
             \ 'dir': ['.svn','.git','.hg','.vscode','.wine','.deepinwine','.oh-my-zsh'],
@@ -1833,6 +1844,8 @@ Plug 'uiiaoo/java-syntax.vim', {'for': ['java']}
 " 快速创建表格
 "Plug 'dhruvasagar/vim-table-mode'
 
+" 自动生成作者、时间等信息
+" Plug 'alpertuna/vim-header'
 
 " 以下插件可能用不到，作为备用吧
 
@@ -2355,6 +2368,8 @@ function s:Enable_normal_scheme() abort
     call s:HL('OrangeSign', s:palette.orange, s:palette.none)
     call s:HL('PurpleSign', s:palette.purple, s:palette.none)
     call s:HL('BlueSign', s:palette.blue, s:palette.none)
+    " vsplit分割线
+    highlight! VertSplit guifg=#658494 guibg=None
     " kshenoy/vim-signature 标记的配色
     highlight! link SignatureMarkText OrangeSign
     highlight! link SignatureMarkerText PurpleSign
@@ -2403,6 +2418,7 @@ hi link illuminatedWord Visual
 hi! snipLeadingSpaces guibg=None
 hi! link snipSippetFooterKeyword snipSnippetHeaderKeyword
 "}}}
+
 endfunction
 
 call s:Enable_normal_scheme()
@@ -2680,7 +2696,6 @@ function s:Enable_transparent_scheme() abort
     call s:HL('OrangeSign', s:palette.orange, s:palette.none)
     call s:HL('PurpleSign', s:palette.purple, s:palette.none)
     call s:HL('BlueSign', s:palette.none, s:palette.none)
-    call s:HL('VertSplit', s:palette.none, s:palette.none)  " vsplit分隔线
 endfunction
 
 let g:in_transparent_mode = 0
