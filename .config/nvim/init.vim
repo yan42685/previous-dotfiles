@@ -1935,9 +1935,14 @@ inoremap <expr> ;j nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? 
 inoremap <expr> ;; nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<c-o>A;<esc>jo'
 " 开关大小写
 inoremap ;u <esc>viW~A
+inoremap ;a <esc>la
+inoremap ;h <esc>i
+inoremap ;e <esc>Ea
+inoremap ;b <esc>Bi
+
 " 快速创建折叠marker, 避免受autopair的影响
-inoremap <expr> ;a &foldmethod == 'marker' ? '{{{' : ';a'
-inoremap <expr> ;b &foldmethod == 'marker' ? '}}}' : ';b'
+inoremap <expr> ;q &foldmethod == 'marker' ? '{{{' : ';a'
+inoremap <expr> ;w &foldmethod == 'marker' ? '}}}' : ';b'
 " NOTE: 这里用imap是因为要借用auto-pairs插件提供的{}自动配对
 imap [[ <esc>A<space>{<cr>
 " 连接下一行
