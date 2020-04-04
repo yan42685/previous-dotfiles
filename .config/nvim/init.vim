@@ -910,7 +910,7 @@ imap <c-_> <esc><plug>NERDCommenterToggle
 " Vim-Surround快捷操作
 Plug 'tpope/vim-surround'
 "{{{
-" 让surround的快捷键可以用 `.` 重复
+ " 让surround的快捷键可以用 `.` 重复
 let s:key_mappings_of_surround = [
             \ "<leader>'", '<leader>"', '<leader>*', '<leader><leader>*', '<leader>)', '<leader>(',
             \ '<leader>[', '<leader>{', '<leader><', '<leader>>', '<leader>\|', '<leader>`',
@@ -930,8 +930,7 @@ fun My_get_inverse_bracket(x)  "
     elseif  a:x == '>' | return '<'
     endif
 endf
-
-
+"
 for x in ['(','[', '{', '<', "'", '"']
     for y in ['(', '[', '{', '<', '>']
         execute 'nmap cs' . x . y . ' cs' . x . My_get_inverse_bracket(y)
@@ -1393,7 +1392,7 @@ tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
 " 切换到项目根目录
 Plug 'airblade/vim-rooter', {'on': 'Rooter'}
 "{{{
-let g:rooter_manual_only = 1  " 停止自动目录
+" let g:rooter_manual_only = 1  " 停止自动Rooter
 let g:rooter_resolve_links = 1  " resolve软硬链接
 let g:rooter_silent_chdir = 1  " 静默change dir
 "}}}
@@ -1467,9 +1466,9 @@ nnoremap <silent> gf :Leaderf function<cr>
 " 项目下即时搜索
 nnoremap <silent> <leader>rg :<C-U>Leaderf rg<cr>
 " 项目下搜索词 -F是fix 即不是正则模式
-nnoremap <silent> <Leader>gw :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cword>"))<CR><cr>
-nnoremap <silent> <Leader>gW :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cWORD>"))<CR><cr>
-xnoremap <silent> <leader>gw :Rooter<cr>:<C-U><C-R>=printf("Leaderf! rg -F %s", leaderf#Rg#visual())<CR><cr>
+nnoremap <silent> <Leader>gw :<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cword>"))<CR><cr>
+nnoremap <silent> <Leader>gW :<C-U><C-R>=printf("Leaderf! rg -F %s", expand("<cWORD>"))<CR><cr>
+xnoremap <silent> <leader>gw :<C-U><C-R>=printf("Leaderf! rg -F %s", leaderf#Rg#visual())<CR><cr>
 " buffer内即时搜索
 nnoremap <silent> / :Leaderf rg --current-buffer<cr>
 " 重复上次搜索, 会直接调用上次搜索结果的缓存
@@ -1521,19 +1520,19 @@ let g:far#prompt_mapping = {
 " TIP: 可以用:3,10Far foo bar **/*.py 指定行和文件, 遮罩%表示本文件，*表示所有文件
 " NOTE: 必须要先rooter再替换，否则会找不到文件
 " buffer内替换
-nnoremap ,su :let @0=expand('<cword>')<cr>:Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  %<left><left><c-f>i
-nnoremap ,sU :let @0=expand('<cWORD>')<cr>:Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  %<left><left><c-f>i
+nnoremap ,su :let @0=expand('<cword>')<cr>:Far <c-r>=expand('<cword>')<cr>  %<left><left><c-f>i
+nnoremap ,sU :let @0=expand('<cWORD>')<cr>:Far <c-r>=expand('<cWORD>')<cr>  %<left><left><c-f>i
 " {{{Function: My_get_current_visual_text() 获取当前visual选择的文本
 function My_get_current_visual_text() abort
     execute "normal! `<v`>y"
     return @"
 endfunction
 "}}}
-xnoremap ,su :Rooter<cr>:<c-u>Far <c-r>=My_get_current_visual_text()<cr>  %<left><left><c-f>i
+xnoremap ,su :<c-u>Far <c-r>=My_get_current_visual_text()<cr>  %<left><left><c-f>i
 " Project内替换
-nnoremap ,Su :let @0=expand('<cword>')<cr>:Rooter<cr>:Far <c-r>=expand('<cword>')<cr>  *<left><left><c-f>i
-nnoremap ,SU :let @0=expand('<cWORD>')<cr>:Rooter<cr>:Far <c-r>=expand('<cWORD>')<cr>  *<left><left><c-f>i
-xnoremap ,Su :Rooter<cr>:<c-u>Far <c-r>=My_get_current_visual_text()<cr>  *<left><left><c-f>i
+nnoremap ,Su :let @0=expand('<cword>')<cr>:Far <c-r>=expand('<cword>')<cr>  *<left><left><c-f>i
+nnoremap ,SU :let @0=expand('<cWORD>')<cr>:Far <c-r>=expand('<cWORD>')<cr>  *<left><left><c-f>i
+xnoremap ,Su :<c-u>Far <c-r>=My_get_current_visual_text()<cr>  *<left><left><c-f>i
 " 交互式替换，按<c-r>可以改变匹配模式为正则 <c-f>在查找和替换模式之间切换
 nnoremap ,sr :Farr<cr>
 
@@ -1700,7 +1699,7 @@ endif
 "        那就可以卸载coc-markdownlint了)
 
 " Todo List 和 笔记，文档管理
-Plug 'vimwiki/vimwiki', {'on': 'VimwikiIndex'}
+Plug 'vimwiki/vimwiki', {'on': 'VimwikiIndex'}  " NOTE: 使用延迟加载的话可能在session中有bug
 " {{{
 " 使用markdown而不是vimwiki的语法
 "let g:vimwiki_list = [{'path': '~/vimwiki/',
@@ -1750,13 +1749,12 @@ function! s:goyo_leave()
   Limelight!
   call s:Enable_normal_scheme()  " 恢复折叠和column的颜色
 endfunction
-
+"}}}
 augroup goyo_toggle_callback
     autocmd!
     autocmd! User GoyoEnter nested call <SID>goyo_enter()
     autocmd! User GoyoLeave nested call <SID>goyo_leave()
 augroup end
-"}}}
 
 " 中文自动排版，不能连续重复使用除感叹号以外的标点 连续句号转换成省略号，中英文之间自动加标点，中文前后的半角符号转成全角
 " NOTE: 文档书写规范见https://github.com/sparanoid/chinese-copywriting-guidelines
@@ -2226,7 +2224,7 @@ augroup tab_indent_settings_by_filetype
     " autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear"
     " 在右边窗口打开help,man, q快速退出
     autocmd filetype man,help wincmd L | nnoremap <silent> <buffer> q :q!<cr>
-    autocmd filetype fugitiveblame,fugitive,git nnoremap <silent> <buffer> q :q!<cr>
+    autocmd filetype fugitiveblame,fugitive nnoremap <silent> <buffer> q :q!<cr>
 
 augroup end
 "}}}

@@ -19,7 +19,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - zsh
 - zgen
 - nvim
-- neovim-remote（命令为 nvr) `pip3 install neovim-remote`
+- neovim-remote `pip3 install neovim-remote`
 - lua
 - node, npm
 - trash
@@ -37,7 +37,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 
 - zeal 查看各种离线文档
 - nnn 文件管理器
-- bat 更漂亮的 cat 高亮?
+- bat 略好看的 cat
 - 无道词典
 - gdb-dashboard 更好看的 gdb
 - 如果是用的 gnome-terminal, 可以考虑从`https://github.com/Mayccoll/Gogh`安装比较好看
