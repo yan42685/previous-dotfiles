@@ -1704,7 +1704,9 @@ nmap gz <Plug>ZVOperator
 nmap <leader><leader>z <Plug>ZVKeyDocset
 
 " normal模式fcitx输入法自动切换到英文输入
-Plug 'lilydjwg/fcitx.vim'
+" NOTE: 会把启动速度拖慢180ms左右, 所以必须要延时启动
+Plug 'lilydjwg/fcitx.vim', {'on':['Leaderf', 'Leaderf!', 'G', 'CocList']}
+
 "}}}
 " ---------------------------------------
 " Layer
