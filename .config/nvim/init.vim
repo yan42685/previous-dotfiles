@@ -670,9 +670,6 @@ nmap gc <Plug>(git-messenger)
 
 " git
 Plug 'tpope/vim-fugitive'
-" test
-
-
 " Gread就是清空暂存区 即checkkout %
 " 还有diffget和diffput可以使用
 nnoremap ,ga :G add %:p<CR><CR>
@@ -682,7 +679,7 @@ autocmd User MyEnterDiffMode normal zz
 " 在新tab中打开,对比目前与暂存区
 nnoremap ,gd :G difftool -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " 在新tab中打开,对比暂存区与HEAD
-nnoremap ,gD :G difftool --staged -y<cr>:doautocmd User MyEnterDiffMode<cr>
+nnoremap ,gD :G difftool --cached -y<cr>:doautocmd User MyEnterDiffMode<cr>
 nnoremap <silent> ,gs :vert Git<cr>
 " nnoremap ,gl :Glog<cr>  " 由Flog插件替代
 nnoremap ,ps :G push<cr>
@@ -716,9 +713,9 @@ augroup flog
     autocmd FileType floggraph vnoremap gd :<C-U>call Flogdiff()<CR>
 augroup end
 let g:flog_default_arguments = { 'max_count': 1000 }  " 约束最大显示的commit数量，防止打开太慢
-nnoremap ,gl :Flog<cr>
+nnoremap <silent> ,gl :Flog<cr>
 " 选中多行查看历史
-vnoremap ,gl :Flog<cr>
+vnoremap <silent> ,gl :Flog<cr>
 
 "}}}
 "{{{coc 生态系统, 补全框架
@@ -1346,12 +1343,12 @@ augroup fix_bug_in_floaterm_and_startify
 augroup end
 "}}}
 " 进入终端前复制当前buffer所在目录, 以便于快速进入该buffer的目录
-nnoremap <silent> <m-n> :call Copy_to_registers(expand('%:p:h'))<cr>:FloatermNew<cr>
+nnoremap <silent> <m-n> :FloatermNew<cr>
 tnoremap <silent> <m-n> <c-\><c-n>:FloatermNew<cr>
 " 进入普通模式
 tnoremap <c-m-n> <c-\><c-n>
 " 可以作为从编辑器回到浮动窗口的快捷键
-nnoremap <silent> <m-m> :call Copy_to_registers(expand('%:p:h'))<cr>:FloatermToggle<cr>
+nnoremap <silent> <m-m> :FloatermToggle<cr>
 "{{{ function My_toggle_full_screen_floterm
 let g:My_full_screen_floterm_status = 0
 function My_toggle_full_screen_floterm()
