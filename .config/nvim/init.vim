@@ -994,6 +994,13 @@ nmap ,` :normal ds`<cr>
 " %匹配对象增强, 也许可以把%改成m
 Plug 'andymass/vim-matchup'
 "{{{
+augroup matchup_matchparen_disable_ft
+    autocmd!
+    " matchup在markdown里非常卡，需要禁用掉
+    autocmd FileType tex,markdown,vimwiki let [b:matchup_matchparen_fallback,
+                    \ b:matchup_matchparen_enabled] = [0, 0]
+augroup END
+
 let loaded_matchit = 1
 let loaded_matchparen = 1
 augroup matchup_matchparen_highlight
