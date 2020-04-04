@@ -1048,6 +1048,16 @@ vmap <m-j> <Plug>MoveBlockDown
 vmap <m-k> <Plug>MoveBlockUp
 vmap <m-h> <Plug>MoveBlockLeft
 vmap <m-l> <Plug>MoveBlockRight
+
+" 让代码在一行和多行之间转换, 主要用与js(ts,vue,json),html,yaml,数组,字典
+Plug 'AndrewRadev/splitjoin.vim', {'on': ['SplitjoinSplit', 'SplitjoinJoin'] }
+"{{{
+let g:splitjoin_split_mapping = ''  " 禁用默认映射
+let g:splitjoin_join_mapping = ''
+"}}}
+nmap <silent> <Leader>tj :SplitjoinSplit<cr>
+nmap <silent> <Leader>tk :SplitjoinJoin<cr>
+
 "}}}
 "{{{ UI 相关
 
@@ -1830,8 +1840,8 @@ Plug 'uiiaoo/java-syntax.vim', {'for': ['java']}
 " 数据库接口的ui
 " Plug 'kristijanhusak/vim-dadbod-ui'
 
-" 让代码在一行和多行之间转换
-" Plug 'AndrewRadev/splitjoin.vim'
+
+
 
 " Github支持
 "Plug 'junegunn/vim-github-dashboard'
@@ -1847,10 +1857,21 @@ Plug 'uiiaoo/java-syntax.vim', {'for': ['java']}
 " 自动生成作者、时间等信息
 " Plug 'alpertuna/vim-header'
 
-" 以下插件可能用不到，作为备用吧
+
+
+
+
+
+
+" ===========================================
+" ============================================
+" 以下插件目前看不到使用场景，作为尝鲜用的吧
 
 " Vue支持
 " coc-vetur
+
+" 高亮多组选中单词, 缺点是需要重新映射n, N与anzu插件有冲突(当然可以选择不要next occurrence功能)
+" Plug 'lfv89/vim-interestingwords'
 
 " React NOTE: 因为有coc-tsserver了 不确定需不需要
 " coc作者早期的插件，高亮以及缩进, js对jsx的适配
