@@ -795,7 +795,7 @@ set signcolumn=yes  " Always show the signcolumn, otherwise it would shift the t
 "       \ <SID>check_back_space() ? "\<TAB>" :
 "       \ coc#refresh()
 " 用于在空白行第一列按tab一步缩进到位
-let g:My_quick_tab_blacklist = ['markdown', 'text', 'vim', 'vimwiki', 'gitcommit']
+let g:My_quick_tab_blacklist = ['markdown', 'text', 'vim', 'vimwiki', 'gitcommit', 'snippets']
 inoremap <silent> <expr> <TAB>
       \ pumvisible() ? coc#_select_confirm() :
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
