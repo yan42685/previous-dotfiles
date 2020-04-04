@@ -35,10 +35,11 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 
 可有可无的软件
 
-- nnn
-- bat
+- zeal 查看各种离线文档
+- nnn 文件管理器
+- bat 更漂亮的 cat 高亮?
 - 无道词典
-- gdb-dashboard
+- gdb-dashboard 更好看的 gdb
 - 如果是用的 gnome-terminal, 可以考虑从`https://github.com/Mayccoll/Gogh`安装比较好看
   的主题（暂时用 material )
 - asynctask (`mkdir ~/github && cd ~/github && git clone --depth 1 https://github.com/skywind3000/asynctasks.vim && ln -s ~/github/asynctasks.vim/bin/asynctask ~/.local/bin`)

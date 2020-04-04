@@ -56,6 +56,7 @@
 "            curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.2/ripgrep_11.0.2_amd64.deb && sudo dpkg -i ripgrep_11.0.2_amd64.deb
 "            FIXME: 如果在Leaderf里调用rg出现~/.config文件夹permission deny的情况 就需要 sudo chown -R $USER:$GROUP ~/.config
 "  6. 使用vim-signify显示diff，必须要注册好git账户，比如git config --global user.name "username" && git config --global user.email "useremail@qq.com"
+"  7. 安装zeal: sudo add-apt-repository ppa:zeal-developers/ppa && sudo apt-get update && sudo apt-get install zeal
 "}}}
 " 【配置过程中遇到的坑】{{{
 "   1. 映射<Plug>(...)时必须用递归映射
@@ -1653,6 +1654,18 @@ nnoremap <leader>ds :Diffthis<cr>
 vnoremap <leader>ds :Diffthis<cr>
 " diff close
 nnoremap <leader>dc :Diffoff<cr>
+
+" 查看各种离线文档
+Plug 'KabbAmine/zeavim.vim', {'on': ['<Plug>Zeavim', '<Plug>ZVVisSelection',
+            \ '<Plug>ZVOperator', '<Plug>ZVKeyDocset']}
+" 自动选择<cword>和文件类型
+nmap <leader>z <Plug>Zeavim
+vmap <leader>z <Plug>ZVVisSelection
+" gz{motion/text-object}
+nmap gz <Plug>ZVOperator
+" 手动选择文档包名
+nmap <leader><leader>z <Plug>ZVKeyDocset
+
 "}}}
 " ---------------------------------------
 " Layer
