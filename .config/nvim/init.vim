@@ -756,7 +756,7 @@ endfunction
 nnoremap <silent> <leader>er :call ToggleCocExplorer()<CR>
 
 " 使用coc-yank (自带复制高亮)
-nnoremap <silent> gy :<C-u>CocList --normal yank<cr>
+nnoremap <silent> gy :<C-u>CocList --normal -A yank<cr>
 
 " coc-translator  可以先输入再查词, 作为一个简单的英汉词典,
 " view word history
@@ -904,6 +904,7 @@ vmap <silent> <c-m-v> <Plug>(coc-codeaction-selected)
 " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 " FIXME: 如果不想显示ref的虚拟文本，需要在coc-setting里关闭codelents
 nnoremap <leader>cc :CocCommand<cr>
+nnoremap <leader>cg :CocConfig<cr>
 
 "}}}
 "{{{编辑, 跳转功能增强
@@ -2547,6 +2548,7 @@ endfunction
 command! Chmodx :!chmod a+x %  " make current buffer executable
 command! FixSyntax :syntax sync fromstart  " fix syntax highlighting
 command! RefreshSyntax :set syntax=off | set syntax=on
+command! -nargs=0 OR :call CocActionAsync('runCommand', 'editor.action.organizeImport')
 
 "==========================================
 " 新增功能 Utilities
