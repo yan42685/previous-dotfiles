@@ -676,11 +676,11 @@ nmap gc <Plug>(git-messenger)
 " git
 Plug 'tpope/vim-fugitive'
 " Gread就是清空暂存区 即checkkout %    " 还有diffget和diffput可以使用
-nnoremap ,ga :G add %:p<CR>
+nnoremap <silent> ,ga :G add %:p<CR>
 " add 所有 tracted 文件, 感觉不怎么实用
-" nnoremap ,gA :G add --update<CR>
-nnoremap ,gb :Git branch<Space>
-nnoremap ,gc :G commit --all<cr>
+" nnoremap ,gA  :G add --update<CR>
+nnoremap <silent> ,gb :Git branch<Space>
+nnoremap <silent> ,gc :G commit --all<cr>
 " {{{  定义 autocmd User MyEnterDiffMode
 " 定义进入diff的事件，然后当前窗口关闭syntax
 augroup my_enter_diffMode
@@ -690,35 +690,36 @@ augroup end
 "}}}
 " [ 本文件内diff ]
 " diff working directory与local repository (即HEAD)
-nnoremap ,gd :G difftool HEAD % -y<cr>:doautocmd User MyEnterDiffMode<cr>
+nnoremap <silent> ,gd :G difftool HEAD % -y<cr>:silent! doautocmd User MyEnterDiffMode<cr>
 " diff working directory与index (即暂存区) -y表示 在新tab中打开
-nnoremap ,gD :G difftool % -y<cr>:doautocmd User MyEnterDiffMode<cr>
+nnoremap <silent> ,gD :G difftool % -y<cr>:silent! doautocmd User MyEnterDiffMode<cr>
 " diff index 与 local repository
-nnoremap ,GD :G difftool --cached % -y<cr>:doautocmd User MyEnterDiffMode<cr>
+nnoremap <silent> ,GD :G difftool --cached % -y<cr>:silent! doautocmd User MyEnterDiffMode<cr>
 " [ 仓库内diff ]
 "
 " diff working directory与local repository (即HEAD)
-nnoremap ,,gd :G difftool HEAD -y<cr>:doautocmd User MyEnterDiffMode<cr>
+nnoremap <silent> ,,gd :G difftool HEAD -y<cr>:silent! doautocmd User MyEnterDiffMode<cr>
 " diff working directory与index (即暂存区) -y表示 在新tab中打开
-nnoremap ,,gD :G difftool -y<cr>:doautocmd User MyEnterDiffMode<cr>
+nnoremap <silent> ,,gD :G difftool -y<cr>:silent! doautocmd User MyEnterDiffMode<cr>
 " diff index 与 local repository
-nnoremap ,,GD :G difftool --cached -y<cr>:doautocmd User MyEnterDiffMode<cr>
+nnoremap <silent> ,,GD :G difftool --cached -y<cr>:silent! doautocmd User MyEnterDiffMode<cr>
 " 编辑其他分支的文件 Gedit branchname:path/to/file,  branchname:%表示当前buffer的文件
-nnoremap ,ge :Gedit<space>
-" nnoremap ,gl :Glog<cr>  " 由Flog插件替代
-nnoremap ,gf :G fetch<cr>
+nnoremap <silent> ,ge :Gedit<space>
+nnoremap <silent> ,gf :G fetch<cr>
+" nnoremap ,gl  :Glog<cr>  " 由Flog插件替代
 " git status
-nnoremap <silent> ,gs :vert Git<cr>
-nnoremap ,gg :Ggrep<space>
+nnoremap <silent> ,gs:vert Git<cr>
+nnoremap <silent> ,gg :Ggrep<space>
 " 重命名git项目下的文件
 " This will:
     " Rename your file on disk.  Rename the file in git repo.
     " Reload the file into the current buffer.  Preserve undo history.
-nnoremap ,gm :G commit --amend %<cr>
-nnoremap .go :Git checkout<Space>
-nnoremap ,gr :G add %<cr>:Gmove <c-r>=expand('%:p:h')<cr>/
-nnoremap ,ps :G push<cr>
-nnoremap ,pl :G pull<cr>
+nnoremap <silent> ,gmd :G commit --amend %<cr>
+nnoremap <silent> ,gmt :G mergetool -y<cr>
+nnoremap <silent> .go :Git checkout<Space>
+nnoremap <silent> ,gr :G add %<cr>:Gmove <c-r>=expand('%:p:h')<cr>/
+nnoremap <silent> ,ps :G push<cr>
+nnoremap <silent> ,pl :G pull<cr>
 
 " 更方便的查看commit g?查看键位 enter查看详细信息 <c-n> <c-p> 跳到上下commit
 Plug 'rbong/vim-flog', {'on': ['Flog']}
@@ -736,6 +737,22 @@ let g:flog_default_arguments = { 'max_count': 1000 }  " 约束最大显示的com
 nnoremap <silent> ,gl :Flog<cr>
 " 选中多行查看历史
 vnoremap <silent> ,gl :Flog<cr>
+
+" 更好看的commit界面, 只用从命令行输入git commit才生效, 不对fugitive打开的commit buffer生效
+Plug 'rhysd/committia.vim'
+"{{{
+let g:committia_min_window_width = 150
+let g:committia_hooks = {}
+"}}}
+function! g:committia_hooks.edit_open(info)
+    " If no commit message, start with insert mode
+    if a:info.vcs ==# 'git' && getline(1) ==# ''
+        startinsert
+    endif
+    " Scroll the diff window from insert mode
+    imap <buffer><C-j> <Plug>(committia-scroll-diff-down-half)
+    imap <buffer><C-k> <Plug>(committia-scroll-diff-up-half)
+endfunction
 
 "}}}
 "{{{coc 生态系统, 补全框架
@@ -1641,8 +1658,8 @@ augroup asyncrun
     au!
     au User asyncrun.vim nnoremap <silent> <plug>(asyncrun-qftoggle) :call asyncrun#quickfix_toggle(10)<cr>
 augroup end
-" 整合fugitive
-command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
+" 整合fugitive, 现在G push和G fetch变成异步的了
+command! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>ocommand! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>mmand! -bang -nargs=* -complete=file Make AsyncRun -program=make @ <args>
 "}}}
 " 任务完成自动打开qf{{{
 augroup auto_open_quickfix
@@ -2331,6 +2348,7 @@ augroup tab_indent_settings_by_filetype
     " 在右边窗口打开help,man, q快速退出
     autocmd filetype man,help wincmd L | nnoremap <silent> <buffer> q :q!<cr>
     autocmd filetype fugitiveblame,fugitive nnoremap <silent> <buffer> q :q!<cr>
+    autocmd filetype gitcommit nmap <silent> <buffer> q :wq<cr>
 
 augroup end
 "}}}
