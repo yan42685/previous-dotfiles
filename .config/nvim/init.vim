@@ -902,7 +902,9 @@ nnoremap <leader>cc :CocCommand<cr>
 "{{{编辑, 跳转功能增强
 " 快速移动
 Plug 'easymotion/vim-easymotion', {'on': '<Plug>(easymotion-bd-f)'}
-map <silent> <leader>f <Plug>(easymotion-bd-f)
+" quick f
+map <silent> qf <Plug>(easymotion-bd-f)
+
 " easymotion可以根据中文拼音首字母跳转
 Plug 'ZSaberLv0/vim-easymotion-chs'  " (不能延迟加载，否则easymotion不能正常使用)
 
@@ -1248,7 +1250,6 @@ let g:which_key_map_space.s = {
             \ 'name': '+buffer-substitute/split/select',
             \ 's': 'split-horizontal',
             \ 'v': 'split-vertical',
-            \ 'o': 'select-all',
             \ 'u': 'buffer-substitute-cword',
             \ 'U': 'buffer-substitute-cWORD',
             \}
@@ -1408,7 +1409,7 @@ tnoremap <silent> <m-j> <c-\><c-n>:FloatermNext<cr>
 nnoremap <silent> <m-k> :FloatermPrev<cr>
 tnoremap <silent> <m-k> <c-\><c-n>:FloatermPrev<cr>
 " 在浮动终端执行命令 -A表示自动预览
-nnoremap <silent> <leader>ct :CocList -A floaterm <cr>
+nnoremap <silent> <leader>gt :CocList -A floaterm <cr>
 " 向终端送去命令去除空白但保持缩进 NOTE: 不适用于浮动窗口，只能当 g:floaterm_type = 'normal'时才能用
 nnoremap <silent> ts :FloatermSend!<cr>
 vnoremap <silent> ts :FloatermSend!<cr>
@@ -2139,8 +2140,6 @@ nnoremap R @q
 " 可以在选中的行执行宏　xnoremap <expr> <leader>@ ":norm! @".nr2char(getchar())."<CR>"
 xnoremap <expr> R ":norm! @q<CR>"
 
-" 选择全部
-nnoremap <leader>so ggVG
 " 切换大小写
 nnoremap gu viw~gv<esc>
 nnoremap gU viW~gv<esc>
