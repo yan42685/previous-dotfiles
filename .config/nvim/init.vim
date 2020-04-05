@@ -1135,6 +1135,7 @@ let g:vista#renderer#icons = {
 \  }
 "}}}
 nnoremap <leader>ot :Vista<cr>
+" nnoremap vo :Vista<cr>
 
 " 查看uodo历史及持久化
 Plug 'simnalamburt/vim-mundo', {'on': 'MundoToggle'}
@@ -1440,6 +1441,7 @@ nnoremap <leader>rt :Rooter<cr>:echo printf('Rooter to %s', FindRootDirectory())
 " 模糊搜索 弹窗后按<c-r>进行正则搜索模式, visual模式 '*' 查找函数依赖这个插件，所以不要延迟加载
 Plug 'Yggdroot/LeaderF', {'do': './install.sh'}
 "{{{
+" let g:Lf_ShowDevIcons = 0  " 因为和devicon的整合在Startify的session里有bug，所以不显示devicon了
 let g:Lf_RgConfig = [
       \ '--glob=!\.git/*',
       \ '--glob=!\.svn/*',
@@ -1504,7 +1506,6 @@ let g:Lf_ShortcutB = ''
 nnoremap <silent> <c-p> :Leaderf command<cr>
 let g:Lf_CommandMap = {
             \ '<C-]>':['<C-l>'],
-            \ '<c-p>': ['<c-p>'],
             \}  " 搜索后<c-l>在右侧窗口打开文件
 nnoremap <silent> <leader>gf :Leaderf file<cr>
 nnoremap <silent> <leader>gr :Leaderf mru<cr>
@@ -2076,6 +2077,8 @@ noremap <silent> <leader>l :wincmd l<cr>
 nnoremap <leader><leader>h gT
 nnoremap <leader><leader>l gt
 nnoremap gxo :tabonly<cr>
+nnoremap t. :+tabmove<CR>
+nnoremap t, :-tabmove<CR>
 nnoremap <silent> <c-t> :tab split<cr>
 " {{{Quit tab, even if it's just one
 function! s:my_quit_tab()
@@ -2221,7 +2224,8 @@ set diffopt+=vertical,algorithm:patience
 set sessionoptions+=tabpages,globals,localoptions
 " set t_ti= t_te=  " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉,
                     " 好处：误删什么的，如果以前屏幕打开，可以找回
-set mouse=r  " 启用鼠标, 可以用右键使用系统剪切板来复制粘贴
+" set mouse=r  " 启用鼠标, 可以用右键使用系统剪切板来复制粘贴
+set mouse=  " 禁用鼠标
 set title  " change the terminal's title
 set novisualbell  " 去掉输入错误的提示声音
 set noerrorbells
@@ -2674,6 +2678,7 @@ nnoremap <leader>ew :VimwikiIndex<cr>
 nnoremap <leader>es :CocCommand snippets.editSnippets<cr>
 " 快速编辑同目录下的文件
 nnoremap ,e :e <c-r>=expand('%:p:h')<cr>/
+nnoremap ,E :tabedit <c-r>=expand('%:p:h')<cr>/
 nnoremap ,n :!mkdir <c-r>=expand('%:p:h')<cr>/
 "}}}
 "{{{ 快速添加空白行 {v:count} ]或[<space>
