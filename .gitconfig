@@ -51,11 +51,11 @@
     cm = commit -a
     # commit - amend the tip of the current branch rather than creating a new commit.
     cma = commit --amend
+    ; cmp = "!f() { git commit -m \"$@\" && git push; }; f"
     # commit - amend the tip of the current branch, and edit the message.
     cmam = commit --amend --message
     ca = commit --all --message
     # commit and push
-    ; cap = "!f() { git commit -m \"$@\" && git push; }; f"
     cap = "!f() { git commit --all -m \"$@\" && git push; }; f"
 
     ### checkout ###
