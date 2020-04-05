@@ -696,7 +696,6 @@ nnoremap <silent> ,gD :G difftool % -y<cr>:silent! doautocmd User MyEnterDiffMod
 " diff index 与 local repository
 nnoremap <silent> ,GD :G difftool --cached % -y<cr>:silent! doautocmd User MyEnterDiffMode<cr>
 " [ 仓库内diff ]
-"
 " diff working directory与local repository (即HEAD)
 nnoremap <silent> ,,gd :G difftool HEAD -y<cr>:silent! doautocmd User MyEnterDiffMode<cr>
 " diff working directory与index (即暂存区) -y表示 在新tab中打开
@@ -2345,10 +2344,6 @@ augroup tab_indent_settings_by_filetype
     " NOTE: 如果js之类的大文件高亮渲染不同步 可以开启这两个可能影响性能的选项
     " autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
     " autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear"
-    " 在右边窗口打开help,man, q快速退出
-    autocmd filetype man,help wincmd L | nnoremap <silent> <buffer> q :q!<cr>
-    autocmd filetype fugitiveblame,fugitive nnoremap <silent> <buffer> q :q!<cr>
-    autocmd filetype gitcommit nmap <silent> <buffer> q :wq<cr>
 
 augroup end
 "}}}
@@ -2396,6 +2391,12 @@ augroup auto_actions_for_better_experience
     " HACK: 解决markdonw不能正常高亮的问题, 方法是试出来的，原因不明确, 不过影响也不大
     autocmd User StartifyBufferOpened if &ft == 'markdown' | set syntax=on | endif
     autocmd BufWinEnter,WinEnter,BufEnter * if &ft == 'markdown' | set syntax=on | endif
+    " 在右边窗口打开help,man, q快速退出
+    autocmd filetype man,help wincmd L | nnoremap <silent> <buffer> q :q!<cr>
+    autocmd filetype fugitiveblame,fugitive nnoremap <silent> <buffer> q :q!<cr>
+    autocmd filetype gitcommit nnoremap <silent> <buffer> q :wq<cr>
+    " Java 自动优化import
+    autocmd BufWritePost *.java :silent! call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
 augroup end
 "}}}
 "{{{ 自定义高亮 Highlighting, ColorScheme
