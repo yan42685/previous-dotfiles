@@ -675,25 +675,31 @@ nmap gc <Plug>(git-messenger)
 
 " git
 Plug 'tpope/vim-fugitive'
-" Gread就是清空暂存区 即checkkout %
-" 还有diffget和diffput可以使用
-nnoremap ,ga :G add %:p<CR><CR>
+" Gread就是清空暂存区 即checkkout %    " 还有diffget和diffput可以使用
+nnoremap ,ga :G add %:p<CR>
+" add 所有 tracted 文件, 感觉不怎么实用
+" nnoremap ,gA :G add --update<CR>
 nnoremap ,gb :Git branch<Space>
 nnoremap ,gc :G commit --all<cr>
+" {{{  定义 autocmd User MyEnterDiffMode
 " 定义进入diff的事件，然后当前窗口关闭syntax
-autocmd User MyEnterDiffMode normal zz
+augroup my_enter_diffMode
+    autocmd!
+    autocmd User MyEnterDiffMode normal zz
+augroup end
+"}}}
 " [ 本文件内diff ]
-" diff working directory与index (即暂存区) -y表示 在新tab中打开
-nnoremap ,gd :G difftool % -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " diff working directory与local repository (即HEAD)
-nnoremap ,gD :G difftool HEAD % -y<cr>:doautocmd User MyEnterDiffMode<cr>
+nnoremap ,gd :G difftool HEAD % -y<cr>:doautocmd User MyEnterDiffMode<cr>
+" diff working directory与index (即暂存区) -y表示 在新tab中打开
+nnoremap ,gD :G difftool % -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " diff index 与 local repository
 nnoremap ,GD :G difftool --cached % -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " [ 仓库内diff ]
-" diff working directory与index (即暂存区) -y表示 在新tab中打开
-nnoremap ,,gd :G difftool -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " diff working directory与local repository (即HEAD)
-nnoremap ,,gD :G difftool HEAD -y<cr>:doautocmd User MyEnterDiffMode<cr>
+nnoremap ,,gd :G difftool HEAD -y<cr>:doautocmd User MyEnterDiffMode<cr>
+" diff working directory与index (即暂存区) -y表示 在新tab中打开
+nnoremap ,,gD :G difftool -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " diff index 与 local repository
 nnoremap ,,GD :G difftool --cached -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " 编辑其他分支的文件 Gedit branchname:path/to/file,  branchname:%表示当前buffer的文件
