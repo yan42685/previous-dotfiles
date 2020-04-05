@@ -5,9 +5,9 @@
 " 一些经验:
 "   1. 抓住主要问题, 用相对简单和有意义的按键映射出现频率高的操作, 而非常冷门的操作
 "      设置较长的快捷键，或者设置成command
-"   2. 最小表达力原则: 用尽可能简单的方式组合来完成复杂的需求, 比如easy-motion插件有很
-"      多功能，但其实<Plug>(easymotion-bd-f)就足以胜任日常快速移动所需要的绝大部分功能, 过
-"      多的快捷键及功能反而会是干扰
+"   2. 用尽可能简单的方式组合来完成复杂的需求, 比如easy-motion插件有很多功能，
+"      但其实<Plug>(easymotion-bd-f)就足以胜任日常快速移动所需要的绝大部分功能,
+"      过多的快捷键及功能反而会是干扰
 "
 " 键位设计原则:
 "   1. 有意义，容易记忆.
@@ -682,12 +682,20 @@ nnoremap ,gb :Git branch<Space>
 nnoremap ,gc :G commit --all<cr>
 " 定义进入diff的事件，然后当前窗口关闭syntax
 autocmd User MyEnterDiffMode normal zz
-" 在新tab中打开,对比目前与暂存区
+" [ 本文件内diff ]
+" diff working directory与index (即暂存区) -y表示 在新tab中打开
 nnoremap ,gd :G difftool % -y<cr>:doautocmd User MyEnterDiffMode<cr>
-" 在新tab中打开,对比暂存区与HEAD
-nnoremap ,gD :G difftool --cached % -y<cr>:doautocmd User MyEnterDiffMode<cr>
-" 查看所有仓库文件的暂存区与HEAD之间的diff
-nnoremap ,GD :G difftool --cached -y<cr>:doautocmd User MyEnterDiffMode<cr>
+" diff working directory与local repository (即HEAD)
+nnoremap ,gD :G difftool HEAD % -y<cr>:doautocmd User MyEnterDiffMode<cr>
+" diff index 与 local repository
+nnoremap ,GD :G difftool --cached % -y<cr>:doautocmd User MyEnterDiffMode<cr>
+" [ 仓库内diff ]
+" diff working directory与index (即暂存区) -y表示 在新tab中打开
+nnoremap ,,gd :G difftool -y<cr>:doautocmd User MyEnterDiffMode<cr>
+" diff working directory与local repository (即HEAD)
+nnoremap ,,gD :G difftool HEAD -y<cr>:doautocmd User MyEnterDiffMode<cr>
+" diff index 与 local repository
+nnoremap ,,GD :G difftool --cached -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " 编辑其他分支的文件 Gedit branchname:path/to/file,  branchname:%表示当前buffer的文件
 nnoremap ,ge :Gedit<space>
 " nnoremap ,gl :Glog<cr>  " 由Flog插件替代
@@ -1710,10 +1718,6 @@ nmap gz <Plug>ZVOperator
 " 手动选择文档包名
 nmap <leader><leader>z <Plug>ZVKeyDocset
 
-" normal模式fcitx输入法自动切换到英文输入
-" NOTE: 会把启动速度拖慢180ms左右, 所以必须要延时启动
-Plug 'lilydjwg/fcitx.vim', {'on':['Leaderf', 'Leaderf!', 'G', 'CocList']}
-
 "}}}
 " ---------------------------------------
 " Layer
@@ -1909,6 +1913,13 @@ Plug 'uiiaoo/java-syntax.vim', {'for': ['java']}
 " 最新的 Stylus 语法高亮，可能被polyglot替代了
 " Plug 'iloginow/vim-stylus'
 
+" normal模式fcitx输入法自动切换到英文输入
+" NOTE: 会把启动速度拖慢180ms左右, 而且延时启动会导致依赖的命令用不了, 只能特
+" 定文件类型用了
+" Plug 'lilydjwg/fcitx.vim', {'for': ['markdown', 'vimwiki']}
+
+
+
 " 添加文件图标 NOTE: 需要放在startify之后才能在startify中生效
 Plug 'ryanoasis/vim-devicons'
 let g:webdevicons_enable_startify = 1
@@ -1917,7 +1928,7 @@ let g:webdevicons_enable_startify = 1
 call plug#end()
 
 "==========================================
-" HotKey Settings  自定义快捷键设置
+" 自定义快捷键 Hotkey
 "==========================================
 " {{{重要的按键重定义
 inoremap kj <esc>
@@ -2491,7 +2502,7 @@ call s:Enable_normal_scheme()
 "}}}
 
 "==========================================
-" 自定义命令
+" 自定义命令 Commands
 "==========================================
 "{{{ Ctabs: Open all files in quickfix window in tabs
 command! Ctabs call s:Ctabs()
@@ -2529,7 +2540,7 @@ command! FixSyntax :syntax sync fromstart  " fix syntax highlighting
 command! RefreshSyntax :set syntax=off | set syntax=on
 
 "==========================================
-" 新增功能
+" 新增功能 Utilities
 "==========================================
 " --------- 自动生效的功能 -----------
 " {{{自动保存
