@@ -33,7 +33,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - fzf
 - tmux (tmux-finger 插件依赖 gawk 包，`sudo apt install gawk`)
 
-可有可无的软件
+## 其他非必须工具
 
 - zeal 查看各种离线文档
 - nnn 文件管理器
