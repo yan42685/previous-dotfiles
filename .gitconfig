@@ -45,15 +45,18 @@
     stashes = stash list
 
     ### commit ###
-    # commit - amend the tip of the current branch rather than creating a new commit.
-    cma = commit --amend
-    # commit - amend the tip of the current branch, and edit the message.
-    cmam = commit --amend --message
     # commit - amend the tip of the current branch, and do not edit the message.
     cane = commit --amend --no-edit
     # commit with a message
     cm = commit -a
+    # commit - amend the tip of the current branch rather than creating a new commit.
+    cma = commit --amend
+    # commit - amend the tip of the current branch, and edit the message.
+    cmam = commit --amend --message
     ca = commit --all --message
+    # commit and push
+    ; cap = "!f() { git commit -m \"$@\" && git push; }; f"
+    cap = "!f() { git commit --all -m \"$@\" && git push; }; f"
 
     ### checkout ###
     # checkout - update the working tree to match a branch or paths. [same as "o" for "out"]
