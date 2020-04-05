@@ -44,6 +44,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
   的主题（暂时用 material )
 - asynctask (`mkdir ~/github && cd ~/github && git clone --depth 1 https://github.com/skywind3000/asynctasks.vim && ln -s ~/github/asynctasks.vim/bin/asynctask ~/.local/bin`)
 - Alacritty （这个终端模拟器不能正常显示 emoji, 其他都挺好）
+- syncthing （同步工具）
 
 ## 如何在远程机器上使用本地 zsh
 
