@@ -696,6 +696,7 @@ nnoremap ,gD :G difftool % -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " diff index 与 local repository
 nnoremap ,GD :G difftool --cached % -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " [ 仓库内diff ]
+"
 " diff working directory与local repository (即HEAD)
 nnoremap ,,gd :G difftool HEAD -y<cr>:doautocmd User MyEnterDiffMode<cr>
 " diff working directory与index (即暂存区) -y表示 在新tab中打开
@@ -1506,10 +1507,10 @@ let g:Lf_CommandMap = {
             \ '<c-p>': ['<c-p>'],
             \}  " 搜索后<c-l>在右侧窗口打开文件
 nnoremap <silent> <leader>gf :Leaderf file<cr>
-nnoremap <silent> <leader>gb :Leaderf buffer<cr>
 nnoremap <silent> <leader>gr :Leaderf mru<cr>
 nnoremap <silent> <leader>gc :Leaderf cmdHistory<cr>
 nnoremap <silent> <leader>gs :Leaderf searchHistory<cr>
+nnoremap <silent> gb :Leaderf buffer<cr>
 nnoremap <silent> gf :Leaderf function<cr>
 " 项目下即时搜索
 nnoremap <silent> <leader>rg :<C-U>Leaderf rg<cr>
@@ -1986,7 +1987,6 @@ nnoremap zzj ]z
 nnoremap zzk [z
 noremap J <C-f>
 noremap K <C-b>
-nmap gb %
 " 去上次修改的地方
 nnoremap gi gi<esc>zvzzi
 " goto previous/next change positon
