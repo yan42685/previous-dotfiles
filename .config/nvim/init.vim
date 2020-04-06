@@ -593,15 +593,6 @@ let $GTAGSLABEL = 'native-pygments'
 
 "}}}
 
-" 写作使用的，自动单词折行
-Plug 'reedes/vim-pencil', {'for': ['markdown', 'text', 'vimwiki']}
-let g:pencil#textwidth = 80  " 默认单行最大长度
-augroup pencil
-    autocmd!
-    autocmd FileType markdown silent! call pencil#init({'wrap': 'hard', 'autoformat': 1}) | setlocal wrap | setlocal textwidth=80
-    autocmd FileType text silent! call pencil#init({'wrap': 'soft', 'autoformat': 0}) | setlocal wrap | setlocal textwidth=120
-augroup END
-
 "  单词级对比,　diff模式自动启动, 高亮组是DiffText
 Plug 'rickhowe/diffchar.vim', {'on': 'TDChar'}
 
@@ -1911,6 +1902,16 @@ augroup My_markdown_run
     autocmd FileType markdown nnoremap <buffer> <Leader>Rf :MarkdownRunnerInsert<CR>
 augroup end
 
+" 非常强大的插件, 插入模式<c-t>缩进，<c-d>反缩进 <leader>x 可以开关checkbox
+" 自动填列表的1,2,3 还有a,b,c，enter或normal模式的o删除最后一个空的bullet
+" 还可以自定义outline层级使用的标记，决定是否renumbered on change
+Plug 'dkarter/bullets.vim', {'for': ['markdown', 'text', 'gitcommit', 'scratch'] }
+"{{{
+let g:bullets_enabled_file_types = ['markdown', 'text', 'gitcommit', 'scratch' ]
+" let g:bullets_set_mappings = 0  " 禁用默认mapping
+"}}}
+
+
 "}}}
 " {{{其他语言 Layer
 
@@ -1988,7 +1989,7 @@ Plug 'uiiaoo/java-syntax.vim', {'for': ['java']}
 " 定文件类型用了
 " Plug 'lilydjwg/fcitx.vim', {'for': ['markdown', 'vimwiki']}
 
-
+" NOTE: pencil这个插件不怎么好用, 不推荐
 
 " 添加文件图标 NOTE: 需要放在startify之后才能在startify中生效
 Plug 'ryanoasis/vim-devicons'
