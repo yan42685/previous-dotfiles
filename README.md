@@ -32,6 +32,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - rg
 - fzf
 - tmux (tmux-finger 插件依赖 gawk 包，`sudo apt install gawk`)
+- cz-cli cz-conventional-changelog `npm install commitizen -g`
 
 # 其他非必须工具推荐
 

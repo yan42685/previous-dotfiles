@@ -262,6 +262,7 @@ Plug 'RRethy/vim-illuminate'
 let g:Illuminate_ftblacklist = [
             \ 'vim', 'text', 'markdown', 'css', 'help',
             \ 'coc-explorer', 'vista', 'qf', 'vimwiki', 'zsh',
+            \ 'tmux',
             \ ]
 "}}}
 
@@ -2353,6 +2354,24 @@ augroup tab_indent_settings_by_filetype
     " NOTE: 如果js之类的大文件高亮渲染不同步 可以开启这两个可能影响性能的选项
     " autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
     " autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear"
+    " HACK: 解决markdonw不能正常高亮的问题, 方法是试出来的，原因不明确, 不过影响也不大
+    autocmd User StartifyBufferOpened if &ft == 'markdown' | set syntax=on | endif
+    autocmd BufWinEnter,WinEnter,BufEnter * if &ft == 'markdown' | set syntax=on | endif
+    " 在右边窗口打开help,man, q快速退出
+    autocmd filetype man,help wincmd L | nnoremap <silent> <buffer> q :q!<cr>
+    autocmd filetype fugitiveblame,fugitive nnoremap <silent> <buffer> q :q!<cr>
+    autocmd filetype gitcommit nnoremap <silent> <buffer> q :wq<cr>
+    " Java 自动优化import
+    autocmd BufWritePost *.java :silent! call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
+    autocmd filetype gitcommit inoreabbrev <buffer> BB BREAKING CHANGE: | nnoremap <buffer> i  i<C-r>=<sid>commit_type()<CR>
+"{{{ function for complete commit
+    fun! s:commit_type()
+        call complete(1, ['refactor: ', 'style: ', 'fix: ', 'improvement:', 'feat: ', 'docs: ', 'test: ', 'revert: ', 'perf: ', 'build: ', 'ci: '])
+        nunmap <buffer> i
+        return ''
+    endfun
+"}}}
+
 
 augroup end
 "}}}
@@ -2397,15 +2416,6 @@ augroup auto_actions_for_better_experience
     autocmd WinEnter * if g:in_transparent_mode == 0 | setlocal cursorline
     " 每次隐藏浮动窗口重置全屏状态
     autocmd WinLeave * if &filetype == 'floaterm' | let g:My_full_screen_floterm_status = 0 | setlocal laststatus=2 | endif
-    " HACK: 解决markdonw不能正常高亮的问题, 方法是试出来的，原因不明确, 不过影响也不大
-    autocmd User StartifyBufferOpened if &ft == 'markdown' | set syntax=on | endif
-    autocmd BufWinEnter,WinEnter,BufEnter * if &ft == 'markdown' | set syntax=on | endif
-    " 在右边窗口打开help,man, q快速退出
-    autocmd filetype man,help wincmd L | nnoremap <silent> <buffer> q :q!<cr>
-    autocmd filetype fugitiveblame,fugitive nnoremap <silent> <buffer> q :q!<cr>
-    autocmd filetype gitcommit nnoremap <silent> <buffer> q :wq<cr>
-    " Java 自动优化import
-    autocmd BufWritePost *.java :silent! call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
 augroup end
 "}}}
 "{{{ 自定义高亮 Highlighting, ColorScheme
