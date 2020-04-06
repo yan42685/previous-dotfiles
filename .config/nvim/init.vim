@@ -2214,8 +2214,7 @@ nnoremap <silent> <leader>oo :call My_toggle_foldlevel()<cr>
 nnoremap <expr> <silent> <leader>vi &conceallevel == 3 ? ':set conceallevel=0<cr>' : ':set conceallevel=3<cr>'
 
 " HACK: 新发现，解锁v键映射
-nnoremap va ggVG
-
+nnoremap vv ggVG
 
 "}}}
 
@@ -2365,7 +2364,10 @@ augroup tab_indent_settings_by_filetype
     autocmd BufWritePost *.java :silent! call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
 "{{{ function for complete commit
     fun! s:commit_type()
-        call complete(1, ['refactor: ', 'style: ', 'fix: ', 'improvement:', 'feat: ', 'docs: ', 'test: ', 'revert: ', 'perf: ', 'build: ', 'ci: '])
+        call complete(1, ['🔧 refactor: ', '✨ style: ', '🔨 fix: ',
+                    \ '🍻 improvement:', '🎉 feat: ', '📖 docs: ',
+                    \ '🔎 test: ', '❗ revert: ', '⚡ perf: ', 'build: ', 'ci: ',
+                    \ ])
         nunmap <buffer> i
         return ''
     endfun
@@ -2586,7 +2588,6 @@ endfunction
 command! Chmodx :!chmod a+x %  " make current buffer executable
 command! FixSyntax :syntax sync fromstart  " fix syntax highlighting
 command! RefreshSyntax :set syntax=off | set syntax=on
-command! -nargs=0 OR :call CocActionAsync('runCommand', 'editor.action.organizeImport')
 
 "==========================================
 " 新增功能 Utilities
