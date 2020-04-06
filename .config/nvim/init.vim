@@ -2363,7 +2363,6 @@ augroup tab_indent_settings_by_filetype
     autocmd filetype gitcommit nnoremap <silent> <buffer> q :wq<cr>
     " Java 自动优化import
     autocmd BufWritePost *.java :silent! call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
-    autocmd filetype gitcommit inoreabbrev <buffer> BB BREAKING CHANGE: | nnoremap <buffer> i  i<C-r>=<sid>commit_type()<CR>
 "{{{ function for complete commit
     fun! s:commit_type()
         call complete(1, ['refactor: ', 'style: ', 'fix: ', 'improvement:', 'feat: ', 'docs: ', 'test: ', 'revert: ', 'perf: ', 'build: ', 'ci: '])
@@ -2371,6 +2370,7 @@ augroup tab_indent_settings_by_filetype
         return ''
     endfun
 "}}}
+    autocmd filetype gitcommit inoreabbrev <buffer> BB BREAKING CHANGE: | nnoremap <buffer> i  i<C-r>=<sid>commit_type()<CR>
 
 
 augroup end
