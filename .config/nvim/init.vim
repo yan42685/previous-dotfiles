@@ -91,7 +91,8 @@ let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night',
 let mapleader='<space>'  " 此条命令的位置应在插件之前
 let g:mapleader = "\<Space>"
 let g:maplocalleader = ','
-"}}}
+
+
 "{{{ Disable Preloaded Plugins
 let g:loaded_getscript = 1
 let g:loaded_getscriptPlugin = 1
@@ -115,6 +116,7 @@ let g:loaded_vimball = 1
 let g:loaded_vimballPlugin = 1
 let g:loaded_zip = 1
 let g:loaded_zipPlugin = 1
+"}}}
 "}}}
 " =========================================
 " 插件管理
@@ -744,7 +746,7 @@ nnoremap <silent> ,gg :Ggrep<space>
 " This will:
     " Rename your file on disk.  Rename the file in git repo.
     " Reload the file into the current buffer.  Preserve undo history.
-nnoremap <silent> ,gmd :G commit --amend %<cr>
+nnoremap <silent> ,gma :G commit --amend %<cr>
 nnoremap <silent> ,gmt :G mergetool -y<cr>
 nnoremap <silent> .go :Git checkout<Space>
 nnoremap <silent> ,gr :G add %<cr>:Gmove <c-r>=expand('%:p:h')<cr>/
@@ -1114,7 +1116,7 @@ vmap <c-a> <Plug>(VisualIncrement)
 vmap <c-x> <Plug>(VisualDecrement)
 
 " 移动选中文本, 支持v:count
-Plug 'matze/vim-move', {'on': [ '<Plug>MoveBlockDown', '<Plug>MoveBlockUp', '<Plug>MoveBlockLeft', '<Plug>MoveBlockRight']}
+Plug 'matze/vim-move', {'on': ['<Plug>MoveBlockDown', '<Plug>MoveBlockUp', '<Plug>MoveBlockLeft', '<Plug>MoveBlockRight']}
 "{{{
 let g:move_map_keys = 0  " 禁用默认快捷键
 "}}}
@@ -1124,14 +1126,14 @@ vmap <m-k> <Plug>MoveBlockUp
 vmap <m-h> <Plug>MoveBlockLeft
 vmap <m-l> <Plug>MoveBlockRight
 
-" 让代码在一行和多行之间转换, 主要用与js(ts,vue,json),html,yaml,数组,字典
-Plug 'AndrewRadev/splitjoin.vim', {'on': ['SplitjoinSplit', 'SplitjoinJoin'] }
+" 让代码在一行和多行之间转换
+Plug 'FooSoft/vim-argwrap', {'on': 'ArgWrap'}
 "{{{
-let g:splitjoin_split_mapping = ''  " 禁用默认映射
-let g:splitjoin_join_mapping = ''
+" let g:argwrap_tail_comma = 1  " 所有括号都保留最后的逗号
+let g:argwrap_tail_comma_braces = '['  " 指定括号(字符串里可以写多个括号)保留尾部逗号
 "}}}
-nmap <silent> <Leader>tj :SplitjoinSplit<cr>
-nmap <silent> <Leader>tk :SplitjoinJoin<cr>
+nnoremap <silent> tp :ArgWrap<CR>
+
 
 "}}}
 "{{{ UI 相关
@@ -1776,6 +1778,16 @@ nmap gz <Plug>ZVOperator
 " 手动选择文档包名
 nmap <leader><leader>z <Plug>ZVKeyDocset
 
+" -快速选择tab和窗口, s交换窗口 ;选择本窗口 ][在tab间移动, 0第一个tab, x关掉tab
+Plug 't9md/vim-choosewin', {'on': '<Plug>(choosewin)'}
+"{{{
+let g:choosewin_color_label = {'gui': ['#70ace5', 'black']}
+let g:choosewin_color_label_current = {'gui': ['#70ace5', 'black']}
+let g:choosewin_color_shade = {'gui': ['#70ace5', 'black']}
+let g:choosewin_blink_on_land = 0  " 不要闪烁
+"}}}
+nmap - <Plug>(choosewin)
+
 "}}}
 " ---------------------------------------
 " Layer
@@ -1947,7 +1959,8 @@ Plug 'uiiaoo/java-syntax.vim', {'for': ['java']}
 " 自动生成作者、时间等信息
 " Plug 'alpertuna/vim-header'
 
-
+" 自定义正则表达式替换规则(即保存替换patterm)
+" Plug 'AndrewRadev/switch.vim'
 
 
 
