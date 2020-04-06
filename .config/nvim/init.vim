@@ -83,7 +83,7 @@ let g:disable_laggy_plugins_for_large_file = 0  " 在启动参数里设置为1�
 set updatetime=400  " 检测CursorHold事件的时间间隔,影响性能的主要因素
 let g:default_colorscheme_mode = 0
 let g:all_colorschemes = ['quantum', 'gruvbox-material', 'forest-night',
-            \ 'deus',             'dracula',
+            \ 'deus'            , 'dracula',
             \ ]
 let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night',
             \ 'gruvbox_material', 'dracula',
@@ -441,6 +441,13 @@ function If_in_merge_or_diff_mode() abort
   return ''
 endfunc
 
+fun My_tab_name(n)
+    if !exists('*WebDevIconsGetFileTypeSymbol') || !exists('*lightline#tab#filename')
+        let l:result = expand('%:t')
+    else
+        let l:result = WebDevIconsGetFileTypeSymbol() . ' ' . lightline#tab#filename(a:n)
+    return l:result
+endf
 "}}}
 
 let g:lightline = {}
@@ -478,10 +485,11 @@ let g:lightline.tab = {
 let g:lightline.tab_component = {
       \ }
 let g:lightline.tab_component_function = {
-      \ 'filename': 'lightline#tab#filename',
+      \ 'filename': 'My_tab_name',
       \ 'readonly': 'lightline#tab#readonly',
       \ 'tabnum': 'Tab_num'
       \ }
+      " \ 'filename': 'lightline#tab#filename',
 
 let g:lightline.component = {
       \ 'bufinfo': '%{bufname("%")}:%{bufnr("%")}',
