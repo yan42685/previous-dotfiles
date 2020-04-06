@@ -1,11 +1,4 @@
 ﻿" TODO: coc.nvim去掉特定tag版本(因为目前最新版本有bug，只能选择特定版本)
-" 只考虑NeoVim，不一定兼容Vim
-" 如果遇到了一些问题, 可以试着在本文件搜索FIXME, NOTE
-
-" 一些经验:
-"   1. 抓住主要问题, 用相对简单和有意义的按键映射出现频率高的操作, 而非常冷门的操作
-"      设置较长的快捷键，或者设置成command
-"   2. 用尽可能简单的方式组合来完成复杂的需求, 比如easy-motion插件有很多功能，
 "      但其实<Plug>(easymotion-bd-f)就足以胜任日常快速移动所需要的绝大部分功能,
 "      过多的快捷键及功能反而会是干扰
 "
@@ -1668,6 +1661,7 @@ augroup auto_open_quickfix
 augroup end
 "}}}
 nmap gq <plug>(asyncrun-qftoggle)
+
 "}}}
 "{{{杂项, 优化使用体验
 " 编辑嵌套的代码，可以有独立的缩进和补全，使用场景: JS, Css在Html里面，
@@ -2237,7 +2231,8 @@ set nobackup nowritebackup  " 取消备份文件
 set updatecount =100  " FIXME:如果编辑大文件很慢那么考虑调大这个值 After typing this many characters the swap file will be written to disk
 set cursorline  " 突出显示当前行
 set diffopt+=vertical,algorithm:patience
-set sessionoptions+=tabpages,globals,localoptions
+set sessionoptions-=curdir  " curdir和sesdir不能同时存在, 后者可以保存多个project的buffer
+set sessionoptions+=tabpages,localoptions,winpos,options,resize,sesdir
 " set t_ti= t_te=  " 设置 退出vim后，内容显示在终端屏幕, 可以用于查看和复制, 不需要可以去掉,
                     " 好处：误删什么的，如果以前屏幕打开，可以找回
 " set mouse=r  " 启用鼠标, 可以用右键使用系统剪切板来复制粘贴
