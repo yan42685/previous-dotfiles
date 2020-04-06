@@ -441,11 +441,14 @@ function If_in_merge_or_diff_mode() abort
   return ''
 endfunc
 
-fun My_tab_name(n)
-    if !exists('*WebDevIconsGetFileTypeSymbol') || !exists('*lightline#tab#filename')
-        let l:result = expand('%:t')
+fun My_tab_name(tab_n)
+    if exists('*WebDevIconsGetFileTypeSymbol') && exists('*lightline#tab#filename')
+        let l:result = WebDevIconsGetFileTypeSymbol(lightline#tab#filename(a:tab_n)) . ' ' . lightline#tab#filename(a:tab_n)
+    elseif exists('*lightline#tab#filename')
+        let l:resutl = lightline#tab#filename(a:tab_n)
     else
-        let l:result = WebDevIconsGetFileTypeSymbol() . ' ' . lightline#tab#filename(a:n)
+        let l:result = expand('%:t')
+    endif
     return l:result
 endf
 "}}}
