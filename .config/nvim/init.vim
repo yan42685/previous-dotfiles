@@ -1215,7 +1215,7 @@ nnoremap <leader>PS :PlugStatus<cr>
 Plug 'liuchengxu/vim-which-key'
 "{{{
 autocmd VimEnter * call which_key#register('<Space>', "g:which_key_map_space")
-autocmd VimEnter * call which_key#register(',', "g:which_key_map_comma")
+autocmd VimEnter * call which_key#register('<localleader>', "g:which_key_map_comma")
 autocmd VimEnter * call which_key#register('g', "g:which_key_map_g")
 autocmd VimEnter * call which_key#register('t', "g:which_key_map_t")
 " 快捷键注释
@@ -1351,10 +1351,10 @@ let g:which_key_use_floating_win = 1  " 使用浮动窗口,优点是在多窗口
 let g:which_key_fallback_to_native_key = 1  " 如果没有自定义则不报警
 nnoremap <silent> <leader> :<C-U>WhichKey '<Space>'<cr>
 nnoremap <silent> <localleader> :<C-U>WhichKey ','<cr>
+nnoremap <silent> g :<C-U>WhichKey 'g'<cr>
 " 在Visual模式显示WhichKey
 vnoremap <silent> <leader> :<C-U>WhichKeyVisual '<space>'<cr>
 vnoremap <silent> <localleader> :<C-U>WhichKeyVisual ','<cr>
-nnoremap <silent> g :<C-U>WhichKey 'g'<cr>
 vnoremap <silent> g :<C-U>WhichKeyVisual  'g'<cr>
 augroup settings_whichkey_for_t  " 因为有插件映射了t所以这里要用autocmd来映射
     autocmd!
