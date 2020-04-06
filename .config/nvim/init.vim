@@ -82,10 +82,12 @@ let g:enable_file_autosave = 1  " 是否自动保存
 let g:disable_laggy_plugins_for_large_file = 0  " 在启动参数里设置为1就可以加快打开速度
 set updatetime=400  " 检测CursorHold事件的时间间隔,影响性能的主要因素
 let g:default_colorscheme_mode = 0
-let g:all_colorschemes = ['quantum', 'gruvbox-material', 'forest-night', 'pencil', 'deus', 'dracula']
-let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night', 'forest_night', 'gruvbox_material', 'dracula']
-
-
+let g:all_colorschemes = ['quantum', 'gruvbox-material', 'forest-night',
+            \ 'deus',             'dracula',
+            \ ]
+let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night',
+            \ 'gruvbox_material', 'dracula',
+            \ ]
 let mapleader='<space>'  " 此条命令的位置应在插件之前
 let g:mapleader = "\<Space>"
 let g:maplocalleader = ','
@@ -120,12 +122,6 @@ Plug 'tyrannicaltoucan/vim-quantum'
 " Plug 'trevordmiller/nova-vim'
 Plug 'sainnhe/gruvbox-material'
 Plug 'sainnhe/forest-night'
-" 专为markdown适配的colorscheme
-Plug 'reedes/vim-colors-pencil'
-"{{{
-let g:pencil_gutter_color = 0  " 灰色的signify指示图标
-let g:pencil_terminal_italics = 0  " 注释不用斜体
-"}}}
 Plug 'ajmwagar/vim-deus'
 "{{{
 let g:deus_termcolors=256
@@ -2333,6 +2329,7 @@ augroup tab_indent_settings_by_filetype
     autocmd!
     autocmd filetype python,ruby,snippets setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab ai
     autocmd filetype javascript,html,css,xml,sass,scss setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
+    autocmd filetype COMMIT_EDITMSG setlocal textwidth=72  " GitHub 每行最多显示75字符
     autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown setlocal filetype=markdown
     autocmd BufRead,BufNewFile *.part setlocal filetype=html
     " autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
