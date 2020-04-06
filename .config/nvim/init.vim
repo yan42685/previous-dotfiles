@@ -609,9 +609,9 @@ if g:disable_laggy_plugins_for_large_file == 0
     \   'json': ['prettier'],
     \   'vue': ['prettier'],
     \   'yaml': ['prettier'],
+    \   'markdown': ['prettier'],
     \   'javascript': ['prettier'],
     \   'typescript': ['prettier'],
-    \   'markdown': ['prettier'],
     \   'flow': ['prettier'],
     \   'javascriptreact': ['prettier'],
     \   'typescriptreact': ['prettier'],
@@ -1773,8 +1773,7 @@ if g:enable_front_end_layer == 1
 endif
 "}}}
 "{{{写作 Layer
-" NOTE:　目前影响markdown排版的有pangu, ale里设置的prettier, lint是用的coc-markdownlint (如果prettier能做到无报警，
-"        那就可以卸载coc-markdownlint了)
+" NOTE:　目前影响markdown排版的有pangu, ale里设置的prettier, lint是用的coc-markdownlint
 " TIP: 尝试过语法检查插件, 不怎么好用，最好在vim里写完了再去专门的网站检查
 
 " Todo List 和 笔记，文档管理
@@ -1853,7 +1852,7 @@ augroup end
 Plug 'junegunn/limelight.vim', {'on': 'Limelight'}
 
 " MarkDown预览, 目前似乎只支持本地图片, 不支持在线的图片
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'on': '<Plug>MarkdownPreviewToggle'}
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vimwiki']}
 "{{{
 let g:mkdp_open_to_the_world = 1  " 可以让别人浏览
 let g:mkdp_command_for_global = 1  " 所有文件中可以使用预览markdown命令

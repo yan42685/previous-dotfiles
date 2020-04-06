@@ -33,7 +33,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - fzf
 - tmux (tmux-finger 插件依赖 gawk 包，`sudo apt install gawk`)
 
-## 其他非必须工具
+# 其他非必须工具
 
 - zeal 查看各种离线文档
 - nnn 文件管理器
@@ -46,7 +46,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - Alacritty （这个终端模拟器不能正常显示 emoji, 其他都挺好）
 - syncthing.x64 （同步工具）
 
-## 如何在远程机器上使用本地 zsh
+# 如何在远程机器上使用本地 zsh
 
 [https://github.com/rutchkiwi/copyzshell](https://github.com/rutchkiwi/copyzshell)
 
@@ -58,7 +58,7 @@ git clone https://github.com/rutchkiwi/copyzshell.git ~ZSH_CUSTOM/plugins/copyzs
 copyzshell <remote machine>
 ```
 
-## 如何在远程机器上使用本地 vim
+# 如何在远程机器上使用本地 vim
 
 [https://unix.stackexchange.com/questions/202918/how-do-i-remotely-edit-files-via-ssh](https://unix.stackexchange.com/questions/202918/how-do-i-remotely-edit-files-via-ssh)
 
