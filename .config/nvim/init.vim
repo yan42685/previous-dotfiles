@@ -2414,6 +2414,7 @@ augroup tab_indent_settings_by_filetype
     " commit buffer第一次按i选择要补全的内容，之后在normal模式可以继续按<tab>触发预设补全
 "{{{ function for trigger_commit_commition
     fun! s:trigger_commit_type_completion()
+        " 防止后面的nunmap 报错
         nmap <buffer> i i
         call complete(1, ['🔧 refactor: ', '✨ style: ', '🔨 fix: ',
                     \ '🍻 improvement: ', '🎉 feat: ', '📖 docs: ',
