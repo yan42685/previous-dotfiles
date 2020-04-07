@@ -2040,6 +2040,9 @@ inoremap ;a <left>
 inoremap ;d <right>
 inoremap ;e <esc>Ea
 inoremap ;b <esc>Bi
+cnoremap ;a <left>
+cnoremap ;d <right>
+
 
 " 快速创建折叠marker, 避免受autopair的影响
 imap <expr> ;z &foldmethod == 'marker' ? '<c-_>a<space>{{{<del><del><del>' : ';z'
@@ -2102,8 +2105,8 @@ cnoremap " ""<left>
 cnoremap ( ()<left>
 cnoremap <c-k> <up>
 cnoremap <c-j> <down>
-cnoremap <c-h> <left>
-cnoremap <c-l> <right>
+cnoremap <c-h> <home>
+cnoremap <c-l> <end>
 cnoremap <c-e> <delete>
 cnoremap <m-p> <c-r>0
 
