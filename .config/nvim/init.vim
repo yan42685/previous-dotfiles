@@ -885,10 +885,10 @@ endif
 augroup coc_completion_keybindings
     autocmd!
     autocmd VimEnter * inoremap <silent><expr> <c-j>
-        \ pumvisible() ? "\<down>" :
+        \ pumvisible() ? '<c-n>' :
         \ <SID>check_back_space() ? "ScrollAnotherWindow(2)" :
         \ coc#refresh()
-    autocmd VimEnter * inoremap <expr> <c-k> pumvisible() ? "\<up>" : "ScrollAnotherWindow(1)"
+    autocmd VimEnter * inoremap <expr> <c-k> pumvisible() ? '<c-p>' : "ScrollAnotherWindow(1)"
 augroup end
 
 function! s:check_back_space() abort
@@ -2411,32 +2411,44 @@ augroup tab_indent_settings_by_filetype
     " Java 自动优化import
     autocmd BufWritePost *.java :silent! call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
     " autocmd BufWritePost *.ts,*.js silent! call CocActionAsync('runCommand', 'tsserver.organizeImports')
-    " commit buffer第一次按i选择要补全的内容，之后在normal模式可以继续按<tab>触发预设补全
-"{{{ function for trigger_commit_commition
-    fun! s:trigger_commit_type_completion()
-        " 防止后面的nunmap 报错
-        nmap <buffer> i i
-        call complete(1, ['🔧 refactor: ', '✨ style: ', '🔨 fix: ',
+    " commit buffer在normal模式按<tab>触发预设补全, 按数字键或者tab确认补全
+"{{{ function for trigger_custom_completion_source
+
+    let g:My_commit_completion_source = ['🔧 refactor: ', '✨ style: ', '🔨 fix: ',
                     \ '🍻 improvement: ', '🎉 feat: ', '📖 docs: ',
                     \ '🔎 test: ', '❗ revert: ', '⚡ perf: ', 'build: ', 'ci: ',
-                    \ ])
-        nunmap <buffer> i
-        return ''
-    endfun
-"}}}
-"{{{ fun Auto_trigger_completion_for_gitcommit()
-fun Auto_trigger_completion_for_gitcommit()
-    inoreabbrev <buffer> BB BREAKING CHANGE:
-    if getline(1) ==# ''  " 只对没有信息的commit buffer进行映射
-        nnoremap <silent> <buffer> i  i<C-r>=<sid>trigger_commit_type_completion()<CR>
-    endif
-    nnoremap <silent> <buffer> <tab> i<C-r>=<sid>trigger_commit_type_completion()<cr>
-endf
-"}}}
-    autocmd filetype gitcommit silent! call Auto_trigger_completion_for_gitcommit()
+                    \ ]
 
+    " 可选参数mode: 表示每次从哪一列开始补全
+    fun My_custom_completion_trigger(source, ...)
+        let l:start_col = a:0 == '' ? col('.') : a:0
+        call complete(a:0, a:source)
+
+        " 快速选择
+        inoremap <buffer> 1 <c-y><esc>:call Clear_buffer_mapping_for_number()<cr>a<space>
+        inoremap <buffer> 2 <c-n><c-y><esc>:call Clear_buffer_mapping_for_number()<cr>a<space>
+        inoremap <buffer> 3 <c-n><c-n><c-y><esc>:call Clear_buffer_mapping_for_number()<cr>a<space>
+        inoremap <buffer> 4 <c-n><c-n><c-n><c-y><esc>:call Clear_buffer_mapping_for_number()<cr>a<space>
+        inoremap <buffer> 5 <c-n><c-n><c-n><c-n><c-y><esc>:call Clear_buffer_mapping_for_number()<cr>a<space>
+        inoremap <buffer> 6 <c-n><c-n><c-n><c-n><c-n><c-y><esc>:call Clear_buffer_mapping_for_number()<cr>a<space>
+        inoremap <buffer> 7 <c-n><c-n><c-n><c-n><c-n><c-n><c-y><esc>:call Clear_buffer_mapping_for_number()<cr>a<space>
+        inoremap <buffer> 8 <c-n><c-n><c-n><c-n><c-n><c-n><c-n><c-y><esc>:call Clear_buffer_mapping_for_number()<cr>a<space>
+        inoremap <buffer> 9 <c-n><c-n><c-n><c-n><c-n><c-n><c-n><c-n><c-y><esc>:call Clear_buffer_mapping_for_number()<cr>a<space>
+
+        return ''
+    endf
+
+    fun Clear_buffer_mapping_for_number()
+        for i in range(1, 9)
+            execute 'iunmap <buffer>' . i
+        endfor
+    endf
+"}}}
+    " autocmd filetype gitcommit nnoremap <silent> <buffer> <tab> i<C-r>=<sid>trigger_commit_type_completion()<cr>
+    autocmd filetype gitcommit nnoremap <silent> <buffer> <tab> i<C-r>=My_custom_completion_trigger(g:My_commit_completion_source, 1)<cr>
 
 augroup end
+
 "}}}
 "{{{ 自动命令设置 Autocmds Settings
 augroup auto_actions_for_better_experience
