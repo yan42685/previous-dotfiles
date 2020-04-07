@@ -1,4 +1,7 @@
 ﻿" TODO: coc.nvim去掉特定tag版本(因为目前最新版本有bug，只能选择特定版本)
+" =========================================
+" {{{ 前言
+"{{{ 简介
 "       只考虑NeoVim，不一定兼容Vim
 "       如果遇到了一些问题, 可以试着在本文件搜索FIXME, NOTE
 "
@@ -15,7 +18,7 @@
 "      手指移动距离和次数
 "
 "  不建议用appimge安装，因为这样的话将nvim作为manpager会出现奇怪的权限问题
-" =========================================
+"}}}
 " 【依赖说明】{{{
 "  coc.nvim补全插件需要安装node.js和npm LeaderF依赖Python3, vista依赖global-ctags
 "  leaderF和far依赖rg
@@ -74,7 +77,7 @@
 "      autocmd VimEnter * noremap <leader>cc echo "my purpose"
 
 "}}}
-
+" }}}
 " =========================================
 "{{{可自行调整的全局配置
 let g:enable_front_end_layer = 1  " 前端Layer, 启动所有前端相关插件
@@ -120,7 +123,6 @@ let g:loaded_zipPlugin = 1
 "}}}
 " =========================================
 " 插件管理
-" =========================================
 " {{{主要插件简介
 " 1. ALE         去除多余空格空行，lint, formatter
 " 2. LeaderF     模糊查找
@@ -2009,7 +2011,7 @@ call plug#end()
 
 "==========================================
 " 自定义快捷键 Hotkey
-"==========================================
+" ==========================================
 " {{{重要的按键重定义
 inoremap kj <esc>
 cnoremap kj <c-c>
@@ -2041,8 +2043,8 @@ inoremap ;e <esc>Ea
 inoremap ;b <esc>Bi
 
 " 快速创建折叠marker, 避免受autopair的影响
-inoremap <expr> ;z &foldmethod == 'marker' ? '{{{' : ';z'
-inoremap <expr> ;x &foldmethod == 'marker' ? '}}}' : ';x'
+imap <expr> ;z &foldmethod == 'marker' ? '<c-_>a<space>{{{<del><del><del>' : ';z'
+imap <expr> ;x &foldmethod == 'marker' ? '<c-_>a<space>}}}<del><del><del>' : ';x'
 " NOTE: 这里用imap是因为要借用auto-pairs插件提供的{}自动配对
 imap [[ <esc>A<space>{<cr>
 " 连接下一行
@@ -2272,9 +2274,9 @@ nnoremap vv ggVG
 
 "}}}
 
-"==========================================
+" ==========================================
 " 设置 Settings
-"==========================================
+" ==========================================
 " {{{ 基础设置 Basic Settings
 set scrolloff=100  " 让视角始终居中，在vim中好像有性能问题,但是在neovim中不清楚
 set termguicolors  " 使用真色彩  NOTE: 此条设置应在colorscheme命令之前
@@ -2648,9 +2650,8 @@ endfunction
 call s:Enable_normal_scheme()
 "}}}
 
-"==========================================
-" 自定义命令 Commands
-"==========================================
+" ==========================================
+"{{{ 自定义命令 Commands
 "{{{ Ctabs: Open all files in quickfix window in tabs
 command! Ctabs call s:Ctabs()
 function! s:Ctabs()
@@ -2685,9 +2686,10 @@ endfunction
 command! Chmodx :!chmod a+x %  " make current buffer executable
 command! FixSyntax :syntax sync fromstart  " fix syntax highlighting
 command! RefreshSyntax :set syntax=off | set syntax=on
-
-"==========================================
-" 新增功能 Utilities
+"}}}
+" ==========================================
+"{{{ 新增功能 Utilities
+"
 "==========================================
 " --------- 自动生效的功能 -----------
 " {{{自动保存
@@ -2743,7 +2745,6 @@ augroup auto_change_fold_method
 augroup end
 "}}}
 " ------------------------------------
-
 " --------需要主动了解的功能----------
 " {{{对vim作为git difftoll的增强, <leader><leader>q 强制退出difftool
 " 当把vim作为git的difftool时，设置 git config --global difftool.trustExitCode true && git config --global mergetool.trustExitCode true
@@ -2982,3 +2983,5 @@ nnoremap <leader>nm :call Copy_to_registers(expand('%:t'))<cr>:echo printf('file
 nnoremap <leader>ap :call Copy_to_registers(expand('%:p'))<cr>:echo printf('absolute path yanked: %s', expand('%:p'))<cr>
 nnoremap <leader>dr :call Copy_to_registers(expand('%:p:h'))<cr>:echo printf('absolute dir yanked: %s', expand('%:p:h'))<cr>
 "}}}
+"}}}
+" ==========================================
