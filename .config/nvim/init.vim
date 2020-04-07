@@ -1789,6 +1789,11 @@ let g:choosewin_blink_on_land = 0  " 不要闪烁
 "}}}
 nmap - <Plug>(choosewin)
 
+" 精炼之后的Man :Tldr [command],    :TldrUpdateDocs
+" NOTE: 安装插件后必须先用TldrUpdateDocs命令下载才行
+Plug 'wlemuel/vim-tldr', {'on': ['Tldr', 'TldrUpdateDocs']}
+nnoremap <silent> ,tl :Tldr<cr>
+
 "}}}
 " ---------------------------------------
 " Layer
@@ -2434,7 +2439,7 @@ augroup tab_indent_settings_by_filetype
     autocmd User StartifyBufferOpened if &ft == 'markdown' | set syntax=on | endif
     autocmd BufWinEnter,WinEnter,BufEnter * if &ft == 'markdown' | set syntax=on | endif
     " 在右边窗口打开help,man, q快速退出
-    autocmd filetype man,help wincmd L | nnoremap <silent> <buffer> q :q!<cr>
+    autocmd filetype man,help,tldr wincmd L | nnoremap <silent> <buffer> q :q!<cr>
     autocmd filetype fugitiveblame,fugitive nnoremap <silent> <buffer> q :q!<cr>
     autocmd filetype gitcommit nnoremap <silent> <buffer> q :wq<cr>
     " Java 自动优化import
@@ -2506,7 +2511,7 @@ augroup auto_actions_for_better_experience
         endif
     endfunction
     "}}}
-    autocmd UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
+    autocmd QuickFixCmdPost,UIEnter,UILeave,WinEnter,WinLeave,BufLeave,BufEnter * call Change_mapping_for_quickfix()
     " 关闭quickfix时恢复快捷键q
     autocmd UILeave * nmap q q
     " 进入diff模式关闭语法高亮，离开时恢复语法高亮 FIXME: 不确定会不会有性能问题
