@@ -2031,6 +2031,8 @@ xnoremap v <esc>
 " 快速在行末写分号并换行, 如果左边一个字符是分号则直接换行
 inoremap <expr> ;j nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<esc>A;<esc>o'
 inoremap <expr> ;; nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<c-o>A;<esc>jo'
+inoremap jj <c-o>o
+inoremap kk <c-o>O
 " 开关大小写
 inoremap ;u <esc>viW~A
 inoremap ;a <esc>la
@@ -2051,9 +2053,15 @@ noremap ZZ <nop>
 map <expr> <cr> &buftype == 'nofile' ? '<cr>' : '%'
 "}}}
 "{{{ 更便捷的移动以及视角居中
-"set wrap之后，在折行之间也可以跳
-noremap j gj
-noremap k gk
+"set wrap之后，在折行之间也可以跳, 指定行数后会忽视wrap的行
+nnoremap <expr> k
+        \ v:count == 0 ? 'gk' : 'k'
+vnoremap <expr> k
+        \ v:count == 0 ? 'gk' : 'k'
+nnoremap <expr> j
+        \ v:count == 0 ? 'gj' : 'j'
+vnoremap <expr> j
+        \ v:count == 0 ? 'gj' : 'j'
 " 在同一个折叠的首位跳转
 nnoremap zzj ]z
 nnoremap zzk [z
@@ -2352,6 +2360,23 @@ set relativenumber number  " 相对行号: 行号变成相对，可以用 nj/nk 
 " set statusline=%<%f\ %h%m%r%=%k[%{(&fenc==\"\")?&enc:&fenc}%{(&bomb?\",BOM\":\"\")}]\ %-14.(%l,%c%V%)\ %P
 " " 命令行（在状态行下）的高度，默认为1，这里是2
 set laststatus=2  " Always show the status line - use 2 lines for the status bar
+"{{{ statusline Config
+set statusline=
+set statusline+=%#CursorLine#
+set statusline+=\ %{mode()}
+set statusline+=\ %*\  " Color separator + space
+set statusline+=%{&paste?'[P]':''}
+set statusline+=%{&spell?'[S]':''}
+set statusline+=%r
+set statusline+=%t
+set statusline+=%m
+set statusline+=%=
+set statusline+=\ %y\  " file type
+set statusline+=%#CursorLine#
+set statusline+=\ %{&ff}\  " Unix or Dos
+set statusline+=%*  " default color
+set statusline+=\ %{strlen(&fenc)?&fenc:'none'}\  " file encoding
+"}}}
 set showmatch  " 括号配对情况, 跳转并高亮一下匹配的括号
 set matchtime=2  " How many tenths of a second to blink when matching brackets
 set hlsearch  " 高亮search命中的文本
@@ -2444,7 +2469,6 @@ augroup tab_indent_settings_by_filetype
         endfor
     endf
 "}}}
-    " autocmd filetype gitcommit nnoremap <silent> <buffer> <tab> i<C-r>=<sid>trigger_commit_type_completion()<cr>
     autocmd filetype gitcommit nnoremap <silent> <buffer> <tab> i<C-r>=My_custom_completion_trigger(g:My_commit_completion_source, 1)<cr>
 
 augroup end
@@ -2806,8 +2830,12 @@ function! s:BlankDown(count) abort
     '[-1
 endfunction
 "}}}
-nnoremap ]<space> :<c-u>call <sid>BlankDown(v:count1)<cr>
-nnoremap [<space> :<c-u>call <sid>BlankUp(v:count1)<cr>
+augroup my_new_blank
+    autocmd!
+    " 因为受到自带的ftplugin干扰，所以需要用这么麻烦的定义快捷键方式
+    autocmd BufWinEnter * nnoremap <buffer> ]] :<c-u>call <sid>BlankDown(v:count1)<cr>
+    autocmd BufWinEnter * nnoremap <buffer> [[ :<c-u>call <sid>BlankUp(v:count1)<cr>
+augroup end
 "}}}
 " {{{ 切换colorscheme <leader>cj/k
 "{{{ function
