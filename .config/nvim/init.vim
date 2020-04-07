@@ -93,8 +93,9 @@ let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night',
 let mapleader='<space>'  " 此条命令的位置应在插件之前
 let g:mapleader = "\<Space>"
 let g:maplocalleader = ','
+" 进入git commit buffer在normal模式按<tab>可以显示预设补全
 let g:My_commit_completion_source = ['🔧 refactor: ', '🔨 fix: ', '💦 chore: ',
-                '🍻 improvement: ', \ '🎉 feat: ', '🍦 style: ',  '📝 docs: ',
+                \ '🍻 improvement: ', '🎉 feat: ', '🍦 style: ',  '📝 docs: ',
                 \ '🔎 test: ', '⚡ perf: ', '❗ revert: ', '☕ build: ', '🐳 ci: ',
                 \ ]
 
