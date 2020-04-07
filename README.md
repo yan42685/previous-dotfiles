@@ -1,4 +1,4 @@
-# 依赖
+pace>v 依赖
 
 包管理器最好换源
 
@@ -46,6 +46,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - Alacritty （这个终端模拟器不能正常显示 emoji, 其他都挺好）
 - syncthing.x64 （同步工具）
 - git-quick-stats
+- Joplin 记笔记
 
 # 如何在远程机器上使用本地 zsh
 

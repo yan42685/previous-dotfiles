@@ -1846,6 +1846,9 @@ function! s:goyo_enter()
     silent !tmux set status off
     silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
   endif
+  execute 'normal ZT'
+  execute 'ALEDisable'
+  execute 'SignifyDisable'
   set noshowmode
   set shortmess+=c
   set noshowcmd
@@ -1857,6 +1860,9 @@ function! s:goyo_leave()
     silent !tmux set status on
     silent !tmux list-panes -F '\#F' | grep -q Z && tmux resize-pane -Z
   endif
+  execute 'normal ZT'
+  execute 'ALEEnable'
+  execute 'SignifyEnable'
   set showmode
   set showcmd
   Limelight!
