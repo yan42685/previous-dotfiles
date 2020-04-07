@@ -1,5 +1,4 @@
 ﻿" TODO: coc.nvim去掉特定tag版本(因为目前最新版本有bug，只能选择特定版本)
-" =========================================
 " {{{ 前言
 "{{{ 简介
 "       只考虑NeoVim，不一定兼容Vim
@@ -94,6 +93,16 @@ let s:lightline_schemes = ['quantum', 'gruvbox_material', 'forest_night',
 let mapleader='<space>'  " 此条命令的位置应在插件之前
 let g:mapleader = "\<Space>"
 let g:maplocalleader = ','
+let g:My_commit_completion_source = ['🔧 refactor: ', '🔨 fix: ', '💦 chore: ',
+                '🍻 improvement: ', \ '🎉 feat: ', '🍦 style: ',  '📝 docs: ',
+                \ '🔎 test: ', '⚡ perf: ', '❗ revert: ', '☕ build: ', '🐳 ci: ',
+                \ ]
+
+" 👀 🐮 🐼 📖 ⚓ 🚧 ✈ 🚀 🔥 ❄ 🎁 🎃 ✨ 🎯 💎 🔔 🎵 🎶 💡 📝 💊 ⚠ ❓ ‼
+" ✅ 🉑 ⏰
+
+
+
 
 
 "{{{ Disable Preloaded Plugins
@@ -2448,11 +2457,6 @@ augroup tab_indent_settings_by_filetype
     " autocmd BufWritePost *.ts,*.js silent! call CocActionAsync('runCommand', 'tsserver.organizeImports')
     " commit buffer在normal模式按<tab>触发预设补全, 按数字键或者tab确认补全
 "{{{ function for trigger_custom_completion_source
-
-    let g:My_commit_completion_source = ['🔧 refactor: ', '✨ style: ', '🔨 fix: ',
-                    \ '🍻 improvement: ', '🎉 feat: ', '📖 docs: ',
-                    \ '🔎 test: ', '❗ revert: ', '⚡ perf: ', 'build: ', 'ci: ',
-                    \ ]
 
     " 可选参数mode: 表示每次从哪一列开始补全
     fun My_custom_completion_trigger(source, ...)
