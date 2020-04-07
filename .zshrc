@@ -234,6 +234,7 @@ fi
 # }}}
 
 
+alias note='vi ~/vimwiki/index.md'
 alias fzfh="rg --hidden -l --glob='!node_modules/' --glob='!.git/' '' | fzf"  # fzf搜索隐藏文件
 alias vif='nvim $(fzf)'
 alias vifh='nvim $(rg --hidden -l --glob="!node_modules/" --glob="!.git/" "" | fzf)'

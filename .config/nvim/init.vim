@@ -1837,34 +1837,6 @@ endif
 " NOTE:　目前影响markdown排版的有pangu, ale里设置的prettier, lint是用的coc-markdownlint
 " TIP: 尝试过语法检查插件, 不怎么好用，最好在vim里写完了再去专门的网站检查
 
-" Todo List 和 笔记，文档管理
-Plug 'vimwiki/vimwiki', {'on': 'VimwikiIndex'}  " NOTE: 使用延迟加载的话可能在session中有bug
-" {{{
-" 使用markdown而不是vimwiki的语法
-"let g:vimwiki_list = [{'path': '~/vimwiki/',
-            " \ 'syntax': 'markdown', 'ext': '.md'}]
-" let g:vimwiki_folding='expr'
-" 禁用table_mappings在insert mode 对<tab>的映射, 避免和coc的补全快捷键冲突
-let g:vimwiki_key_mappings =
-\ {
-\   'all_maps': 1,
-\   'global': 1,
-\   'headers': 1,
-\   'text_objs': 1,
-\   'table_format': 1,
-\   'table_mappings': 0,
-\   'lists': 1,
-\   'links': 1,
-\   'html': 1,
-\   'mouse': 0,
-\ }
-
-"}}}
-nnoremap <leader>ww :VimwikiIndex<cr>
-
-"　自动commit,push　vimwiki
-Plug 'michal-h21/vimwiki-sync', { 'for': 'vimwiki', 'on': ['VimwikiIndex'] }
-
 " Sink沉浸写作模式
 Plug 'junegunn/goyo.vim', {'on': 'Goyo'}
 "{{{
@@ -1875,6 +1847,7 @@ function! s:goyo_enter()
     silent !tmux list-panes -F '\#F' | grep -q Z || tmux resize-pane -Z
   endif
   set noshowmode
+  set shortmess+=c
   set noshowcmd
   Limelight
 endfunction
