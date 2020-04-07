@@ -129,6 +129,7 @@ let g:loaded_zipPlugin = 1
 " 3. coc         补全框架, 重构，跳转定义，其他插件生态系统
 " 4. Far         可视化替换
 " 5. Spelunker   拼写检查
+" NOTE: 对于使用了on或for来延迟加载的插件只有在加载了之后才能用 help 查看文档
 "}}}
 " {{{ vim-plug 自动安装
 if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
@@ -138,7 +139,6 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
 endif
 " }}}
 
-" NOTE: 对于使用了on或for来延迟加载的插件只有在加载了之后才能用 help 查看文档
 call plug#begin('~/.vim/plugged')
 " {{{没有设置快捷键的，在后台默默运行的插件
 
@@ -1929,7 +1929,6 @@ let g:bullets_enabled_file_types = ['markdown', 'text', 'gitcommit', 'scratch']
 " Java增强语法高亮
 Plug 'uiiaoo/java-syntax.vim', {'for': ['java']}
 "}}}
-
 " ---------------------------------------
 "{{{打算以后再体验的插件
 "
@@ -2037,8 +2036,8 @@ inoremap <expr> ;; nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? 
 inoremap <expr> ;j nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<c-o>A;<esc>jo'
 " 开关大小写
 inoremap ;u <esc>viW~A
-inoremap ;a <esc>la
-inoremap ;h <esc>i
+inoremap ;a <left>
+inoremap ;d <right>
 inoremap ;e <esc>Ea
 inoremap ;b <esc>Bi
 
