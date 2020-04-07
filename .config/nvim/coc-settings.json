@@ -1,4 +1,5 @@
 {
+  "markdownlint.onChange": false,
   "coc.source.emoji.filetypes": ["markdown", "gitcommit", "vimwiki", "wiki"],
   "codeLens.separator": "  ‣",
   "codeLens.enable": true, // 使用codelens特性
