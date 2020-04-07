@@ -768,13 +768,15 @@ let g:committia_min_window_width = 150
 let g:committia_hooks = {}
 "}}}
 function! g:committia_hooks.edit_open(info)
-    " If no commit message, start with insert mode
-    if a:info.vcs ==# 'git' && getline(1) ==# ''
-        startinsert
-    endif
+    " if a:info.vcs ==# 'git' && getline(1) ==# ''  " If no commit message, start with insert mode
+        " startinsert
+    " endif
+
     " Scroll the diff window from insert mode
-    imap <buffer><C-j> <Plug>(committia-scroll-diff-down-half)
-    imap <buffer><C-k> <Plug>(committia-scroll-diff-up-half)
+    imap <buffer> <expr> <c-j> pumvisible() ? '<c-n>' : '<Plug>(committia-scroll-diff-down-half)'
+    imap <buffer> <expr> <c-k> pumvisible() ? '<c-p>' : '<Plug>(committia-scroll-diff-up-half)'
+    nmap <buffer><C-j> <Plug>(committia-scroll-diff-down-half)
+    nmap <buffer><C-k> <Plug>(committia-scroll-diff-up-half)
 endfunction
 
 "}}}
@@ -859,12 +861,16 @@ set signcolumn=yes  " Always show the signcolumn, otherwise it would shift the t
 " 用于在空白行第一列按tab一步缩进到位
 " FIXME: 没有添加到下面列表里的文件类型如果cc不能缩进，则tab也不能缩进了, 那么就需要在下面的list新增文件类型
 let g:My_quick_tab_blacklist = ['markdown', 'text', 'vim', 'vimwiki', 'gitcommit', 'snippets']
+" inoremap <silent> <expr> <TAB>
+"       \ pumvisible() ? coc#_select_confirm() :
+"       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+"       \ <SID>check_back_space() ? (strwidth(getline('.')) == 0 && index(g:My_quick_tab_blacklist, &filetype) < 0 ? '<esc>cc' : '<tab>') :
+"       \ coc#refresh()
 inoremap <silent> <expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
+      \ pumvisible() ? '<c-y>' :
       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
       \ <SID>check_back_space() ? (strwidth(getline('.')) == 0 && index(g:My_quick_tab_blacklist, &filetype) < 0 ? '<esc>cc' : '<tab>') :
       \ coc#refresh()
-
 " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
 " position. Coc only does snippet and additional edit on confirm.
 if has('patch8.1.1068')
@@ -945,7 +951,8 @@ vmap <silent> <c-m-v> <Plug>(coc-codeaction-selected)
 " FIXME: 如果不想显示ref的虚拟文本，需要在coc-setting里关闭codelents
 nnoremap <leader>cc :CocCommand<cr>
 nnoremap <leader>cg :CocConfig<cr>
-
+" rename file
+nnoremap <silent> <leader>rn :CocActionAsync('runCommand', 'workspace.renameCurrentFile')<cr>
 "}}}
 "{{{编辑, 跳转功能增强
 " 快速移动
@@ -1741,11 +1748,12 @@ nnoremap <leader>cm :DogeGenerate<cr>
 "  选择区域进行diff
 Plug 'rickhowe/spotdiff.vim', {'on': 'Diffthis'}
 let s:in_diff_hunk_status = 0
-nnoremap <leader>ds :Diffthis<cr>
+" diff two window
+nnoremap <silent> <leader>df :windo diffthis<cr>:windo doautocmd User MyEnterDiffMode<cr><c-w>w
 " diff selsct
-vnoremap <leader>ds :Diffthis<cr>
+vnoremap <silent> <leader>df :Diffthis<cr>
 " diff close
-nnoremap <leader>dc :Diffoff<cr>
+nnoremap <silent> <leader>dc :windo diffoff<cr>:windo setlocal syntax=on<cr><c-w>w
 
 " 查看各种离线文档, 使用:Docset 参数<cr>可以指定当前buffer的文档(docset), 重置当前buffer文档
 " 类型, 使用:Docset<cr>重置当前buffer为默认文档类型
@@ -1834,6 +1842,7 @@ let g:vimwiki_key_mappings =
 \ }
 
 "}}}
+nnoremap <leader>ww :VimwikiIndex<cr>
 
 "　自动commit,push　vimwiki
 Plug 'michal-h21/vimwiki-sync', { 'for': 'vimwiki', 'on': ['VimwikiIndex'] }
@@ -1907,7 +1916,7 @@ augroup end
 " 还可以自定义outline层级使用的标记，决定是否renumbered on change
 Plug 'dkarter/bullets.vim', {'for': ['markdown', 'text', 'gitcommit', 'scratch'] }
 "{{{
-let g:bullets_enabled_file_types = ['markdown', 'text', 'gitcommit', 'scratch' ]
+let g:bullets_enabled_file_types = ['markdown', 'text', 'gitcommit', 'scratch']
 " let g:bullets_set_mappings = 0  " 禁用默认mapping
 "}}}
 
@@ -2305,6 +2314,8 @@ set showbreak=⤷▶  " wrap line指示器
 " set showbreak=↪
 set backupcopy=yes  " Does not break hard/symbolic links on file save
 set virtualedit+=block  " 块选择模式可以把光标移动到没有字符的位置
+set grepprg=rg\ --vimgrep
+
 
 
 
@@ -2378,7 +2389,7 @@ augroup tab_indent_settings_by_filetype
     autocmd filetype python,ruby,snippets setlocal tabstop=4 shiftwidth=4 softtabstop=4 expandtab ai
     autocmd filetype javascript,html,css,xml,sass,scss setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
     autocmd filetype COMMIT_EDITMSG setlocal textwidth=72  " GitHub 每行最多显示75字符
-    autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown setlocal filetype=markdown
+    autocmd BufRead,BufNewFile *.md,*.mkd,*.markdown,*.mkdn setlocal filetype=markdown
     autocmd BufRead,BufNewFile *.part setlocal filetype=html
     " autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript tabstop=2 shiftwidth=2 softtabstop=2 expandtab ai
     autocmd BufWinEnter *.php set mps-=<:>  " disable showmatch when use > in php
@@ -2399,17 +2410,29 @@ augroup tab_indent_settings_by_filetype
     autocmd filetype gitcommit nnoremap <silent> <buffer> q :wq<cr>
     " Java 自动优化import
     autocmd BufWritePost *.java :silent! call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
-"{{{ function for complete commit
-    fun! s:commit_type()
+    " autocmd BufWritePost *.ts,*.js silent! call CocActionAsync('runCommand', 'tsserver.organizeImports')
+    " commit buffer第一次按i选择要补全的内容，之后在normal模式可以继续按<tab>触发预设补全
+"{{{ function for trigger_commit_commition
+    fun! s:trigger_commit_type_completion()
+        nmap <buffer> i i
         call complete(1, ['🔧 refactor: ', '✨ style: ', '🔨 fix: ',
-                    \ '🍻 improvement:', '🎉 feat: ', '📖 docs: ',
+                    \ '🍻 improvement: ', '🎉 feat: ', '📖 docs: ',
                     \ '🔎 test: ', '❗ revert: ', '⚡ perf: ', 'build: ', 'ci: ',
                     \ ])
         nunmap <buffer> i
         return ''
     endfun
 "}}}
-    autocmd filetype gitcommit inoreabbrev <buffer> BB BREAKING CHANGE: | nnoremap <buffer> i  i<C-r>=<sid>commit_type()<CR>
+"{{{ fun Auto_trigger_completion_for_gitcommit()
+fun Auto_trigger_completion_for_gitcommit()
+    inoreabbrev <buffer> BB BREAKING CHANGE:
+    if getline(1) ==# ''  " 只对没有信息的commit buffer进行映射
+        nnoremap <silent> <buffer> i  i<C-r>=<sid>trigger_commit_type_completion()<CR>
+    endif
+    nnoremap <silent> <buffer> <tab> i<C-r>=<sid>trigger_commit_type_completion()<cr>
+endf
+"}}}
+    autocmd filetype gitcommit silent! call Auto_trigger_completion_for_gitcommit()
 
 
 augroup end
@@ -2752,7 +2775,6 @@ function! Alternative()
 endfunction
 "}}}
 noremap <silent> <leader>ea :<C-U><C-R>=printf("Leaderf file --input %s", Alternative())<CR><CR>
-nnoremap <leader>ew :VimwikiIndex<cr>
 nnoremap <leader>es :CocCommand snippets.editSnippets<cr>
 " 快速编辑同目录下的文件
 nnoremap ,e :e <c-r>=expand('%:p:h')<cr>/
