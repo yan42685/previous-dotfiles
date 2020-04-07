@@ -1476,6 +1476,17 @@ tnoremap <m-l> <c-\><c-n><c-w>l
 " " 粘贴寄存器0的内容到终端
 tnoremap <expr> <m-p> '<C-\><C-n>"0pi'
 
+" -快速选择tab和窗口, s交换窗口 ;选择本窗口 ][在tab间移动, 0第一个tab, x关掉tab
+Plug 't9md/vim-choosewin', {'on': '<Plug>(choosewin)'}
+"{{{
+let g:choosewin_color_label = {'gui': ['#70ace5', 'black']}
+let g:choosewin_color_label_current = {'gui': ['#70ace5', 'black']}
+let g:choosewin_color_shade = {'gui': ['#70ace5', 'black']}
+let g:choosewin_blink_on_land = 0  " 不要闪烁
+"}}}
+nmap - <Plug>(choosewin)
+
+
 "}}}
 "{{{ Project 增强
 " 切换到项目根目录
@@ -1757,7 +1768,7 @@ vnoremap <silent> <leader>df :Diffthis<cr>
 " diff close
 nnoremap <silent> <leader>dc :windo diffoff<cr>:windo setlocal syntax=on<cr><c-w>w
 
-" 查看各种离线文档, 使用:Docset 参数<cr>可以指定当前buffer的文档(docset), 重置当前buffer文档
+" 查看各种离线API文档, 使用:Docset 参数<cr>可以指定当前buffer的文档(docset), 重置当前buffer文档
 " 类型, 使用:Docset<cr>重置当前buffer为默认文档类型
 Plug 'KabbAmine/zeavim.vim', {'on': ['<Plug>Zeavim', '<Plug>ZVVisSelection',
             \ '<Plug>ZVOperator', '<Plug>ZVKeyDocset', 'Docset']}
@@ -1779,20 +1790,10 @@ nmap gz <Plug>ZVOperator
 " 手动选择文档包名
 nmap <leader><leader>z <Plug>ZVKeyDocset
 
-" -快速选择tab和窗口, s交换窗口 ;选择本窗口 ][在tab间移动, 0第一个tab, x关掉tab
-Plug 't9md/vim-choosewin', {'on': '<Plug>(choosewin)'}
-"{{{
-let g:choosewin_color_label = {'gui': ['#70ace5', 'black']}
-let g:choosewin_color_label_current = {'gui': ['#70ace5', 'black']}
-let g:choosewin_color_shade = {'gui': ['#70ace5', 'black']}
-let g:choosewin_blink_on_land = 0  " 不要闪烁
-"}}}
-nmap - <Plug>(choosewin)
-
 " 精炼之后的Man :Tldr [command],    :TldrUpdateDocs
 " NOTE: 安装插件后必须先用TldrUpdateDocs命令下载才行
 Plug 'wlemuel/vim-tldr', {'on': ['Tldr', 'TldrUpdateDocs']}
-nnoremap <silent> ,tl :Tldr<cr>
+nnoremap ,tl :Tldr<space>
 
 "}}}
 " ---------------------------------------
@@ -2524,6 +2525,7 @@ augroup auto_actions_for_better_experience
     autocmd WinEnter * if g:in_transparent_mode == 0 | setlocal cursorline
     " 每次隐藏浮动窗口重置全屏状态
     autocmd WinLeave * if &filetype == 'floaterm' | let g:My_full_screen_floterm_status = 0 | setlocal laststatus=2 | endif
+
 augroup end
 "}}}
 "{{{ 自定义高亮 Highlighting, ColorScheme
