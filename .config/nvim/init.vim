@@ -1911,6 +1911,8 @@ let g:bullets_enabled_file_types = ['markdown', 'text', 'gitcommit', 'scratch']
 " let g:bullets_set_mappings = 0  " 禁用默认mapping
 "}}}
 
+" 添加标题和代码块折叠
+Plug 'masukomi/vim-markdown-folding', {'for': 'markdown'}
 
 "}}}
 " {{{其他语言 Layer
@@ -2018,8 +2020,8 @@ nnoremap p ""p
 vnoremap v <esc>
 " 快速退出选择模式
 xnoremap v <esc>
-inoremap jj <c-o>o
-inoremap kk <c-o>O
+inoremap jj <esc>o
+inoremap kk <esc>O
 " 快速在行末写分号并换行, 如果左边一个字符是分号则直接换行
 inoremap <expr> ;; nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<esc>A;<esc>o'
 inoremap <expr> ;j nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<c-o>A;<esc>jo'
@@ -2458,6 +2460,8 @@ augroup tab_indent_settings_by_filetype
     endf
 "}}}
     autocmd filetype gitcommit nnoremap <silent> <buffer> <tab> i<C-r>=My_custom_completion_trigger(g:My_commit_completion_source, 1)<cr>
+    " FIXME: 主要是用于作为choplin的外接编辑器, 可能影响性能
+    autocmd InsertLeave *.md update
 
 augroup end
 
