@@ -45,6 +45,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - asynctask (`mkdir ~/github && cd ~/github && git clone --depth 1 https://github.com/skywind3000/asynctasks.vim && ln -s ~/github/asynctasks.vim/bin/asynctask ~/.local/bin`)
 - Alacritty （这个终端模拟器不能正常显示 emoji, 其他都挺好）
 - syncthing.x64 （同步工具）
+- git-quick-stats
 
 # 如何在远程机器上使用本地 zsh
 
