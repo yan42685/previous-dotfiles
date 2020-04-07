@@ -2028,11 +2028,11 @@ nnoremap p ""p
 vnoremap v <esc>
 " 快速退出选择模式
 xnoremap v <esc>
-" 快速在行末写分号并换行, 如果左边一个字符是分号则直接换行
-inoremap <expr> ;j nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<esc>A;<esc>o'
-inoremap <expr> ;; nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<c-o>A;<esc>jo'
 inoremap jj <c-o>o
 inoremap kk <c-o>O
+" 快速在行末写分号并换行, 如果左边一个字符是分号则直接换行
+inoremap <expr> ;; nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<esc>A;<esc>o'
+inoremap <expr> ;j nr2char(strgetchar(getline('.')[col('.') - 2:], 0)) == ';' ? '<c-o>o' : '<c-o>A;<esc>jo'
 " 开关大小写
 inoremap ;u <esc>viW~A
 inoremap ;a <esc>la
@@ -2605,8 +2605,8 @@ function s:Enable_normal_scheme() abort
 "}}}
 " {{{ Spelunker 拼写检查
     " spelunker的popup menue配色(只支持cterm, 但又要兼顾coc的gui补全配色)
-    hi! Pmenu ctermfg=188 ctermbg=240 cterm=NONE guifg=#aebbc5 guibg=#425762 gui=NONE
-    hi! PmenuSel ctermfg=237 ctermbg=246 cterm=NONE guifg=#2c3a41 guibg=#69c5ce gui=NONE
+    " hi! Pmenu ctermfg=188 ctermbg=240 cterm=NONE guifg=#aebbc5 guibg=#425762 gui=NONE
+    " hi! PmenuSel ctermfg=237 ctermbg=246 cterm=NONE guifg=#2c3a41 guibg=#69c5ce gui=NONE
 
     " spelunker 显示错误单词的颜色
     highlight! SpelunkerSpellBad cterm=undercurl ctermfg=247 gui=undercurl guifg=#9e9e9e
