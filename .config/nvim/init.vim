@@ -1584,6 +1584,7 @@ nnoremap <silent> <leader>gc :Leaderf cmdHistory<cr>
 nnoremap <silent> <leader>gs :Leaderf searchHistory<cr>
 nnoremap <silent> gb :Leaderf buffer<cr>
 nnoremap <silent> gf :Leaderf function<cr>
+nnoremap <silent> ,gt :Leaderf bufTag<cr>
 " 项目下即时搜索
 nnoremap <silent> <leader>rg :<C-U>Leaderf rg<cr>
 " 项目下搜索词 -F是fix 即不是正则模式
@@ -1919,6 +1920,36 @@ let g:bullets_enabled_file_types = ['markdown', 'text', 'gitcommit', 'scratch']
 
 " 添加标题和代码块折叠
 Plug 'masukomi/vim-markdown-folding', {'for': 'markdown'}
+
+
+" Todo List 和 笔记，文档管理
+Plug 'vimwiki/vimwiki', {'on': 'VimwikiIndex'}  " NOTE: 使用延迟加载的话可能在session中有bug
+" {{{
+" 使用markdown而不是vimwiki的语法
+let g:vimwiki_list = [{'path': '~/vimwiki/',
+            \ 'syntax': 'markdown', 'ext': '.md'}]
+let g:vimwiki_folding='expr'
+" 禁用table_mappings在insert mode 对<tab>的映射, 避免和coc的补全快捷键冲突
+let g:vimwiki_key_mappings =
+\ {
+\   'all_maps': 1,
+\   'global': 1,
+\   'headers': 1,
+\   'text_objs': 1,
+\   'table_format': 1,
+\   'table_mappings': 0,
+\   'lists': 1,
+\   'links': 1,
+\   'html': 1,
+\   'mouse': 0,
+\ }
+
+"}}}
+nnoremap <leader>ew :VimwikiIndex<cr>
+
+"　自动commit,push　vimwiki
+Plug 'michal-h21/vimwiki-sync', { 'for': 'vimwiki', 'on': ['VimwikiIndex'] }
+
 
 "}}}
 " {{{其他语言 Layer
@@ -2831,6 +2862,8 @@ augroup my_new_blank
     " 因为受到自带的ftplugin干扰，所以需要用这么麻烦的定义快捷键方式
     autocmd BufWinEnter * nnoremap <buffer> ]] :<c-u>call <sid>BlankDown(v:count1)<cr>
     autocmd BufWinEnter * nnoremap <buffer> [[ :<c-u>call <sid>BlankUp(v:count1)<cr>
+    autocmd filetype vim nnoremap <buffer> ]] :<c-u>call <sid>BlankDown(v:count1)<cr>
+    autocmd filetype vim nnoremap <buffer> [[ :<c-u>call <sid>BlankUp(v:count1)<cr>
 augroup end
 "}}}
 " {{{ 切换colorscheme <leader>cj/k
