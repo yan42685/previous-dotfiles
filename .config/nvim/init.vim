@@ -2466,8 +2466,6 @@ augroup tab_indent_settings_by_filetype
     endf
 "}}}
     autocmd filetype gitcommit nnoremap <silent> <buffer> <tab> i<C-r>=My_custom_completion_trigger(g:My_commit_completion_source, 1)<cr>
-    " FIXME: 主要是用于作为choplin的外接编辑器, 可能影响性能
-    autocmd InsertLeave *.md update
 
 augroup end
 

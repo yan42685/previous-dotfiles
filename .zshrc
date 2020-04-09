@@ -16,7 +16,7 @@ export TERM=xterm-256color
 export NNN_USE_EDITOR=1                                 # use the $EDITOR when opening text files
 export EDITOR=nvim
 # 下面这条选项会让git的输出用nvim来打开
-export PAGER="nvim --cmd 'let g:vimManPager = 1' -c MANPAGER -"
+export PAGER="nvim"
 # export MANPAGER="nvim"
 export BROWSER="chromium"
 export NNN_COLORS="2136"                        # use a different color for each context
