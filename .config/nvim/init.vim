@@ -1606,6 +1606,10 @@ nnoremap <leader>tr :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expan
 " 查看tag定义
 nnoremap <leader>td :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
 
+" 浏览marks
+Plug 'Yggdroot/LeaderF-marks'
+nnoremap <leader>gm :LeaderfMarks<cr>
+
 " Project/buffer内替换 (默认搜索隐藏文件)
 Plug 'brooth/far.vim'  " 因为奇怪的遮罩原因，不建议使用on来延迟加载
 "{{{
@@ -1657,6 +1661,7 @@ nnoremap ,SU :let @0=expand('<cWORD>')<cr>:Far <c-r>=expand('<cWORD>')<cr>  *<le
 xnoremap ,Su :<c-u>Far <c-r>=My_get_current_visual_text()<cr>  *<left><left><c-f>i
 " 交互式替换，按<c-r>可以改变匹配模式为正则 <c-f>在查找和替换模式之间切换
 nnoremap ,sr :Farr<cr>
+
 
 " 在quickfix窗口里编辑  " FIXME: 和quickr-preview有冲突
 " Plug 'stefandtw/quickfix-reflector.vim'
