@@ -2,7 +2,7 @@
   "markdownlint.onChange": false,
   "coc.source.emoji.filetypes": ["markdown", "gitcommit", "vimwiki", "wiki"],
   "codeLens.separator": "  ‣",
-  "codeLens.enable": true, // 使用codelens特性
+  // "codeLens.enable": true, // 使用codelens特性
   "bookmark.signHi": "BlueSign",
   "snippets.priority": 130, // 从默认的90提高到130的优先级
   "session.directory": "~/.local/share/nvim/session", // coclist查找session文件的地址
