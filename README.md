@@ -1,5 +1,9 @@
-# 依赖
+[新仓库地址](https://github.com/yan42685/dotfiles)
+<details>
+<summary>手动部署环境详情</summary>
+## 依赖
 
+<br>
 包管理器最好换源
 
 - pyenv
@@ -33,7 +37,7 @@ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
 - fzf
 - tmux (tmux-finger 插件依赖 gawk 包，`sudo apt install gawk`)
 
-# 其他非必须工具推荐
+## 其他非必须工具推荐
 
 - zeal 查看各种离线文档
 - nnn 文件管理器
@@ -64,3 +68,4 @@ copyzshell <remote machine>
 [https://unix.stackexchange.com/questions/202918/how-do-i-remotely-edit-files-via-ssh](https://unix.stackexchange.com/questions/202918/how-do-i-remotely-edit-files-via-ssh)
 
 使用 sshfs 把远程文件夹 mount 到本地
+</details>
